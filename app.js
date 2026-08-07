@@ -95,7 +95,9 @@ async function boot() {
   try {
     await init();
     store = new Store();
-    store.load(await (await fetch('data/graph.ttl')).text(),
+    // 팀이 graph.ttl 을 고치고 새로고침해도 옛것이 뜨지 않게 매번 서버에 확인한다.
+    // (ETag 로 검증만 하므로 안 바뀌었으면 304 — 실제 전송은 없다)
+    store.load(await (await fetch('data/graph.ttl', { cache: 'no-cache' })).text(),
       { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
     const nT = store.size ?? [...store.match()].length;
 
@@ -392,7 +394,7 @@ function stem(w) {
 
 async function loadCorpus() {
   let text = '';
-  try { text = await (await fetch('data/corpus.txt')).text(); } catch (e) { }
+  try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
   const paras = text.split(/\n\s*\n/).filter(p => p.trim());
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
     .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
@@ -532,7 +534,7 @@ function langPrint(stage) {
 
 async function showWordSource(w) {
   let text = '';
-  try { text = await (await fetch('data/corpus.txt')).text(); } catch (e) { }
+  try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
   const hits = text.split(/\n\s*\n/).map((p, i) => ({ i, p }))
     .filter(x => x.p.includes(w)).slice(0, 3);
   $('#langNote').innerHTML = hits.length

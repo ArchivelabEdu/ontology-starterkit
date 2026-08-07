@@ -42,7 +42,7 @@ export async function initHero(G) {
   layout();
   loop(performance.now());
 
-  const meta = await fetch('assets/life/frames.json').then(r => r.json()).catch(() => []);
+  const meta = await fetch('assets/life/frames.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
   if (!meta.length) { hint('초상 이미지를 찾지 못했습니다'); return; }
   P.meta = meta;
   renderDots();

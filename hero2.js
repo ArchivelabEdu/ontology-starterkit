@@ -21,7 +21,7 @@ export async function initHero2() {
   const root = $('#hero2');
   if (!root || H) return;
 
-  const meta = await fetch('assets/life/frames.json').then(r => r.json()).catch(() => []);
+  const meta = await fetch('assets/life/frames.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
   if (!meta.length) { root.innerHTML = '<p class="status">장면을 찾지 못했습니다</p>'; return; }
 
   H = { meta, i: 0, timer: 0, busy: false, root };
