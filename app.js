@@ -213,8 +213,42 @@ function buildModel() {
 
 /* ══════════ 지도 ══════════ */
 const MAP = { map: null, markers: new Map(), filter: new Set(), tour: null, tourIdx: 0 };
-const TOUR = ['place-jinan', 'place-jeonju', 'place-korea-univ', 'place-newyork',
-  'place-ssangyong', 'place-assembly'];
+/* 생애 따라가기 — 지도 위에서 읽는 여섯 장면.
+   서술은 구술총서에서 그대로 가져온 사실만 쓴다. 각 막의 refs 는 그 장면이
+   기대고 있는 개체이고, 눌러서 상세로 갈 수 있다. */
+const STORY = {
+  title: '진안에서 여의도까지',
+  sub: '지도 위에서 따라가는 정세균의 여섯 장면',
+  desc: '1950년 전북 진안의 산골에서 시작해 여의도 국회의사당까지 — '
+      + '구술총서가 말한 자리들을 순서대로 밟아 갑니다.',
+  acts: [
+    { place: 'place-jinan', year: '1950', title: '산골에서 시작하다',
+      narr: '전라북도 진안에서 태어났습니다. 아버지는 시골에서 약종상을 하며 면의원을 지냈고, '
+          + '5대조 할아버지는 문과에 급제해 참판을 지냈다고 구술했습니다.',
+      refs: ['agent-jsk'] },
+    { place: 'place-jeonju', year: '1969', title: '전주로 나오다',
+      narr: '가정 형편 때문에 전주공업고등학교에 들어갔다가, 대학 진학을 권한 한기창 선생님을 만나 '
+          + '인문계인 신흥고등학교로 옮겨 졸업했습니다.',
+      refs: [] },
+    { place: 'place-korea-univ', year: '1973', title: '총학생회장이 되다',
+      narr: '고려대학교 법과대학에 진학해 고대신문 기자를 거쳐 1973년 총학생회장에 당선되었습니다. '
+          + '유신 체제에 반대하는 시위를 주도하다 성북서에 며칠 유치되기도 했습니다.',
+      refs: ['event-student-pres', 'event-yushin'] },
+    { place: 'place-newyork', year: '1978–1995', title: '기업인 정세균',
+      narr: '제대 후 쌍용그룹 공채로 입사해 뉴욕지점 주재원으로 나갔고, '
+          + '미국 페퍼다인대학교에서 경영학 석사를 마쳤습니다. 1995년 상무이사로 퇴사할 때까지 17년.',
+      refs: ['org-ssangyong', 'event-pepperdine'] },
+    { place: 'place-ssangyong', year: '1996', title: '정치를 시작하다',
+      narr: '김대중 총재의 권유로 새정치국민회의에 입당해, 무주·진안·장수 선거구에서 '
+          + '제15대 국회의원에 당선되었습니다. “새 시대, 새 정치, 새 인물”을 내걸었습니다.',
+      refs: ['event-elected-15', 'org-nca', 'agent-kdj'] },
+    { place: 'place-assembly', year: '2016–2018', title: '의사봉을 들다',
+      narr: '제20대 국회 전반기 국회의장에 선출되었습니다. 재임 중 박근혜 대통령 탄핵소추안 '
+          + '가결을 선포했고, 국회의원 특권 내려놓기와 국회 청소노동자 정규직 전환을 추진했습니다.',
+      refs: ['pos-speaker-20-1', 'event-impeach-park', 'event-cleaner'] },
+  ],
+};
+const TOUR = STORY.acts.map(a => a.place);
 
 function placeNodes() {
   return G.nodes.filter(n => n.cls === 'Place' && n.lat != null);
@@ -283,14 +317,42 @@ window.mapFilter = k => {
   });
   renderMapList(); fitMap();
 };
+const sid = u => String(u).replace('http://archives.nanet.go.kr/id/', '');
+
+/** 이 장소에 걸린 개체들. 무엇이 걸렸는지가 장소의 뜻이다. */
+function placeLinks(id) {
+  const out = [];
+  G.edges.forEach(e => {
+    if (e.o === id) { const o = G.byId.get(e.s); if (o) out.push({ o, p: e.p }); }
+    if (e.s === id) { const o = G.byId.get(e.o); if (o) out.push({ o, p: e.p }); }
+  });
+  return out.sort((a, b) => (b.o.deg || 0) - (a.o.deg || 0));
+}
+const entChip = (o, rel) => `<a class="chip ent-chip${o.img ? ' has-img' : ''}"
+  href="#/item/${encodeURIComponent(sid(o.id))}" onclick="event.stopPropagation()"
+  title="${esc(o.label)} 상세 보기">
+  ${o.img ? `<img src="${esc(o.img)}" alt="" loading="lazy">`
+          : `<i class="dot" style="background:${clsColor(o.cls)}"></i>`}
+  ${esc(o.label)}${rel ? `<span class="rel">${esc(REL_KO[rel] || rel)}</span>` : ''}</a>`;
+
 function renderMapList() {
   const vis = placeNodes().filter(p => MAP.filter.has(p.kind));
   $('#mapCount').textContent = vis.length;
   $('#mapItems').innerHTML = vis.map(p => {
-    const linked = G.edges.filter(e => e.o === p.id).length;
-    return `<div class="mi" data-id="${esc(p.id)}" onclick="selectPlace('${esc(p.id)}')">
-      <i class="dot" style="background:var(--place)"></i>
-      <div><b>${esc(p.label)}</b><span>${esc(p.kind)}${linked ? ` · 연결 ${linked}` : ''}</span></div></div>`;
+    const links = placeLinks(p.id);
+    return `<div class="mi${p.img ? ' has-img' : ''}" data-id="${esc(p.id)}"
+        onclick="selectPlace('${esc(p.id)}')">
+      ${p.img ? `<img class="mi-thumb" src="${esc(p.img)}" alt="" loading="lazy">`
+              : `<i class="dot" style="background:var(--place)"></i>`}
+      <div class="mi-body">
+        <b>${esc(p.label)}</b>
+        <span>${esc(p.kind)}${links.length ? ` · 연결 ${links.length}` : ''}</span>
+        ${links.length ? `<div class="mi-chips">
+          ${links.slice(0, 4).map(l => entChip(l.o, l.p)).join('')}
+          ${links.length > 4 ? `<a class="chip more" href="#/item/${encodeURIComponent(sid(p.id))}"
+             onclick="event.stopPropagation()">+${links.length - 4}</a>` : ''}
+        </div>` : ''}
+      </div></div>`;
   }).join('');
 }
 window.selectPlace = id => {
@@ -300,19 +362,59 @@ window.selectPlace = id => {
   document.querySelectorAll('.mi').forEach(e => e.classList.toggle('on', e.dataset.id === id));
   document.querySelector(`.mi[data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'nearest' });
 };
+/* ── 생애 따라가기 ──
+   자동으로 넘어가던 것을 읽는 것으로 바꿨다. 2.6초마다 지도가 튀면 글을 읽을 수가 없다.
+   인트로 → 막 카드 → 좌우 버튼(또는 ←/→ 키)으로 다음 자리. */
 window.toggleTour = () => {
-  if (MAP.tour) { clearInterval(MAP.tour); MAP.tour = null; $('#tourBtn').textContent = '▶ 생애 따라가기'; $('#tourLabel').textContent = ''; return; }
-  MAP.tourIdx = 0; $('#tourBtn').textContent = '■ 정지';
-  const step = () => {
-    const ids = TOUR.map(t => 'http://archives.nanet.go.kr/id/' + t).filter(i => G.byId.has(i));
-    if (MAP.tourIdx >= ids.length) { window.toggleTour(); return; }
-    const id = ids[MAP.tourIdx];
-    selectPlace(id);
-    $('#tourLabel').textContent = `${MAP.tourIdx + 1}/${ids.length} · ${G.byId.get(id).label}`;
-    MAP.tourIdx++;
-  };
-  step(); MAP.tour = setInterval(step, 2600);
+  const on = !document.body.classList.contains('story-on');
+  document.body.classList.toggle('story-on', on);
+  $('#tourBtn').textContent = on ? '■ 이야기 닫기' : '▶ 생애 따라가기';
+  if (!on) { $('#storyLayer').innerHTML = ''; return; }
+  MAP.act = -1;
+  $('#storyLayer').innerHTML = `
+    <div class="story-intro">
+      <div class="si-inner">
+        <div class="kicker">생애 따라가기 · ${STORY.acts.length}막</div>
+        <h3>${esc(STORY.title)}</h3>
+        <p class="sub">${esc(STORY.sub)}</p>
+        <p class="desc">${esc(STORY.desc)}</p>
+        <button class="btn primary" onclick="storyGo(0)">지도 위에서 시작 →</button>
+        <button class="btn sm ghost" onclick="toggleTour()">닫기</button>
+      </div>
+    </div>`;
 };
+
+window.storyGo = i => {
+  const n = STORY.acts.length;
+  if (i < 0 || i >= n) { window.toggleTour(); return; }
+  MAP.act = i;
+  const a = STORY.acts[i];
+  const pid = 'http://archives.nanet.go.kr/id/' + a.place;
+  if (G.byId.has(pid)) selectPlace(pid);
+  const refs = a.refs.map(r => G.byId.get('http://archives.nanet.go.kr/id/' + r))
+    .filter(Boolean).map(o => entChip(o)).join('');
+  $('#storyLayer').innerHTML = `
+    <button class="story-arrow prev" ${i === 0 ? 'disabled' : ''}
+      onclick="storyGo(${i - 1})" aria-label="이전">‹</button>
+    <div class="story-card">
+      <div class="act">제${i + 1}막 · ${n}막 중<em>${esc(a.year)}</em></div>
+      <h4>${esc(a.title)}</h4>
+      <p>${esc(a.narr)}</p>
+      ${refs ? `<div class="chips refs">${refs}</div>` : ''}
+      <div class="foot">
+        <div class="prog"><i style="width:${(i + 1) / n * 100}%"></i></div>
+        <button class="btn sm" onclick="toggleTour()">닫기</button>
+      </div>
+    </div>
+    <button class="story-arrow next" onclick="storyGo(${i + 1})"
+      aria-label="${i === n - 1 ? '끝내기' : '다음'}">${i === n - 1 ? '✓' : '›'}</button>`;
+};
+
+addEventListener('keydown', e => {
+  if (!document.body.classList.contains('story-on') || MAP.act === undefined || MAP.act < 0) return;
+  if (e.key === 'ArrowRight') window.storyGo(MAP.act + 1);
+  if (e.key === 'ArrowLeft') window.storyGo(MAP.act - 1);
+});
 
 /* ══════════ 연표 ══════════ */
 const TL = { filter: new Set() };
@@ -359,10 +461,14 @@ function renderTimeline() {
   const W = Math.ceil(prev + 160);
   axis.style.width = track.style.width = W + 'px';
 
+  // 눈금은 밀린 좌표에서 다시 읽는다. 사건이 없는 구간에서는 여러 눈금이 한 점에
+  // 겹치므로, 너무 가까우면 뒤엣것을 버린다.
   const ticks = [];
   for (let y = Math.ceil(y0 / 5) * 5; y <= y1; y += 5) {
     const at = placed.find(e => e.year >= y);
-    ticks.push({ y, x: at ? at.x : W });
+    const x = at ? at.x : W;
+    if (ticks.length && x - ticks[ticks.length - 1].x < 46) continue;
+    ticks.push({ y, x });
   }
   axis.innerHTML = '<div class="tl-line"></div>' +
     ticks.map(t => `<div class="yr" style="left:${t.x}px">${t.y}</div>`).join('');

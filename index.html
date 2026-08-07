@@ -286,6 +286,54 @@ body.item-open{overflow:hidden}
 :root.records-on #heroZone,:root.records-on main,:root.records-on footer{display:none}
 .rec-back{display:inline-block;margin-bottom:1rem;font-size:.86rem;text-decoration:none}
 
+/* ───── 지도 목록 ───── */
+.mi.has-img{display:grid;grid-template-columns:52px 1fr;gap:.6rem;align-items:start}
+.mi-thumb{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.mi-body{min-width:0}
+.mi-chips{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.35rem}
+.mi-chips .chip{font-size:.74rem;padding:.18rem .5rem}
+.mi-chips .ent-chip img{width:16px;height:16px}
+.mi-chips .chip.more{color:var(--muted);text-decoration:none}
+
+/* ───── 생애 따라가기 ───── */
+.map-wrap{position:relative}
+#storyLayer{position:absolute;inset:0;z-index:500;pointer-events:none;display:none}
+body.story-on #storyLayer{display:block}
+#storyLayer>*{pointer-events:auto}
+.story-intro{position:absolute;inset:0;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(6px)}
+.si-inner{max-width:44ch;text-align:center;padding:1.6rem}
+.si-inner h3{font-family:var(--serif);font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);
+  margin:.3rem 0 .4rem;letter-spacing:-.03em}
+.si-inner .sub{color:var(--fg);font-size:.95rem;margin:0 0 .6rem;font-weight:600}
+.si-inner .desc{color:var(--muted);font-size:.9rem;margin:0 0 1.2rem;word-break:keep-all}
+.si-inner .kicker{justify-content:center}
+.si-inner .kicker::after{display:none}
+.si-inner .btn.ghost{background:transparent;border-color:transparent;color:var(--muted);margin-left:.4rem}
+
+.story-card{position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);
+  width:min(560px,calc(100% - 6rem));background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.2rem;animation:sIn .35s ease}
+@keyframes sIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.story-card .act{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--accent);
+  display:flex;gap:.6rem;align-items:baseline}
+.story-card .act em{font-style:normal;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.story-card h4{font-family:var(--serif);font-size:1.2rem;margin:.35rem 0 .4rem;letter-spacing:-.02em}
+.story-card p{margin:0 0 .7rem;font-size:.9rem;line-height:1.7;color:var(--fg);word-break:keep-all}
+.story-card .refs{margin:0 0 .7rem}
+.story-card .foot{display:flex;align-items:center;gap:.8rem}
+.story-card .prog{flex:1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.story-card .prog i{display:block;height:100%;background:var(--accent);transition:width .4s}
+.story-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;
+  border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);
+  font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:var(--shadow);transition:all .15s}
+.story-arrow:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.story-arrow:disabled{opacity:.3;cursor:default}
+.story-arrow.prev{left:1rem}
+.story-arrow.next{right:1rem}
+@media(max-width:640px){.story-card{width:calc(100% - 2rem);bottom:.6rem}
+  .story-arrow{width:34px;height:34px}.story-arrow.prev{left:.4rem}.story-arrow.next{right:.4rem}}
+
 /* ───── 연표 카드 ───── */
 .tl-ev .bub.has-img{display:inline-flex;align-items:center;gap:.35rem;padding-left:.25rem}
 .tl-ev .bub.has-img img{width:18px;height:18px;object-fit:cover;border-radius:4px;flex:none}
@@ -543,10 +591,10 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <div class="chips" id="mapChips"></div>
     <div class="chips" style="margin-top:-.4rem">
       <button class="btn sm primary" id="tourBtn" onclick="toggleTour()">▶ 생애 따라가기</button>
-      <span class="status" id="tourLabel"></span>
     </div>
     <div class="panel map-wrap">
       <div id="map"></div>
+      <div id="storyLayer"></div>
       <div class="map-list"><h4>자원 <span id="mapCount">0</span></h4><div id="mapItems"></div></div>
     </div>
   </section>
@@ -556,8 +604,9 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <div class="sec-head">
       <button class="fs-btn" onclick="fullscreen('event')">⤢ 전체화면</button>
       <div class="kicker">Timeline</div>
-      <h2>1972 유신에서 2018 퇴임까지</h2>
-      <p>사건 <b id="nEvent">–</b>건. 색은 영역, 높이는 겹침을 피한 배치입니다.
+      <h2>사건이 놓인 자리</h2>
+      <p>구술과 부록 연표에서 뽑은 사건 <b id="nEvent">–</b>건을 시간 위에 놓았습니다.
+         같은 해에 몰린 것은 순서를 지키며 옆으로 밀어 두었으니, 가로로 밀어 보세요.
          유형 칩으로 걸러 보고 항목을 누르면 상세가 열립니다.</p>
     </div>
     <div class="chips" id="tlChips"></div>

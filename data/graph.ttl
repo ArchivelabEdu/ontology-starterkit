@@ -617,8 +617,10 @@ ric:activity-energy-welfare a rico:Activity ;
 
 ric:activity-five-year-economic-development-plan a rico:Activity ;
   rico:name "경제개발 5개년 계획" ;
+  rico:beginningDate "1962" ;
   rico:identifier "activity-five-year-economic-development-plan" ;
   rico:identifier "urn:uuid:4111cd1f-14b7-5650-8043-0c6463c48dd1" ;
+  foaf:depiction "assets/media/activity-five-year-economic-development-plan.jpg" ;
   rico:descriptiveNote "p.25" .
 
 ric:activity-four-reform-bills a rico:Activity ;
@@ -758,6 +760,7 @@ ric:event-20th-general-election a rico:Event ;
   rico:name "제20대 국회의원선거" ;
   rico:identifier "event-20th-general-election" ;
   rico:identifier "urn:uuid:998c8f78-f42d-5a07-9722-1eb0ca2f1a8c" ;
+  foaf:depiction "assets/media/event-20th-general-election.jpg" ;
   rico:descriptiveNote "p.167,168,169,171" .
 
 ric:event-appf-assembly-2017 a rico:Event ;
@@ -773,6 +776,7 @@ ric:event-april-19-revolution a rico:Event ;
   rico:name "4·19혁명" ;
   rico:identifier "event-april-19-revolution" ;
   rico:identifier "urn:uuid:1833f611-3693-5e93-b99f-8fbe49c4fc96" ;
+  foaf:depiction "assets/media/event-april-19-revolution.jpg" ;
   rico:descriptiveNote "p.228" .
 
 ric:event-arrest-motion-vote-2018 a rico:Event ;
@@ -952,6 +956,7 @@ ric:event-candlelight a rico:Event ;
   rico:name "촛불집회" ;
   rico:identifier "event-candlelight" ;
   rico:identifier "urn:uuid:db4a2beb-0930-5b4f-afe4-bfc38c93312c" ;
+  foaf:depiction "assets/media/event-candlelight.jpg" ;
   rico:descriptiveNote "p.202" .
 
 ric:event-candlelight-rally-3rd a rico:Event ;
@@ -1803,8 +1808,10 @@ ric:event-october-yushin a rico:Event ;
 
 ric:event-panmunjom-declaration a rico:Event ;
   rico:name "판문점 선언" ;
+  rico:beginningDate "2018-04-27" ;
   rico:identifier "event-panmunjom-declaration" ;
   rico:identifier "urn:uuid:9d45f6bf-c715-5984-b06e-938bf79f15a9" ;
+  foaf:depiction "assets/media/event-panmunjom-declaration.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q52222422> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%ED%8C%90%EB%AC%B8%EC%A0%90_%EC%84%A0%EC%96%B8> ;
   rico:descriptiveNote "p.192" .
@@ -2002,8 +2009,10 @@ ric:event-sanjabu-hearing-2006 a rico:Event ;
 ric:event-sasaoip-constitutional-amendment a rico:Event ;
   rico:name "사사오입개헌" ;
   rico:generalDescription "자유당이 정족수 미달의 헌법개정안을 불법 통과시킨 제2차 헌법 개정" ;
+  rico:beginningDate "1954-11-27" ;
   rico:identifier "event-sasaoip-constitutional-amendment" ;
   rico:identifier "urn:uuid:d38bcc88-ee80-5768-95dd-7565892becd6" ;
+  foaf:depiction "assets/media/event-sasaoip-constitutional-amendment.jpg" ;
   rico:descriptiveNote "p.228" .
 
 ric:event-seomun-market-fire a rico:Event ;
@@ -2214,6 +2223,7 @@ ric:org-bareunmirae-dang a rico:CorporateBody ;
   rico:name "바른미래당" ;
   rico:identifier "org-bareunmirae-dang" ;
   rico:identifier "urn:uuid:e4d823cc-8e9c-52df-bad9-23ee964dc466" ;
+  foaf:depiction "assets/media/org-bareunmirae-dang.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q47537429> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%B0%94%EB%A5%B8%EB%AF%B8%EB%9E%98%EB%8B%B9> ;
   rico:descriptiveNote "p.201,203" .
@@ -2222,6 +2232,7 @@ ric:org-budget-settlement-committee a rico:CorporateBody ;
   rico:name "국회 예산결산특별위원회" ;
   rico:identifier "org-budget-settlement-committee" ;
   rico:identifier "urn:uuid:e904155d-7184-5385-ac95-39f94b14a8bf" ;
+  foaf:depiction "assets/media/org-budget-settlement-committee.png" ;
   rico:descriptiveNote "p.12,13" .
 
 ric:org-cheong-wa-dae a rico:CorporateBody ;
@@ -2229,6 +2240,7 @@ ric:org-cheong-wa-dae a rico:CorporateBody ;
   rico:generalDescription "대통령 비서 조직." ;
   rico:identifier "org-cheong-wa-dae" ;
   rico:identifier "urn:uuid:1dc026c2-0b17-59da-9460-0ab4fd0ad4c2" ;
+  foaf:depiction "assets/media/org-cheong-wa-dae.png" ;
   rico:descriptiveNote "p.88,134,179,197,204,211" .
 
 ric:org-chinnohmuhyun-pa a rico:CorporateBody ;
@@ -2258,6 +2270,7 @@ ric:org-columbia-university a rico:CorporateBody ;
   rico:name "컬럼비아대" ;
   rico:identifier "org-columbia-university" ;
   rico:identifier "urn:uuid:ea0a68e8-d58e-51dd-8d59-d7921bc073e5" ;
+  foaf:depiction "assets/media/org-columbia-university.jpg" ;
   rico:descriptiveNote "p.48" .
 
 ric:org-competent-economic-party-committee a rico:CorporateBody ;
@@ -2285,6 +2298,7 @@ ric:org-constitutional-court a rico:CorporateBody ;
   rico:generalDescription "헌법재판소를 가리키는 약칭." ;
   rico:identifier "org-constitutional-court" ;
   rico:identifier "urn:uuid:6087605e-f674-5191-8e8f-d8e09af8444b" ;
+  foaf:depiction "assets/media/org-constitutional-court.jpg" ;
   rico:descriptiveNote "p.121,203,204,206" .
 
 ric:org-construction-transportation-committee a rico:CorporateBody ;
@@ -2315,6 +2329,7 @@ ric:org-daetonghap-minju-sindang a rico:CorporateBody ;
   rico:name "대통합민주신당" ;
   rico:identifier "org-daetonghap-minju-sindang" ;
   rico:identifier "urn:uuid:f7a3be9a-6c8c-53cc-ab8c-5286a74bbe2d" ;
+  foaf:depiction "assets/media/org-daetonghap-minju-sindang.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q483770> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%ED%86%B5%ED%95%A9%EB%AF%BC%EC%A3%BC%EC%8B%A0%EB%8B%B9> ;
   rico:descriptiveNote "p.115" .
@@ -2337,6 +2352,7 @@ ric:org-deobureo-minjudang a rico:CorporateBody ;
   rico:generalDescription "정당" ;
   rico:identifier "org-deobureo-minjudang" ;
   rico:identifier "urn:uuid:eb921acc-912d-562a-adec-bb9337b41156" ;
+  foaf:depiction "assets/media/org-deobureo-minjudang.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q15978686> ;
   owl:sameAs <http://viaf.org/viaf/1363152200775714400004> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8D%94%EB%B6%88%EC%96%B4%EB%AF%BC%EC%A3%BC%EB%8B%B9> ;
@@ -2362,6 +2378,7 @@ ric:org-donggyodong-gye a rico:CorporateBody ;
   rico:name "동교동계" ;
   rico:identifier "org-donggyodong-gye" ;
   rico:identifier "urn:uuid:9c3cdeb5-9ee0-5c95-81e2-144b3c2123cb" ;
+  foaf:depiction "assets/media/org-donggyodong-gye.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q16181943> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8F%99%EA%B5%90%EB%8F%99%EA%B3%84> ;
   rico:descriptiveNote "p.113" .
@@ -2376,6 +2393,7 @@ ric:org-education-culture-sports-tourism-committee a rico:CorporateBody ;
   rico:name "국회 교육문화체육관광위원회" ;
   rico:identifier "org-education-culture-sports-tourism-committee" ;
   rico:identifier "urn:uuid:496c0302-3ef1-564e-acf4-92c2350dfa0c" ;
+  foaf:depiction "assets/media/org-education-culture-sports-tourism-committee.png" ;
   rico:descriptiveNote "p.14" .
 
 ric:org-environment-labor-committee a rico:CorporateBody ;
@@ -2383,6 +2401,7 @@ ric:org-environment-labor-committee a rico:CorporateBody ;
   rico:generalDescription "전교조 합법화 약속을 지키기 위해 구술자가 옮겨간 상임위원회." ;
   rico:identifier "org-environment-labor-committee" ;
   rico:identifier "urn:uuid:13039a28-f94a-5d6a-bd6b-84d86fa63e58" ;
+  foaf:depiction "assets/media/org-environment-labor-committee.png" ;
   rico:descriptiveNote "p.86" .
 
 ric:org-eu a rico:CorporateBody ;
@@ -2606,6 +2625,7 @@ ric:org-jayu-hangukdang a rico:CorporateBody ;
   rico:name "자유한국당" ;
   rico:identifier "org-jayu-hangukdang" ;
   rico:identifier "urn:uuid:a4fefd2d-605f-5615-a15b-668fae88fdbd" ;
+  foaf:depiction "assets/media/org-jayu-hangukdang.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q20916> ;
   owl:sameAs <http://viaf.org/viaf/6689167025412153390007> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%9E%90%EC%9C%A0%ED%95%9C%EA%B5%AD%EB%8B%B9> ;
@@ -2615,6 +2635,7 @@ ric:org-jeonbuk-national-university a rico:CorporateBody ;
   rico:name "전북대학교" ;
   rico:identifier "org-jeonbuk-national-university" ;
   rico:identifier "urn:uuid:2d50c497-d736-59dc-980a-8be7ec19e5f6" ;
+  foaf:depiction "assets/media/org-jeonbuk-national-university.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q623851> ;
   owl:sameAs <http://viaf.org/viaf/134424645> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%A0%84%EB%B6%81%EB%8C%80%ED%95%99%EA%B5%90> ;
@@ -2663,6 +2684,7 @@ ric:org-jeonju-technical-high-school a rico:CorporateBody ;
   rico:name "전주공업고등학교" ;
   rico:identifier "org-jeonju-technical-high-school" ;
   rico:identifier "urn:uuid:342a7459-0976-5e02-84aa-11f1a1840336" ;
+  foaf:depiction "assets/media/org-jeonju-technical-high-school.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q12615301> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%A0%84%EC%A3%BC%EA%B3%B5%EC%97%85%EA%B3%A0%EB%93%B1%ED%95%99%EA%B5%90> ;
   rico:descriptiveNote "p.25,26,28" .
@@ -2788,6 +2810,7 @@ ric:org-minjokilbo a rico:CorporateBody ;
   rico:name "민족일보" ;
   rico:identifier "org-minjokilbo" ;
   rico:identifier "urn:uuid:255c4933-a894-545b-b810-0d76ab73a9eb" ;
+  foaf:depiction "assets/media/org-minjokilbo.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q16172277> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%AF%BC%EC%A1%B1%EC%9D%BC%EB%B3%B4> ;
   rico:descriptiveNote "p.129" .
@@ -2837,6 +2860,7 @@ ric:org-moon-jae-in-government a rico:CorporateBody ;
   rico:name "문재인 정부" ;
   rico:identifier "org-moon-jae-in-government" ;
   rico:identifier "urn:uuid:263563b6-4f97-5a07-9ce6-7a5278a90002" ;
+  foaf:depiction "assets/media/org-moon-jae-in-government.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q31180800> ;
   owl:sameAs <http://viaf.org/viaf/2480155226703484490007> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%AC%B8%EC%9E%AC%EC%9D%B8_%EC%A0%95%EB%B6%80> ;
@@ -2877,6 +2901,7 @@ ric:org-national-assembly-20 a rico:CorporateBody ;
   rico:generalDescription "구술 시점에 구술자가 후반기 활동을 하던 국회" ;
   rico:identifier "org-national-assembly-20" ;
   rico:identifier "urn:uuid:a6b9abc3-f6a7-5816-83da-aff6188e8142" ;
+  foaf:depiction "assets/media/org-national-assembly-20.jpg" ;
   rico:descriptiveNote "p.247" .
 
 ric:org-national-assembly-archives a rico:CorporateBody ;
@@ -2915,6 +2940,7 @@ ric:org-national-assembly-steering-committee a rico:CorporateBody ;
   rico:name "국회운영위원회" ;
   rico:identifier "org-national-assembly-steering-committee" ;
   rico:identifier "urn:uuid:6362531b-2864-5da8-9097-e8a8ee39a880" ;
+  foaf:depiction "assets/media/org-national-assembly-steering-committee.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q12592033> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EA%B5%AD%ED%9A%8C_%EA%B5%AD%ED%9A%8C%EC%9A%B4%EC%98%81%EC%9C%84%EC%9B%90%ED%9A%8C> ;
   rico:descriptiveNote "p.12,13" .
@@ -2923,12 +2949,14 @@ ric:org-national-defense-committee a rico:CorporateBody ;
   rico:name "국회 국방위원회" ;
   rico:identifier "org-national-defense-committee" ;
   rico:identifier "urn:uuid:bb2a26cf-0fa3-5d5e-9c72-dca8d0c50677" ;
+  foaf:depiction "assets/media/org-national-defense-committee.png" ;
   rico:descriptiveNote "p.14" .
 
 ric:org-nonglim-chuksan-sikpumbu a rico:CorporateBody ;
   rico:name "농림축산식품부" ;
   rico:identifier "org-nonglim-chuksan-sikpumbu" ;
   rico:identifier "urn:uuid:a7e2759d-ff8f-5123-a81e-0be88c9242cf" ;
+  foaf:depiction "assets/media/org-nonglim-chuksan-sikpumbu.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q624460> ;
   owl:sameAs <http://viaf.org/viaf/144481399> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EB%86%8D%EB%A6%BC%EC%B6%95%EC%82%B0%EC%8B%9D%ED%92%88%EB%B6%80> ;
@@ -2938,6 +2966,7 @@ ric:org-oegyotongsangbu a rico:CorporateBody ;
   rico:name "외교통상부" ;
   rico:identifier "org-oegyotongsangbu" ;
   rico:identifier "urn:uuid:8bda4ec6-0f63-5052-92dc-3d09d483ecbf" ;
+  foaf:depiction "assets/media/org-oegyotongsangbu.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q490373> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%99%B8%EA%B5%90%ED%86%B5%EC%83%81%EB%B6%80> ;
   rico:descriptiveNote "p.137" .
@@ -3016,6 +3045,7 @@ ric:org-saneopjawonbu a rico:CorporateBody ;
   rico:generalDescription "구술자가 2006년 장관 청문회를 치른 부처." ;
   rico:identifier "org-saneopjawonbu" ;
   rico:identifier "urn:uuid:ee1726e7-87d2-5020-9b94-07adc4872c0c" ;
+  foaf:depiction "assets/media/org-saneopjawonbu.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q12592079> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%82%B0%EC%97%85%EC%9E%90%EC%9B%90%EB%B6%80> ;
   rico:descriptiveNote "p.13,59,112,134,135,137,139,140,143" .
@@ -3058,6 +3088,7 @@ ric:org-sinhangukdang a rico:CorporateBody ;
   rico:generalDescription "제15대 국회의원선거 당시 집권당." ;
   rico:identifier "org-sinhangukdang" ;
   rico:identifier "urn:uuid:86a4798b-2d90-510c-9c7a-42d83f1c311a" ;
+  foaf:depiction "assets/media/org-sinhangukdang.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q7009697> ;
   owl:sameAs <http://viaf.org/viaf/140776265> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%8B%A0%ED%95%9C%EA%B5%AD%EB%8B%B9> ;
@@ -3067,6 +3098,7 @@ ric:org-sinheung-high-school a rico:CorporateBody ;
   rico:name "신흥고등학교" ;
   rico:identifier "org-sinheung-high-school" ;
   rico:identifier "urn:uuid:029e6876-f8ff-5c22-a7c5-2b77d1fc6dd4" ;
+  foaf:depiction "assets/media/org-sinheung-high-school.png" ;
   rico:descriptiveNote "p.12,26,27,34" .
 
 ric:org-sk a rico:CorporateBody ;
@@ -3141,6 +3173,7 @@ ric:org-yeoncheong a rico:CorporateBody ;
   rico:generalDescription "전국 지회를 둔 외곽 청년 조직. 회원 규모는 만 명 정도." ;
   rico:identifier "org-yeoncheong" ;
   rico:identifier "urn:uuid:cc650da3-06dc-5d22-ab07-04858817c768" ;
+  foaf:depiction "assets/media/org-yeoncheong.jpg" ;
   rico:descriptiveNote "p.74,75" .
 
 ric:org-yonsei-university a rico:CorporateBody ;
@@ -4410,6 +4443,7 @@ ric:place-daechi-dong a rico:Place ;
   rico:generalDescription "한보가 있던 곳으로 회고된 지역." ;
   rico:identifier "place-daechi-dong" ;
   rico:identifier "urn:uuid:983fccad-d101-56e0-8074-e38561260f93" ;
+  foaf:depiction "assets/media/place-daechi-dong.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q2647655> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%8C%80%EC%B9%98%EB%8F%99> ;
   rico:descriptiveNote "p.70" .
@@ -4600,6 +4634,7 @@ ric:place-honam a rico:Place ;
   geo:lat "35.3000" ; geo:long "126.9000" ;
   rico:identifier "place-honam" ;
   rico:identifier "urn:uuid:4152cfc5-7e9c-58f3-a2b7-5a4129601010" ;
+  foaf:depiction "assets/media/place-honam.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q494131> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%ED%98%B8%EB%82%A8_%EC%A7%80%EB%B0%A9> ;
   rico:descriptiveNote "p.57,58,91,149,156,168" .
@@ -4795,6 +4830,7 @@ ric:place-norway a rico:Place ;
   rico:name "노르웨이" ;
   rico:identifier "place-norway" ;
   rico:identifier "urn:uuid:bd67201a-72a6-52c6-a989-b1571edad891" ;
+  foaf:depiction "assets/media/place-norway.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q20> ;
   owl:sameAs <http://viaf.org/viaf/155855229> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EB%85%B8%EB%A5%B4%EC%9B%A8%EC%9D%B4> ;
@@ -4843,6 +4879,7 @@ ric:place-sanggye-dong a rico:Place ;
   rico:name "상계동" ;
   rico:identifier "place-sanggye-dong" ;
   rico:identifier "urn:uuid:1f5469c0-d0db-5a87-a518-5c7b866dbb66" ;
+  foaf:depiction "assets/media/place-sanggye-dong.jpg" ;
   owl:sameAs <http://www.wikidata.org/entity/Q2681417> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%83%81%EA%B3%84%EB%8F%99> ;
   rico:descriptiveNote "p.187" .
@@ -4997,6 +5034,7 @@ ric:place-yeongil a rico:Place ;
   rico:generalDescription "구술자 장인의 출신지이자 세 차례 출마한 지역." ;
   rico:identifier "place-yeongil" ;
   rico:identifier "urn:uuid:fb68b1b0-e0db-51b7-a752-5fa60ec69ef2" ;
+  foaf:depiction "assets/media/place-yeongil.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q12607477> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%98%81%EC%9D%BC%EA%B5%B0> ;
   rico:descriptiveNote "p.57" .
@@ -5019,6 +5057,7 @@ ric:place-yeongnam a rico:Place ;
   geo:lat "35.8000" ; geo:long "128.6000" ;
   rico:identifier "place-yeongnam" ;
   rico:identifier "urn:uuid:828390f2-e83c-5525-bc86-27665ef66944" ;
+  foaf:depiction "assets/media/place-yeongnam.png" ;
   owl:sameAs <http://www.wikidata.org/entity/Q487576> ;
   owl:sameAs <https://ko.wikipedia.org/wiki/%EC%98%81%EB%82%A8_%EC%A7%80%EB%B0%A9> ;
   rico:descriptiveNote "p.91,156" .
@@ -6310,9 +6349,11 @@ ric:agent-kdj owl:sameAs <https://ko.wikipedia.org/wiki/%EA%B9%80%EB%8C%80%EC%A4
 ric:agent-gnk owl:sameAs <http://www.wikidata.org/entity/Q12586058> .
 ric:agent-gnk owl:sameAs <http://viaf.org/viaf/51627472> .
 ric:agent-gnk owl:sameAs <https://ko.wikipedia.org/wiki/%EA%B6%8C%EB%85%B8%EA%B0%91> .
+ric:place-korea-univ foaf:depiction "assets/media/org-korea-university.jpg" .
 ric:place-korea-univ owl:sameAs <http://www.wikidata.org/entity/Q39997> .
 ric:place-korea-univ owl:sameAs <http://viaf.org/viaf/123145546> .
 ric:place-korea-univ owl:sameAs <https://ko.wikipedia.org/wiki/%EA%B3%A0%EB%A0%A4%EB%8C%80%ED%95%99%EA%B5%90> .
+ric:org-ssangyong foaf:depiction "assets/media/org-ssangyong-group.png" .
 ric:org-ssangyong owl:sameAs <http://www.wikidata.org/entity/Q7586628> .
 ric:org-ssangyong owl:sameAs <https://ko.wikipedia.org/wiki/%EC%8C%8D%EC%9A%A9%EA%B7%B8%EB%A3%B9> .
 ric:place-newyork foaf:depiction "assets/media/place-new-york.jpg" .
@@ -6329,6 +6370,7 @@ ric:agent-pgh foaf:depiction "assets/media/person-park-geun-hye.png" .
 ric:agent-pgh owl:sameAs <http://www.wikidata.org/entity/Q138048> .
 ric:agent-pgh owl:sameAs <http://viaf.org/viaf/33284471> .
 ric:agent-pgh owl:sameAs <https://ko.wikipedia.org/wiki/%EB%B0%95%EA%B7%BC%ED%98%9C> .
+ric:org-nca foaf:depiction "assets/media/org-saejeongchi-gukminhoeui.png" .
 ric:org-nca owl:sameAs <http://www.wikidata.org/entity/Q11249759> .
 ric:org-nca owl:sameAs <http://viaf.org/viaf/305167256> .
 ric:org-nca owl:sameAs <https://ko.wikipedia.org/wiki/%EC%83%88%EC%A0%95%EC%B9%98%EA%B5%AD%EB%AF%BC%ED%9A%8C%EC%9D%98> .
@@ -6340,6 +6382,7 @@ ric:agent-kkt owl:sameAs <http://viaf.org/viaf/58961448> .
 ric:agent-kkt owl:sameAs <https://ko.wikipedia.org/wiki/%EA%B9%80%EA%B7%BC%ED%83%9C_%281947%EB%85%84%29> .
 ric:event-impeach-roh owl:sameAs <http://www.wikidata.org/entity/Q10856174> .
 ric:event-impeach-roh owl:sameAs <https://ko.wikipedia.org/wiki/%EB%85%B8%EB%AC%B4%ED%98%84_%EB%8C%80%ED%86%B5%EB%A0%B9_%ED%83%84%ED%95%B5%EC%86%8C%EC%B6%94> .
+ric:org-uri foaf:depiction "assets/media/org-yeollinuri.png" .
 ric:org-uri owl:sameAs <http://www.wikidata.org/entity/Q489124> .
 ric:org-uri owl:sameAs <https://ko.wikipedia.org/wiki/%EC%97%B4%EB%A6%B0%EC%9A%B0%EB%A6%AC%EB%8B%B9> .
 ric:place-nanet foaf:depiction "assets/media/org-national-assembly-library.jpg" .
