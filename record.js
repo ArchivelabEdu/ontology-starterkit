@@ -9,7 +9,8 @@ import { G, CLS, REL_KO, RICO, esc, $, clsColor } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
 const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule'];
-const R = { q: '', cls: new Set(), built: false };
+const PAGE = 24;                       // 유형마다 먼저 보여 주는 개수
+const R = { q: '', cls: new Set(), more: new Set(), built: false };
 
 /* RiC-O 가 owl:inverseOf 로 짝지어 둔 속성들. 프로파일 §4 에서 검증한 9쌍. */
 const PAIRS = [
@@ -50,7 +51,7 @@ export function initRecord() {
   route();
 }
 
-window.recSearch = v => { R.q = v.trim().toLowerCase(); draw(); };
+window.recSearch = v => { R.q = v.trim().toLowerCase(); R.more.clear(); draw(); };
 window.recFacet = c => {
   const used = ORDER.filter(x => R.items.some(n => n.cls === x));
   if (c === '*') R.cls = R.cls.size === used.length ? new Set() : new Set(used);
@@ -84,13 +85,18 @@ function draw() {
   const groups = ORDER.filter(c => found.some(n => n.cls === c));
   $('#recBody').innerHTML = groups.map(c => {
     const ns = found.filter(n => n.cls === c).sort((a, b) => b.deg - a.deg || a.label.localeCompare(b.label));
+    // 800건을 한꺼번에 그리면 문서가 3만 픽셀이 된다. 유형마다 끊어서 보여 준다.
+    const lim = R.more.has(c) ? ns.length : PAGE;
     return `<div class="rec-group">
       <h4><i class="dot" style="background:${clsColor(c)}"></i>${CLS[c].ko}
         <span>${ns.length}</span></h4>
-      <div class="rec-grid">${ns.map(card).join('')}</div>
+      <div class="rec-grid">${ns.slice(0, lim).map(card).join('')}</div>
+      ${ns.length > lim ? `<button class="btn sm rec-more" onclick="recMore('${c}')">
+        ${CLS[c].ko} ${ns.length - lim}건 더 보기</button>` : ''}
     </div>`;
   }).join('');
 }
+window.recMore = c => { R.more.add(c); draw(); };
 
 function card(n) {
   return `<a class="rec-card" href="#/item/${encodeURIComponent(short(n.id))}">

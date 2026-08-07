@@ -288,23 +288,34 @@ function renderTimeline() {
   const track = $('#tlTrack'), axis = $('#tlAxis');
   if (!evs.length) { track.innerHTML = '<p class="status">표시할 사건이 없습니다.</p>'; return; }
   const y0 = Math.min(...evs.map(e => e.year)) - 2, y1 = Math.max(...evs.map(e => e.year)) + 2;
-  const pos = y => ((y - y0) / (y1 - y0)) * 100;
-  axis.innerHTML = '<div class="tl-line"></div>' +
-    Array.from({ length: Math.ceil((y1 - y0) / 5) + 1 }, (_, i) => y0 + i * 5)
-      .filter(y => y <= y1).map(y => `<div class="yr" style="left:${pos(y)}%">${y}</div>`).join('');
-  // 겹침 회피: 레인 배정
-  const lanes = [];
-  const placed = evs.map(e => {
-    const x = pos(e.year);
-    let lane = lanes.findIndex(last => x - last > 5);
-    if (lane === -1) { lane = lanes.length; lanes.push(x); } else lanes[lane] = x;
-    return { ...e, x, lane };
+
+  /* 연도축을 그대로 쓰면 2016~18 세 해에 84건이 겹쳐 세로로 70줄씩 쌓인다.
+     시간 순서는 지키되, 앞 사건과 너무 가까우면 오른쪽으로 밀어낸다.
+     레인 4줄을 돌려 쓰므로 같은 줄의 이웃은 항상 MIN 만큼 떨어진다.
+     대신 축이 등간격이 아니게 되므로, 연도 눈금도 밀린 좌표에서 다시 읽는다. */
+  const LANES = 4, MIN = 132, BASE = Math.max(900, (y1 - y0) * 22);
+  let prev = -1e9;
+  const placed = evs.map((e, i) => {
+    const x = Math.max(((e.year - y0) / (y1 - y0)) * BASE, prev + MIN / LANES);
+    prev = x;
+    return { ...e, x, lane: i % LANES };
   });
+  const W = Math.ceil(prev + 160);
+  axis.style.width = track.style.width = W + 'px';
+
+  const ticks = [];
+  for (let y = Math.ceil(y0 / 5) * 5; y <= y1; y += 5) {
+    const at = placed.find(e => e.year >= y);
+    ticks.push({ y, x: at ? at.x : W });
+  }
+  axis.innerHTML = '<div class="tl-line"></div>' +
+    ticks.map(t => `<div class="yr" style="left:${t.x}px">${t.y}</div>`).join('');
+
   const H = 40;
-  track.style.height = (lanes.length * H + 30) + 'px';
+  track.style.height = (LANES * H + 30) + 'px';
   track.innerHTML = placed.map(e => {
     const col = css(KIND_COLOR[e.kind] || '--muted');
-    return `<div class="tl-ev" data-id="${esc(e.id)}" style="left:${e.x}%;top:0;color:${col}"
+    return `<div class="tl-ev" data-id="${esc(e.id)}" style="left:${e.x}px;top:0;color:${col}"
         onclick="tlDetail('${esc(e.id)}')">
       <div class="stem" style="height:${e.lane * H + 6}px"></div>
       <div class="bub" title="${esc(e.label)}">${esc(e.label)}</div>
