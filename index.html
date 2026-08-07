@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정세균 구술기록 아카이브 — 지식그래프로 읽다</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f0; --panel:#fffdf8; --fg:#1e1b18; --muted:#7a736a; --line:#e6ded0;
+  --accent:#8f3a24; --accent-2:#b8703f; --accent-soft:#f3e7de;
+  --person:#9b3535; --org:#b08840; --place:#2f6b5c; --event:#5b4b9e;
+  --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a; --activity:#8a6d2f;
+  --ok:#2f6b46; --bad:#a5322b;
+  --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --serif:"Nanum Myeongjo","Apple SD Gothic Neo",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --shadow:0 1px 2px rgba(30,27,24,.04),0 8px 24px rgba(30,27,24,.06);
+}
+:root[data-theme=dark]{
+  --bg:#14130f; --panel:#1c1a16; --fg:#eee9df; --muted:#9b948a; --line:#2f2b24;
+  --accent:#dd8a5f; --accent-2:#c9743f; --accent-soft:#2a211a;
+  --person:#dd7a7a; --org:#dcb264; --place:#6fc0aa; --event:#a294e0;
+  --position:#dfa05c; --record:#c49bd0; --rule:#84b0c4; --activity:#c9ab63;
+  --ok:#7cc39a; --bad:#e08a80;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
+  line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent)}
+
+/* ───── 헤더 ───── */
+header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hw{max-width:1240px;margin:0 auto;padding:.65rem 1.4rem;display:flex;gap:1rem;align-items:center}
+.logo{display:flex;align-items:center;gap:.55rem;font-family:var(--serif);font-weight:800;font-size:1.02rem}
+.logo .mk{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:grid;place-items:center;color:#fff;font-size:.7rem;font-family:var(--sans)}
+.logo small{display:block;font-family:var(--sans);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:.02em}
+nav{margin-left:auto;display:flex;gap:.1rem;align-items:center;flex-wrap:wrap}
+nav a{padding:.4rem .72rem;border-radius:8px;color:var(--fg);text-decoration:none;font-size:.86rem;
+  border-bottom:2px solid transparent}
+nav a:hover{background:var(--accent-soft)}
+nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.ico{padding:.3rem .55rem;border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--fg);cursor:pointer;font-size:.85rem}
+
+/* ───── 히어로 ───── */
+.hero{position:relative;min-height:min(92vh,780px);display:grid;
+  grid-template-columns:1.05fr .95fr;gap:2rem;align-items:center;
+  max-width:1240px;margin:0 auto;padding:3rem 1.4rem 2rem;overflow:hidden}
+.hero-copy{position:relative;z-index:2}
+.kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.kicker::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--accent),transparent);max-width:120px}
+.hero h1{font-family:var(--serif);font-weight:800;font-size:clamp(2.1rem,4.6vw,3.5rem);
+  line-height:1.22;letter-spacing:-.03em;margin:0 0 1.1rem}
+.hero h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.28em;
+  background:var(--accent-soft);z-index:-1;border-radius:2px}
+.hero p{color:var(--muted);font-size:1.03rem;max-width:46ch;margin:0 0 1.6rem}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.hero-stats div{}
+.hero-stats b{display:block;font-family:var(--serif);font-size:1.85rem;font-weight:800;line-height:1;
+  color:var(--accent)}
+.hero-stats span{font-size:.78rem;color:var(--muted)}
+.hero-cta{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.hero-vis{position:relative;height:min(74vh,660px);z-index:1;display:flex;flex-direction:column}
+/* 캔버스에 크기를 직접 주면 자기 intrinsic 크기로 플렉스 레이아웃을 흔든다.
+   래퍼가 크기를 잡고 캔버스는 그 안에 절대배치로 채운다. */
+.hero-stage{position:relative;flex:1;min-height:0}
+#portrait{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+.hero-cap{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;
+  padding:.7rem 0 .35rem;border-top:1px solid var(--line);margin-top:.6rem}
+.hero-cap b{font-family:var(--serif);font-size:1.45rem;color:var(--accent);letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.hero-cap span{font-size:.86rem;color:var(--fg);font-weight:600}
+.hero-cap em{font-size:.7rem;color:var(--muted);font-style:normal;margin-left:auto}
+.hero-cap b,.hero-cap span,.hero-cap em{transition:opacity .4s}
+.hero-cap.fade b,.hero-cap.fade span,.hero-cap.fade em{opacity:0}
+.hero-dots{display:flex;gap:.35rem}
+.hero-dots button{flex:1;height:3px;border:none;border-radius:2px;padding:0;cursor:pointer;
+  background:var(--line);transition:background .3s,height .2s}
+.hero-dots button:hover{height:6px}
+.hero-dots button.on{background:var(--accent);height:6px}
+.hero-hint{position:absolute;top:.5rem;right:.5rem;font-size:.72rem;color:var(--muted);
+  background:color-mix(in srgb,var(--panel) 80%,transparent);padding:.2rem .5rem;border-radius:6px}
+
+/* ───── 섹션 공통 ───── */
+main{max-width:1240px;margin:0 auto;padding:0 1.4rem 6rem}
+section{padding-top:4.5rem;scroll-margin-top:60px}
+.sec-head{margin-bottom:1.5rem}
+.sec-head h2{font-family:var(--serif);font-weight:800;font-size:clamp(1.5rem,2.8vw,2.1rem);
+  letter-spacing:-.025em;margin:.25rem 0 .5rem}
+.sec-head p{color:var(--muted);margin:0;max-width:70ch;font-size:.95rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+
+/* 칩 */
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0}
+.chip{display:inline-flex;align-items:center;gap:.4rem;padding:.36rem .8rem;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit;font-size:.83rem;
+  cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent-2)}
+.chip.on{border-color:currentColor;font-weight:600}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.chip.on.c-person{color:var(--person);background:color-mix(in srgb,var(--person) 10%,transparent)}
+.chip.on.c-org{color:var(--org);background:color-mix(in srgb,var(--org) 10%,transparent)}
+.chip.on.c-place{color:var(--place);background:color-mix(in srgb,var(--place) 10%,transparent)}
+.chip.on.c-event{color:var(--event);background:color-mix(in srgb,var(--event) 10%,transparent)}
+.chip.on.c-position{color:var(--position);background:color-mix(in srgb,var(--position) 12%,transparent)}
+.chip.on.c-record{color:var(--record);background:color-mix(in srgb,var(--record) 10%,transparent)}
+.chip.on.c-rule{color:var(--rule);background:color-mix(in srgb,var(--rule) 10%,transparent)}
+.chip.on.c-activity{color:var(--activity);background:color-mix(in srgb,var(--activity) 10%,transparent)}
+.chip.on.c-all{color:var(--accent);background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* 세그먼트 컨트롤 */
+.seg{display:inline-flex;gap:.15rem;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:.22rem;flex-wrap:wrap}
+.seg button{padding:.35rem .75rem;border:none;border-radius:8px;background:transparent;color:var(--muted);
+  font:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.seg button.on{background:var(--accent);color:#fff;font-weight:600}
+
+.btn{padding:.5rem 1rem;border-radius:10px;border:1px solid var(--line);background:var(--panel);
+  color:var(--fg);font:inherit;font-size:.87rem;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{padding:.3rem .65rem;font-size:.79rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input[type=text],input[type=password],textarea,select{width:100%;padding:.55rem .75rem;
+  border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit;font-size:.9rem}
+textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical}
+
+/* ───── 지도 ───── */
+.map-wrap{display:grid;grid-template-columns:1fr 320px}
+#map{height:540px}
+.map-list{border-left:1px solid var(--line);overflow-y:auto;max-height:540px;background:var(--panel)}
+.map-list h4{margin:0;padding:.75rem 1rem;font-size:.78rem;color:var(--muted);letter-spacing:.04em;
+  text-transform:uppercase;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.mi{padding:.7rem 1rem;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:.6rem;align-items:flex-start}
+.mi:hover{background:var(--accent-soft)}
+.mi.on{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.mi .dot{width:9px;height:9px;border-radius:50%;margin-top:.45rem;flex:none}
+.mi b{display:block;font-size:.9rem;font-weight:600}
+.mi span{font-size:.76rem;color:var(--muted)}
+
+/* ───── 연표 ───── */
+.tl-wrap{position:relative;padding:1.4rem 1.2rem 1.8rem;overflow-x:auto}
+.tl-axis{position:relative;min-width:900px;height:64px;margin-bottom:.4rem}
+.tl-axis .yr{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:.72rem;
+  color:var(--muted);padding-top:1.5rem}
+.tl-axis .yr::before{content:"";position:absolute;top:0;left:50%;width:1px;height:1.1rem;background:var(--line)}
+.tl-line{position:absolute;left:0;right:0;top:1.15rem;height:1px;background:var(--line)}
+.tl-track{position:relative;min-width:900px}
+.tl-ev{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;
+  transform:translateX(-50%);transition:transform .15s}
+.tl-ev:hover{transform:translateX(-50%) translateY(-3px);z-index:5}
+.tl-ev .stem{width:1px;background:var(--line)}
+.tl-ev .bub{border:1px solid currentColor;border-radius:10px;padding:.3rem .6rem;background:var(--panel);
+  font-size:.78rem;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;box-shadow:var(--shadow)}
+.tl-ev .yr{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.15rem}
+.tl-ev.dim{opacity:.2}
+
+/* ───── 관계망 ───── */
+.g-toolbar{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-bottom:.8rem}
+.g-search{max-width:280px}
+#graph{width:100%;height:620px;display:block}
+.g-stage{position:relative;background:
+  radial-gradient(circle at 30% 20%, color-mix(in srgb,var(--accent) 5%,transparent), transparent 60%)}
+.g-tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:.5rem .7rem;font-size:.82rem;box-shadow:var(--shadow);z-index:20;max-width:260px;display:none}
+.g-tip b{display:block;margin-bottom:.15rem}
+.g-tip span{font-size:.75rem;color:var(--muted)}
+.g-legend{display:flex;gap:1rem;flex-wrap:wrap;padding:.65rem 1rem;border-top:1px solid var(--line);
+  font-size:.78rem;color:var(--muted)}
+.g-legend i{display:inline-block;width:9px;height:9px;margin-right:.3rem;vertical-align:middle}
+
+/* ───── 질의 ───── */
+.q-grid{display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start}
+.q-list{display:flex;flex-direction:column;gap:.5rem}
+.q-card{text-align:left;padding:.75rem .9rem;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);cursor:pointer;font:inherit;transition:all .15s}
+.q-card:hover{border-color:var(--accent-2);transform:translateX(2px)}
+.q-card.on{border-color:var(--accent);background:var(--accent-soft)}
+.q-card .tag{display:inline-block;font-size:.68rem;font-family:var(--mono);letter-spacing:.06em;
+  color:var(--accent);margin-bottom:.25rem}
+.q-card .t{display:block;font-size:.88rem;line-height:1.5}
+.q-panel{min-height:320px}
+.q-tabs{display:flex;gap:.15rem;border-bottom:1px solid var(--line);padding:0 .4rem}
+.q-tabs button{padding:.6rem .9rem;border:none;background:transparent;color:var(--muted);font:inherit;
+  font-size:.85rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.q-tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.q-body{padding:1.1rem 1.2rem}
+.ans{font-size:.95rem;line-height:1.85}
+.ans-src{margin-top:.9rem;padding-top:.7rem;border-top:1px dashed var(--line);font-size:.8rem;color:var(--muted)}
+.tri{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;padding:.4rem .55rem;border-radius:8px;
+  background:var(--bg);border:1px solid var(--line);margin-bottom:.3rem;font-size:.82rem}
+.tri .p{font-family:var(--mono);font-size:.74rem;color:var(--accent)}
+.warnbox{border-left:3px solid var(--bad);background:color-mix(in srgb,var(--bad) 8%,transparent);
+  padding:.75rem .95rem;border-radius:0 10px 10px 0;font-size:.86rem;margin-bottom:.8rem}
+.okbox{border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 8%,transparent);
+  padding:.75rem .95rem;border-radius:0 10px 10px 0;font-size:.86rem;margin-bottom:.8rem}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.6;margin:.5rem 0}
+.builder{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin:.8rem 0}
+.builder label{display:block;font-size:.74rem;color:var(--muted);margin-bottom:.25rem}
+.keybar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;padding:.85rem 1rem;
+  border-radius:12px;border:1px solid var(--line);background:var(--panel);margin-bottom:1rem}
+.keystate{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .7rem;border-radius:999px;
+  font-size:.79rem;font-weight:600;white-space:nowrap}
+.keystate.off{background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad)}
+.keystate.on{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+.keystate .led{width:8px;height:8px;border-radius:50%;background:currentColor}
+.keystate.on .led{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ───── 언어 ───── */
+#lang-stage{height:460px;position:relative}
+#lang-stage canvas,#lang-stage svg{width:100%;height:100%;display:block}
+
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{border-bottom:1px solid var(--line);padding:.5rem .65rem;text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}
+.note{font-size:.83rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.85rem;margin:.9rem 0}
+.status{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);margin-top:3rem}
+footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(--muted);font-size:.82rem}
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-vis{height:420px;order:-1}
+  .map-wrap{grid-template-columns:1fr}.map-list{border-left:none;border-top:1px solid var(--line);max-height:280px}
+  .q-grid{grid-template-columns:1fr}
+  .builder{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header><div class="hw">
+  <div class="logo"><span class="mk">丁</span><span>정세균 구술기록 아카이브<small>국회의장단 구술총서 08 · 지식그래프</small></span></div>
+  <nav id="nav">
+    <a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
+    <a href="#query">질의</a><a href="#lang">언어</a><a href="#about">해설</a>
+    <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
+  </nav>
+</div></header>
+
+<!-- ═══════ 히어로 ═══════ -->
+<div class="hero">
+  <div class="hero-copy">
+    <div class="kicker">Oral History · Knowledge Graph</div>
+    <h1>한 사람의 기억이<br><em>그래프</em>가 될 때</h1>
+    <p>국회도서관 국회기록보존소가 2018년 채록한 정세균 전 국회의장의 구술기록을
+       RiC-O 국제표준으로 구조화했습니다. 진안에서 여의도까지, 유신에서 탄핵까지 —
+       흩어진 회고가 이어진 관계망이 됩니다.</p>
+    <div class="hero-stats">
+      <div><b id="hsNode">–</b><span>개체</span></div>
+      <div><b id="hsEdge">–</b><span>관계</span></div>
+      <div><b id="hsTriple">–</b><span>트리플</span></div>
+      <div><b id="hsSpan">–</b><span>수록 연도</span></div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn primary" href="#query">온톨로지에게 묻기 →</a>
+      <a class="btn" href="#graph-sec">관계망 보기</a>
+    </div>
+  </div>
+  <div class="hero-vis">
+    <div class="hero-stage">
+      <canvas id="portrait"></canvas>
+      <div class="hero-hint" id="heroHint">마우스를 올려 보세요</div>
+    </div>
+    <div class="hero-cap">
+      <b id="heroYear">–</b>
+      <span id="heroLabel"></span>
+      <em id="heroCredit"></em>
+    </div>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+</div>
+
+<main>
+  <p class="status" id="loadStatus">그래프 적재 중…</p>
+
+  <!-- ═══════ 장소 ═══════ -->
+  <section id="place">
+    <div class="sec-head">
+      <div class="kicker">Archive Map</div>
+      <h2>구술이 지나간 자리</h2>
+      <p>구술에 등장하는 장소 <b id="nPlace">–</b>곳을 지도에 펼쳤습니다.
+         유형으로 걸러 보고, ‘생애 따라가기’로 진안에서 여의도까지 여섯 장면을 따라가 보세요.</p>
+    </div>
+    <div class="chips" id="mapChips"></div>
+    <div class="chips" style="margin-top:-.4rem">
+      <button class="btn sm primary" id="tourBtn" onclick="toggleTour()">▶ 생애 따라가기</button>
+      <span class="status" id="tourLabel"></span>
+    </div>
+    <div class="panel map-wrap">
+      <div id="map"></div>
+      <div class="map-list"><h4>자원 <span id="mapCount">0</span></h4><div id="mapItems"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 연표 ═══════ -->
+  <section id="event">
+    <div class="sec-head">
+      <div class="kicker">Timeline</div>
+      <h2>1972 유신에서 2018 퇴임까지</h2>
+      <p>사건 <b id="nEvent">–</b>건. 색은 영역, 높이는 겹침을 피한 배치입니다.
+         유형 칩으로 걸러 보고 항목을 누르면 상세가 열립니다.</p>
+    </div>
+    <div class="chips" id="tlChips"></div>
+    <div class="panel"><div class="tl-wrap">
+      <div class="tl-axis" id="tlAxis"><div class="tl-line"></div></div>
+      <div class="tl-track" id="tlTrack"></div>
+    </div></div>
+    <div id="tlDetail"></div>
+  </section>
+
+  <!-- ═══════ 관계망 ═══════ -->
+  <section id="graph-sec">
+    <div class="sec-head">
+      <div class="kicker">Linked Data</div>
+      <h2>관계망 — 인물·직위·단체·사건의 그물</h2>
+      <p>개체 <b id="nNode">–</b>개가 <b id="nEdge">–</b>개의 관계로 이어져 있습니다.
+         레이아웃을 바꿔 같은 데이터를 다른 눈으로 보세요. 노드를 누르면 이웃만 남습니다.</p>
+    </div>
+    <div class="chips" id="clsChips"></div>
+    <div class="chips" id="relChips"></div>
+    <div class="g-toolbar">
+      <div class="seg" id="layoutSeg"></div>
+      <input type="text" class="g-search" id="gSearch" placeholder="개체 검색…" oninput="graphSearch(this.value)">
+      <button class="btn sm" onclick="resetGraph()">초기화</button>
+    </div>
+    <div class="panel g-stage">
+      <canvas id="graph"></canvas>
+      <div class="g-tip" id="gTip"></div>
+      <div class="g-legend" id="gLegend"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 질의 ═══════ -->
+  <section id="query">
+    <div class="sec-head">
+      <div class="kicker">Query · SPARQL · AI</div>
+      <h2>온톨로지에게 묻다</h2>
+      <p>질문을 고르면 실제 SPARQL이 이 그래프에서 실행되어 <b>근거 트리플과 함께</b> 답합니다.
+         같은 질문에 대한 ‘원문만 읽은 AI 자유 해석’과 나란히 비교해 보세요.</p>
+      <p class="note">트리플로 정리된 데이터는 빠짐없이(전수), 여러 단계를 따라(경로), 근거를 밝히며 답하고,
+         모르면 지어내지 않고 ‘없음’이라 답합니다 — AI가 원문을 그냥 해석하는 것과의 결정적 차이입니다.</p>
+    </div>
+
+    <div class="keybar">
+      <span class="keystate off" id="keyState"><i class="led"></i><span id="keyStateTxt">API 키 없음</span></span>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." style="flex:1;min-width:200px">
+      <button class="btn sm primary" onclick="saveKey()">저장</button>
+      <button class="btn sm" onclick="clearKey()">삭제</button>
+      <span class="status" id="keyHint">키 없이도 아래 6개 질문은 SPARQL로 동작합니다</span>
+    </div>
+
+    <div class="q-grid">
+      <div class="q-list" id="qList"></div>
+      <div class="panel q-panel">
+        <div class="q-tabs">
+          <button class="on" id="tabG" onclick="qTab('graph')">그래프에 근거한 답</button>
+          <button id="tabA" onclick="qTab('ai')">원문만 읽은 AI</button>
+          <button id="tabS" onclick="qTab('sparql')">SPARQL</button>
+        </div>
+        <div class="q-body" id="qBody">
+          <p class="status">왼쪽에서 질문을 선택하세요.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.4rem">
+      <h2 style="font-size:1.25rem">직접 질의 — SPARQL 플레이그라운드</h2>
+      <p>세 칸을 고르면 SPARQL이 완성됩니다. 모르는 칸은 <code>?변수</code>로 두세요. 접두어는 자동으로 붙습니다.</p>
+    </div>
+    <div class="panel" style="padding:1.1rem 1.2rem">
+      <div class="builder">
+        <div><label>주어 (Subject)</label><select id="bS" onchange="buildQ()"></select></div>
+        <div><label>관계 (Predicate)</label><select id="bP" onchange="buildQ()"></select></div>
+        <div><label>목적어 (Object)</label><select id="bO" onchange="buildQ()"></select></div>
+      </div>
+      <textarea id="qEditor" rows="7"></textarea>
+      <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap">
+        <button class="btn primary" onclick="runEditor()">실행</button>
+        <button class="btn sm" onclick="loadExample(0)">인물 목록</button>
+        <button class="btn sm" onclick="loadExample(1)">정세균이 참여한 사건</button>
+        <button class="btn sm" onclick="loadExample(2)">역대 의장 재임순</button>
+        <button class="btn sm" onclick="loadExample(3)">관계 종류별 개수</button>
+        <button class="btn sm" onclick="loadExample(4)">2단계로 닿는 것</button>
+      </div>
+      <div id="qResult"></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.4rem">
+      <h2 style="font-size:1.25rem">자유롭게 묻기 — 자연어 → SPARQL</h2>
+      <p>문장으로 물으면 Claude가 SPARQL을 만들고, 브라우저 안의 엔진이 실행해 답합니다. API 키가 필요합니다.</p>
+    </div>
+    <div class="panel" style="padding:1.1rem 1.2rem">
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <input type="text" id="nlq" placeholder="예: 정세균이 국회의장 시절 관여한 일은?"
+          style="flex:1;min-width:240px" onkeydown="if(event.key==='Enter')askNL()">
+        <button class="btn primary" id="nlBtn" onclick="askNL()">질의</button>
+      </div>
+      <div id="nlOut"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 언어 ═══════ -->
+  <section id="lang">
+    <div class="sec-head">
+      <div class="kicker">Language</div>
+      <h2>구술의 언어</h2>
+      <p>원문 8단락에서 뽑은 어휘를 세 방식으로 봅니다. 탭을 바꿔 보세요.</p>
+    </div>
+    <div class="seg" id="langSeg" style="margin-bottom:.9rem"></div>
+    <div class="panel"><div id="lang-stage"></div></div>
+    <p class="note" id="langNote"></p>
+  </section>
+
+  <!-- ═══════ 해설 ═══════ -->
+  <section id="about">
+    <div class="sec-head">
+      <div class="kicker">About</div>
+      <h2>이 사이트가 보여주는 것</h2>
+    </div>
+    <p>이 사이트는 구술기록을 <b>기록관리 국제표준 RiC-O</b>로 구조화하면 무엇이 가능해지는지 보여줍니다.</p>
+    <div class="panel" style="padding:.4rem 1.2rem 1rem;margin-top:1rem"><table>
+      <tr><th>단계</th><th>한 일</th><th>산출</th></tr>
+      <tr><td>① 수집·전처리</td><td>구술 녹취문 PDF → 텍스트 정제, 쪽 앵커 부여</td><td>정제 텍스트</td></tr>
+      <tr><td>② 온톨로지 정의</td><td>RiC-O 1.1에서 구술기록용 12클래스·30속성 추출</td><td><code>ontology.rdf</code></td></tr>
+      <tr><td>③ 추출·그라운딩</td><td>LLM 개체·관계 추출 → 전거 매핑 → 도메인·레인지 검증</td><td><code>graph.ttl</code></td></tr>
+      <tr><td>④ 시맨틱 검색</td><td>자연어 → SPARQL → Oxigraph 실행 → 답변 + 출처</td><td>이 페이지</td></tr>
+    </table></div>
+    <p class="note">어휘는 RiC-O 1.1 원본과 대조 검증한 부분집합입니다. 네임스페이스·지역명이 원본과 같아
+      이 데이터는 완전한 RiC-O 데이터로 유효합니다.</p>
+  </section>
+</main>
+
+<footer><div class="fw">
+  <p><b>출처</b> · 국회도서관 국회기록보존소, 『대한민국 국회를 말하다 08 정세균』, 2021 (면담자 손동유) ·
+     ICA EGAD, <i>Records in Contexts-Ontology 1.1</i>, 2025.</p>
+  <p>2026 국회기록원 온톨로지-지식그래프 실습교육 스타터킷 · 지도 © OpenStreetMap 기여자 · SPARQL 엔진 Oxigraph (WASM)</p>
+  <p id="portraitCredit" style="display:none"></p>
+</div></footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Anthropic API 키가 커밋에 섞이면 차단한다.
+# GitHub는 푸시된 키를 자동 폐기하므로, 한 팀의 실수가 전체 키를 죽일 수 있다.
+if git diff --cached -U0 | grep -nE 'sk-ant-[A-Za-z0-9_-]{10,}' >/dev/null 2>&1; then
+  echo ""
+  echo "  ✗ 커밋 차단: Anthropic API 키로 보이는 문자열이 있습니다."
+  echo "    키는 코드에 넣지 말고 화면의 [API 키] 입력란에 넣으세요."
+  echo "    (브라우저 localStorage 에만 저장되고 저장소에는 남지 않습니다)"
+  echo ""
+  exit 1
+fi

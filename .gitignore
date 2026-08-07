@@ -1,0 +1,8 @@
+# API 키는 절대 커밋하지 않는다
+.env
+*.key
+secrets*
+.anthropic*
+
+# 히어로 사진은 assets/life/ 에 있고 출처는 frames.json 에 기재한다.
+# 교육 범위를 넘겨 배포할 때는 이용조건이 확인된 장면만 남길 것.

@@ -1,0 +1,542 @@
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+@prefix ric:  <http://archives.nanet.go.kr/id/> .
+@prefix geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# 국회의장단 구술기록 샘플 그래프 — 정세균
+# 어휘: RiC-O 1.1 구술 프로파일 (Core)
+# 출처: 국회도서관 국회기록보존소, 『대한민국 국회를 말하다 08 정세균』, 2021.
+
+
+# ── 기록집합·기록 ──
+ric:recset-speakers a rico:RecordSet ;
+    rico:title "국회의장단 구술총서" ;
+    rico:hasPublisher ric:org-nanet .
+
+ric:recset-jsk a rico:RecordSet ;
+    rico:title "대한민국 국회를 말하다 08 정세균" ;
+    rico:isOrWasIncludedIn ric:recset-speakers ;
+    rico:hasCreator ric:agent-jsk ;
+    rico:hasPublisher ric:org-nanet ;
+    rico:beginningDate "2021-02-25" .
+
+ric:rec-jsk-1 a rico:Record ;
+    rico:title "정세균 1차 구술" ;
+    rico:scopeAndContent "성장 과정과 사회 진출" ;
+    rico:isOrWasIncludedIn ric:recset-jsk ;
+    rico:hasCreator ric:agent-jsk ;
+    rico:hasAuthor ric:agent-sdy ;
+    rico:beginningDate "2018-08" ;
+    rico:identifier "21" .
+
+ric:rec-jsk-2 a rico:Record ;
+    rico:title "정세균 2차 구술" ;
+    rico:scopeAndContent "제15·16대 국회 활동" ;
+    rico:isOrWasIncludedIn ric:recset-jsk ;
+    rico:hasCreator ric:agent-jsk ;
+    rico:hasAuthor ric:agent-sdy ;
+    rico:beginningDate "2018-09" ;
+    rico:identifier "61" .
+
+ric:rec-jsk-3 a rico:Record ;
+    rico:title "정세균 3차 구술" ;
+    rico:scopeAndContent "제17~19대 국회 활동" ;
+    rico:isOrWasIncludedIn ric:recset-jsk ;
+    rico:hasCreator ric:agent-jsk ;
+    rico:hasAuthor ric:agent-sdy ;
+    rico:beginningDate "2018-10" ;
+    rico:identifier "121" .
+
+ric:rec-jsk-4 a rico:Record ;
+    rico:title "정세균 4차 구술" ;
+    rico:scopeAndContent "제20대 국회와 국회의장직" ;
+    rico:isOrWasIncludedIn ric:recset-jsk ;
+    rico:hasCreator ric:agent-jsk ;
+    rico:hasAuthor ric:agent-sdy ;
+    rico:beginningDate "2018-11" ;
+    rico:identifier "163" .
+
+# ── 인물 ──
+
+ric:agent-jsk a rico:Person ;
+    rico:name "정세균" ;
+    rico:birthDate "1950" ;
+    rico:history "구술자. 제15~20대 국회의원, 제20대 전반기 국회의장, 국무총리" .
+
+ric:agent-kdj a rico:Person ;
+    rico:name "김대중" ;
+    rico:birthDate "1924" ;
+    rico:history "제15대 대통령. 새정치국민회의 총재" .
+
+ric:agent-rmh a rico:Person ;
+    rico:name "노무현" ;
+    rico:birthDate "1946" ;
+    rico:history "제16대 대통령" .
+
+ric:agent-gnk a rico:Person ;
+    rico:name "권노갑" ;
+    rico:birthDate "1930" ;
+    rico:history "새정치국민회의 고문. 정계 입문 권유" .
+
+ric:agent-kkt a rico:Person ;
+    rico:name "김근태" ;
+    rico:birthDate "1947" ;
+    rico:history "열린우리당 의장" .
+
+ric:agent-kwk a rico:Person ;
+    rico:name "김원기" ;
+    rico:birthDate "1937" ;
+    rico:history "노사정위원회 2기 위원장, 제17대 전반기 국회의장" .
+
+ric:agent-sdy a rico:Person ;
+    rico:name "손동유" ;
+    rico:history "면담자. 명지대학교 연구교수, 한국사·기록학" .
+
+ric:agent-pgh a rico:Person ;
+    rico:name "박근혜" ;
+    rico:birthDate "1952" ;
+    rico:history "제18대 대통령" .
+
+# ── 단체 ──
+
+ric:org-assembly a rico:CorporateBody ;
+    rico:name "대한민국 국회" ;
+    rico:history "입법부" .
+
+ric:org-nca a rico:CorporateBody ;
+    rico:name "새정치국민회의" ;
+    rico:history "1995년 창당" .
+
+ric:org-mdp a rico:CorporateBody ;
+    rico:name "새천년민주당" ;
+    rico:history "2000년 창당" .
+
+ric:org-uri a rico:CorporateBody ;
+    rico:name "열린우리당" ;
+    rico:history "2003년 창당" .
+
+ric:org-ssangyong a rico:CorporateBody ;
+    rico:name "쌍용그룹" ;
+    rico:history "1978년 입사, 1995년 상무이사 퇴사" .
+
+ric:org-nosajeong a rico:CorporateBody ;
+    rico:name "노사정위원회" ;
+    rico:history "현 경제사회노동위원회" .
+
+ric:org-nafr a rico:CorporateBody ;
+    rico:name "국회미래연구원" ;
+    rico:history "2018년 설립" .
+
+ric:org-nanet a rico:CorporateBody ;
+    rico:name "국회도서관" ;
+    rico:history "구술총서 발행처" .
+
+# ── 직위 (전거의 핵심) ──
+
+ric:pos-speaker-20-1 a rico:Position ;
+    rico:name "제20대 전반기 국회의장" ;
+    rico:existsOrExistedIn ric:org-assembly ;
+    rico:beginningDate "2016-06-09" ;
+    rico:endDate "2018-05-29" .
+
+ric:pos-member-15 a rico:Position ;
+    rico:name "제15대 국회의원" ;
+    rico:existsOrExistedIn ric:org-assembly ;
+    rico:beginningDate "1996-05-30" ;
+    rico:endDate "2000-05-29" .
+
+ric:pos-speaker-17-1 a rico:Position ;
+    rico:name "제17대 전반기 국회의장" ;
+    rico:existsOrExistedIn ric:org-assembly ;
+    rico:beginningDate "2004-06-05" ;
+    rico:endDate "2006-05-29" .
+
+ric:pos-floor-leader a rico:Position ;
+    rico:name "원내대표" ;
+    rico:existsOrExistedIn ric:org-assembly ;
+    rico:beginningDate "2007-02" ;
+    rico:endDate "2008-05" .
+
+ric:pos-party-leader a rico:Position ;
+    rico:name "당대표" ;
+    rico:existsOrExistedIn ric:org-assembly ;
+    rico:beginningDate "2008-07" ;
+    rico:endDate "2010-08" .
+
+# ── 장소 ──
+
+ric:place-jinan a rico:Place ;
+    rico:name "전라북도 진안" ;
+    rico:generalDescription "1950년 출생지" ;
+    geo:lat "35.7917" ; geo:long "127.425" ;
+    rdfs:comment "출생" .
+
+ric:place-jeonju a rico:Place ;
+    rico:name "전주" ;
+    rico:generalDescription "전주 신흥고등학교" ;
+    geo:lat "35.8242" ; geo:long "127.148" ;
+    rdfs:comment "학창" .
+
+ric:place-korea-univ a rico:Place ;
+    rico:name "고려대학교" ;
+    rico:generalDescription "법학과·총학생회장(1973)" ;
+    geo:lat "37.5894" ; geo:long "127.0324" ;
+    rdfs:comment "학창" .
+
+ric:place-ssangyong a rico:Place ;
+    rico:name "쌍용그룹 본사" ;
+    rico:generalDescription "1978년 공채 입사" ;
+    geo:lat "37.5665" ; geo:long "126.978" ;
+    rdfs:comment "직장" .
+
+ric:place-newyork a rico:Place ;
+    rico:name "뉴욕" ;
+    rico:generalDescription "쌍용 뉴욕지점 4년" ;
+    geo:lat "40.7128" ; geo:long "-74.006" ;
+    rdfs:comment "해외" .
+
+ric:place-losangeles a rico:Place ;
+    rico:name "로스앤젤레스" ;
+    rico:generalDescription "쌍용 LA지점 5년" ;
+    geo:lat "34.0522" ; geo:long "-118.2437" ;
+    rdfs:comment "해외" .
+
+ric:place-pepperdine a rico:Place ;
+    rico:name "페퍼다인대학교" ;
+    rico:generalDescription "1990년 경영학 석사" ;
+    geo:lat "34.0416" ; geo:long "-118.7101" ;
+    rdfs:comment "학업" .
+
+ric:place-assembly a rico:Place ;
+    rico:name "국회의사당" ;
+    rico:generalDescription "제15~20대 국회의원, 제20대 전반기 국회의장" ;
+    geo:lat "37.532" ; geo:long "126.914" ;
+    rdfs:comment "의정" .
+
+ric:place-muju a rico:Place ;
+    rico:name "무주" ;
+    rico:generalDescription "무진장(무주·진안·장수)" ;
+    geo:lat "36.007" ; geo:long "127.661" ;
+    rdfs:comment "지역구" .
+
+ric:place-jangsu a rico:Place ;
+    rico:name "장수" ;
+    rico:generalDescription "무진장(무주·진안·장수)" ;
+    geo:lat "35.6473" ; geo:long "127.521" ;
+    rdfs:comment "지역구" .
+
+ric:place-shinheung a rico:Place ;
+    rico:name "전주 신흥고등학교" ;
+    rico:generalDescription "1969년 졸업" ;
+    geo:lat "35.8114" ; geo:long "127.148" ;
+    rdfs:comment "학창" .
+
+ric:place-nanet a rico:Place ;
+    rico:name "국회도서관" ;
+    rico:generalDescription "구술총서 발행처" ;
+    geo:lat "37.5312" ; geo:long "126.9137" ;
+    rdfs:comment "기관" .
+
+ric:place-nafr a rico:Place ;
+    rico:name "국회미래연구원" ;
+    rico:generalDescription "2018년 설립" ;
+    geo:lat "37.5285" ; geo:long "126.9195" ;
+    rdfs:comment "기관" .
+
+# ── 사건 ──
+
+ric:event-yushin a rico:Event ;
+    rico:name "10월유신 선포" ;
+    rico:generalDescription "박정희 대통령 유신 선포. 재학 중 반대 시위 참여" ;
+    rico:beginningDate "1972-10-17" ;
+    rdfs:comment "정치" .
+
+ric:event-donga a rico:Event ;
+    rico:name "동아일보 광고탄압" ;
+    rico:generalDescription "자유언론실천선언 이후 광고 탄압" ;
+    rico:beginningDate "1974-12" ;
+    rdfs:comment "언론" .
+
+ric:event-president-election-1997 a rico:Event ;
+    rico:name "제15대 대통령선거" ;
+    rico:generalDescription "김대중 당선, 최초의 평화적 정권교체" ;
+    rico:beginningDate "1997-12-18" ;
+    rdfs:comment "정치" .
+
+ric:event-hanbo a rico:Event ;
+    rico:name "한보사태" ;
+    rico:generalDescription "재벌 문어발식 확장의 상징. 외환위기의 한 원인" ;
+    rico:beginningDate "1997-01" ;
+    rdfs:comment "경제" .
+
+ric:event-imf a rico:Event ;
+    rico:name "IMF 외환위기" ;
+    rico:generalDescription "국제통화기금 구제금융 신청" ;
+    rico:beginningDate "1997-11-21" ;
+    rdfs:comment "경제" .
+
+ric:event-nosajeong a rico:Event ;
+    rico:name "노사정위원회 1기 대타협" ;
+    rico:generalDescription "경제위기 극복을 위한 사회협약" ;
+    rico:beginningDate "1998-02-06" ;
+    rdfs:comment "노동" .
+
+ric:event-impeach-roh a rico:Event ;
+    rico:name "노무현 대통령 탄핵소추" ;
+    rico:generalDescription "국회 가결, 헌재 기각" ;
+    rico:beginningDate "2004-03-12" ;
+    rdfs:comment "정치" .
+
+ric:event-uri-party a rico:Event ;
+    rico:name "열린우리당 창당" ;
+    rico:generalDescription "새천년민주당 분당" ;
+    rico:beginningDate "2003-11-11" ;
+    rdfs:comment "정당" .
+
+ric:event-impeach-park a rico:Event ;
+    rico:name "박근혜 대통령 탄핵소추" ;
+    rico:generalDescription "국회 가결, 헌재 인용" ;
+    rico:beginningDate "2016-12-09" ;
+    rdfs:comment "정치" .
+
+ric:event-speaker-inaug a rico:Event ;
+    rico:name "제20대 전반기 국회의장 취임" ;
+    rico:generalDescription "'국민에게 힘이 되는 국회' 일성" ;
+    rico:beginningDate "2016-06-09" ;
+    rdfs:comment "의정" .
+
+ric:event-nafr a rico:Event ;
+    rico:name "국회미래연구원 설립" ;
+    rico:generalDescription "여야 설득 끝에 설립" ;
+    rico:beginningDate "2018-05-28" ;
+    rdfs:comment "의정" .
+
+ric:event-cleaner a rico:Event ;
+    rico:name "국회 청소노동자 정규직 전환" ;
+    rico:generalDescription "고용의 질 개선" ;
+    rico:beginningDate "2017-01-01" ;
+    rdfs:comment "노동" .
+
+ric:event-privilege a rico:Event ;
+    rico:name "국회의원 특권 내려놓기" ;
+    rico:generalDescription "특권 내려놓기 추진위원회" ;
+    rico:beginningDate "2016-07" ;
+    rdfs:comment "의정" .
+
+ric:event-speaker-retire a rico:Event ;
+    rico:name "국회의장 퇴임" ;
+    rico:generalDescription "제20대 전반기 임기 종료" ;
+    rico:beginningDate "2018-05-29" ;
+    rdfs:comment "의정" .
+
+ric:event-student-pres a rico:Event ;
+    rico:name "고려대 총학생회장 당선" ;
+    rico:generalDescription "재학 중 학생운동 참여" ;
+    rico:beginningDate "1973" ;
+    rdfs:comment "학창" .
+
+ric:event-graduate a rico:Event ;
+    rico:name "고려대학교 법학과 졸업" ;
+    rico:generalDescription "졸업 후 육군 입대" ;
+    rico:beginningDate "1975" ;
+    rdfs:comment "학창" .
+
+ric:event-ssangyong-join a rico:Event ;
+    rico:name "쌍용그룹 공채 입사" ;
+    rico:generalDescription "이후 뉴욕·LA 지점 근무" ;
+    rico:beginningDate "1978" ;
+    rdfs:comment "직장" .
+
+ric:event-pepperdine a rico:Event ;
+    rico:name "페퍼다인대학교 경영학 석사" ;
+    rico:generalDescription "미국 유학" ;
+    rico:beginningDate "1990" ;
+    rdfs:comment "학업" .
+
+ric:event-enter-politics a rico:Event ;
+    rico:name "정계 입문" ;
+    rico:generalDescription "권노갑 권유로 민주당 입당" ;
+    rico:beginningDate "1995" ;
+    rdfs:comment "정치" .
+
+ric:event-elected-15 a rico:Event ;
+    rico:name "제15대 국회의원 당선" ;
+    rico:generalDescription "전북 진안·무주·장수" ;
+    rico:beginningDate "1996-04-11" ;
+    rdfs:comment "정치" .
+
+ric:event-oct26 a rico:Event ;
+    rico:name "10·26 사태" ;
+    rico:generalDescription "박정희 대통령 서거" ;
+    rico:beginningDate "1979-10-26" ;
+    rdfs:comment "정치" .
+
+ric:event-may18 a rico:Event ;
+    rico:name "5·18민주화운동" ;
+    rico:generalDescription "광주" ;
+    rico:beginningDate "1980-05-18" ;
+    rdfs:comment "정치" .
+
+ric:event-interview a rico:Event ;
+    rico:name "국회의장단 구술채록" ;
+    rico:generalDescription "국회기록보존소, 면담자 손동유" ;
+    rico:beginningDate "2018-08" ;
+    rdfs:comment "기록" .
+
+# ── 규칙(법령) ──
+
+ric:rule-constitution a rico:Rule ;
+    rico:name "대한민국헌법" ;
+    rico:generalDescription "국가 최고규범" .
+
+ric:rule-assembly-act a rico:Rule ;
+    rico:name "국회법" ;
+    rico:generalDescription "국회 운영에 관한 법률" .
+
+ric:rule-pastaffairs a rico:Rule ;
+    rico:name "과거사법" ;
+    rico:generalDescription "진실·화해를 위한 과거사정리 기본법" .
+
+ric:rule-basic-livelihood a rico:Rule ;
+    rico:name "국민기초생활보장법" ;
+    rico:generalDescription "1999년 제정" .
+
+ric:rule-nafr-act a rico:Rule ;
+    rico:name "국회미래연구원법" ;
+    rico:generalDescription "2018년 제정" .
+
+# ── 활동 ──
+
+ric:act-oral-project a rico:Activity ;
+    rico:name "국회의장단 구술기록 아카이브 구축 사업" ;
+    rico:beginningDate "2012" ;
+    rico:generalDescription "국회기록보존소" .
+
+ric:act-privilege-reform a rico:Activity ;
+    rico:name "국회의원 특권 내려놓기 추진" ;
+    rico:beginningDate "2016" ;
+    rico:generalDescription "제20대 전반기" .
+
+ric:act-labor-reform a rico:Activity ;
+    rico:name "노동 고용의 질 개선 활동" ;
+    rico:beginningDate "1998" ;
+    rico:generalDescription "노사정위원회부터" .
+
+# ── 관계 ──
+ric:agent-jsk  rico:occupiesOrOccupied  ric:pos-speaker-20-1 .
+ric:agent-jsk  rico:occupiesOrOccupied  ric:pos-member-15 .
+ric:agent-jsk  rico:occupiesOrOccupied  ric:pos-floor-leader .
+ric:agent-jsk  rico:occupiesOrOccupied  ric:pos-party-leader .
+ric:agent-kwk  rico:occupiesOrOccupied  ric:pos-speaker-17-1 .
+ric:agent-jsk  rico:isOrWasMemberOf  ric:org-nca .
+ric:agent-jsk  rico:isOrWasMemberOf  ric:org-mdp .
+ric:agent-jsk  rico:isOrWasMemberOf  ric:org-uri .
+ric:agent-jsk  rico:isOrWasMemberOf  ric:org-ssangyong .
+ric:agent-kdj  rico:isOrWasMemberOf  ric:org-nca .
+ric:agent-gnk  rico:isOrWasMemberOf  ric:org-nca .
+ric:agent-kkt  rico:isOrWasMemberOf  ric:org-uri .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-yushin .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-hanbo .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-nosajeong .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-impeach-roh .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-impeach-park .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-speaker-inaug .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-nafr .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-cleaner .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-privilege .
+ric:agent-kdj  rico:isOrWasParticipantIn  ric:event-president-election-1997 .
+ric:agent-rmh  rico:isOrWasParticipantIn  ric:event-impeach-roh .
+ric:agent-pgh  rico:isOrWasParticipantIn  ric:event-impeach-park .
+ric:agent-kwk  rico:isOrWasParticipantIn  ric:event-nosajeong .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-jinan .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-korea-univ .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-newyork .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-assembly .
+ric:agent-gnk  rico:isRelatedTo  ric:agent-jsk .
+ric:org-assembly  rico:hasOrHadPosition  ric:pos-speaker-20-1 .
+ric:org-assembly  rico:hasOrHadPosition  ric:pos-member-15 .
+ric:org-assembly  rico:hasOrHadPosition  ric:pos-speaker-17-1 .
+ric:event-nafr  rico:resultsOrResultedIn  ric:org-nafr .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-student-pres .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-graduate .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-ssangyong-join .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-pepperdine .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-enter-politics .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-elected-15 .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:event-interview .
+ric:agent-sdy  rico:isOrWasParticipantIn  ric:event-interview .
+ric:agent-gnk  rico:isOrWasParticipantIn  ric:event-enter-politics .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-jeonju .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-shinheung .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-losangeles .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-pepperdine .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-muju .
+ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-jangsu .
+ric:event-student-pres  rico:isAssociatedWithPlace  ric:place-korea-univ .
+ric:event-graduate  rico:isAssociatedWithPlace  ric:place-korea-univ .
+ric:event-ssangyong-join  rico:isAssociatedWithPlace  ric:place-ssangyong .
+ric:event-pepperdine  rico:isAssociatedWithPlace  ric:place-pepperdine .
+ric:event-may18  rico:isAssociatedWithPlace  ric:place-assembly .
+ric:event-speaker-inaug  rico:isAssociatedWithPlace  ric:place-assembly .
+ric:event-nafr  rico:isAssociatedWithPlace  ric:place-nafr .
+ric:event-cleaner  rico:isAssociatedWithPlace  ric:place-assembly .
+ric:org-nanet  rico:isAssociatedWithPlace  ric:place-nanet .
+ric:org-assembly  rico:isAssociatedWithPlace  ric:place-assembly .
+ric:org-nafr  rico:isAssociatedWithPlace  ric:place-nafr .
+ric:act-oral-project  rico:hasOrHadParticipant  ric:agent-sdy .
+ric:act-oral-project  rico:hasOrHadParticipant  ric:agent-jsk .
+ric:act-privilege-reform  rico:hasOrHadParticipant  ric:agent-jsk .
+ric:act-labor-reform  rico:hasOrHadParticipant  ric:agent-jsk .
+ric:act-oral-project  rico:resultsOrResultedIn  ric:recset-jsk .
+ric:event-nafr  rico:isOrWasRegulatedBy  ric:rule-nafr-act .
+ric:event-privilege  rico:isOrWasRegulatedBy  ric:rule-assembly-act .
+ric:event-impeach-park  rico:isOrWasRegulatedBy  ric:rule-constitution .
+ric:event-impeach-roh  rico:isOrWasRegulatedBy  ric:rule-constitution .
+ric:agent-jsk  rico:isOrWasParticipantIn  ric:act-oral-project .
+ric:agent-kdj  rico:isOrWasParticipantIn  ric:event-oct26 .
+ric:org-nca  rico:hasOrHadMember  ric:agent-kdj .
+ric:org-nca  rico:hasOrHadMember  ric:agent-gnk .
+ric:org-uri  rico:hasOrHadMember  ric:agent-kkt .
+ric:org-assembly  rico:hasOrHadPosition  ric:pos-floor-leader .
+ric:org-assembly  rico:hasOrHadPosition  ric:pos-party-leader .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-yushin .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-donga .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:place-jinan .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:place-korea-univ .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:agent-gnk .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:agent-kdj .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:org-nca .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:org-ssangyong .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-student-pres .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-graduate .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-ssangyong-join .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-pepperdine .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-enter-politics .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:event-elected-15 .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:place-jeonju .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:place-shinheung .
+ric:rec-jsk-1  rico:hasOrHadSubject  ric:place-newyork .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:event-hanbo .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:event-imf .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:event-nosajeong .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:agent-kdj .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:agent-kwk .
+ric:rec-jsk-2  rico:hasOrHadSubject  ric:org-nosajeong .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:event-impeach-roh .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:event-uri-party .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:agent-rmh .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:agent-kkt .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:org-uri .
+ric:rec-jsk-3  rico:hasOrHadSubject  ric:org-mdp .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:event-impeach-park .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:event-speaker-inaug .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:event-nafr .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:event-cleaner .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:event-privilege .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:agent-pgh .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:pos-speaker-20-1 .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:org-nafr .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:rule-assembly-act .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:rule-nafr-act .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:act-privilege-reform .
+ric:rec-jsk-4  rico:hasOrHadSubject  ric:place-assembly .

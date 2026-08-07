@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RiC-O 구술기록 프로파일 (Core + Extended)
+     원본: ICA Records in Contexts-Ontology (RiC-O) 1.1, 2025-05-22
+     https://www.ica.org/standards/RiC/ontology
+     이 파일은 원본의 부분집합이며 네임스페이스·지역명을 그대로 사용한다.
+     따라서 이 프로파일로 만든 데이터는 완전한 RiC-O 데이터로 유효하다.
+     생성: 2026 국회기록원 온톨로지-지식그래프 실습교육 / 아카이브랩 -->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:rico="https://www.ica.org/standards/RiC/ontology#">
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#RecordSet">
+    <rdfs:label xml:lang="ko">기록집합</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 관련 기록을 묶은 집합. 컬렉션·시리즈·기록철 · 용례: 국회의장단 구술총서 / 정세균 구술기록 전체</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Record">
+    <rdfs:label xml:lang="ko">기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 증거적 가치를 지닌 개별 기록 정보 단위 · 용례: 정세균 1차 구술 녹취문</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Instantiation">
+    <rdfs:label xml:lang="ko">구현체</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 지적 개체인 기록이 특정 매체·형태로 실현된 실체 · 용례: 구술 영상 MP4 / 총서 PDF / 인쇄본</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Agent">
+    <rdfs:label xml:lang="ko">행위자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 기록을 생산·소유·관리하는 인물·단체·직위·시스템의 상위 개념</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Person">
+    <rdfs:label xml:lang="ko">인물</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 개인 · 용례: 정세균, 손동유(면담자), 김대중</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#CorporateBody">
+    <rdfs:label xml:lang="ko">단체</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 법인·기관·조직 · 용례: 대한민국 국회, 새정치국민회의, 쌍용그룹</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Position">
+    <rdfs:label xml:lang="ko">직위</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 단체 안에 존재하며 인물이 점유하는 자리. 그 자체가 행위자 · 용례: 제20대 전반기 국회의장, 국회 재정경제위원회 간사</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Activity">
+    <rdfs:label xml:lang="ko">활동</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 행위자가 수행하는 지속적 업무·기능 · 용례: 국회의장단 구술기록 아카이브 구축 사업</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Event">
+    <rdfs:label xml:lang="ko">사건</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 특정 시점에 일어난 일 · 용례: 5·18민주화운동, 대통령 탄핵소추(2016)</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Place">
+    <rdfs:label xml:lang="ko">장소</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 지리적 위치 · 용례: 전라북도 진안, 국회의사당, 뉴욕</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Date">
+    <rdfs:label xml:lang="ko">날짜</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 시간 표현 · 용례: 2018-08-14, 2016~2018</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Rule">
+    <rdfs:label xml:lang="ko">규칙</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 기록·활동을 규율하는 법령·지침·표준 · 용례: 대한민국헌법, 국회법</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Thing">
+    <rdfs:label xml:lang="ko">사물</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] RiC-O 최상위 클래스</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#RecordResource">
+    <rdfs:label xml:lang="ko">기록자원</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] Record와 RecordSet의 상위 개념</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Group">
+    <rdfs:label xml:lang="ko">그룹</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 복수 행위자의 집합. 단체의 상위 개념 · 용례: 정당 계파</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#RecordPart">
+    <rdfs:label xml:lang="ko">기록구성부분</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기록을 이루는 부분 · 용례: 녹취문 중 특정 문답</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Family">
+    <rdfs:label xml:lang="ko">가족</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 가계 집단 · 용례: 구술자 가계</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Mechanism">
+    <rdfs:label xml:lang="ko">기계장치</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기록을 생산·관리하는 시스템 · 용례: 기록관리시스템(RMS)</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Name">
+    <rdfs:label xml:lang="ko">명칭</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 개체의 이름을 개체로 다룰 때 · 용례: 이명·개명 이력</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Identifier">
+    <rdfs:label xml:lang="ko">식별자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 식별기호를 개체로 다룰 때 · 용례: 발간등록번호</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Language">
+    <rdfs:label xml:lang="ko">언어</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기록의 언어 · 용례: 한국어</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="https://www.ica.org/standards/RiC/ontology#Relation">
+    <rdfs:label xml:lang="ko">관계</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 개체 간 관계 자체를 개체로 다룰 때(N항 관계) · 용례: 재임 관계</rdfs:comment>
+  </rdfs:Class>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#name">
+    <rdfs:label xml:lang="ko">이름</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 개체의 이름. 전거 통제의 출발점 (도메인 Thing → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#identifier">
+    <rdfs:label xml:lang="ko">식별기호</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 개체를 고유하게 식별하는 문자열 (도메인 Thing → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#title">
+    <rdfs:label xml:lang="ko">제목</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 기록·구현체·규칙의 표제 (도메인 Instantiation|RecordResource|Rule → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#scopeAndContent">
+    <rdfs:label xml:lang="ko">범위와 내용</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 기록이 다루는 범위와 내용 요약 (도메인 RecordResource → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#history">
+    <rdfs:label xml:lang="ko">연혁</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 개체의 이력·변천 (도메인 Agent|Event|Instantiation|Place|RecordResource|Rule → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#generalDescription">
+    <rdfs:label xml:lang="ko">일반 설명</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 개체에 대한 서술 (도메인 Thing → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#birthDate">
+    <rdfs:label xml:lang="ko">생년월일</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 인물의 출생일 (도메인 Person → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#deathDate">
+    <rdfs:label xml:lang="ko">사망일</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 인물의 사망일 (도메인 Person → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#beginningDate">
+    <rdfs:label xml:lang="ko">시작일</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 존재·재임·사건의 시작 (도메인 Thing → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#endDate">
+    <rdfs:label xml:lang="ko">종료일</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 존재·재임·사건의 종료 (도메인 Thing → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasCreator">
+    <rdfs:label xml:lang="ko">생산자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록을 생산한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isCreatorOf">
+    <rdfs:label xml:lang="ko">생산한 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 행위자가 생산한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasAuthor">
+    <rdfs:label xml:lang="ko">저자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록을 저술한 인물·단체·직위 (도메인 Record → 레인지 Group|Person|Position)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isAuthorOf">
+    <rdfs:label xml:lang="ko">저술한 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 행위자가 저술한 기록 (도메인 Group|Person|Position → 레인지 Record)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadSubject">
+    <rdfs:label xml:lang="ko">주제</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록이 다루는 주제(인물·사건·장소 등) (도메인 RecordResource → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasSubjectOf">
+    <rdfs:label xml:lang="ko">주제인 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 개체를 주제로 다루는 기록 (도메인 Thing → 레인지 RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#occupiesOrOccupied">
+    <rdfs:label xml:lang="ko">재임 직위</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 인물이 점유했(하)는 직위 ★전거의 핵심 (도메인 Person → 레인지 Position)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasOccupiedBy">
+    <rdfs:label xml:lang="ko">재임자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 직위를 점유했(하)는 인물 (도메인 Position → 레인지 Person)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadPosition">
+    <rdfs:label xml:lang="ko">소속 직위</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 단체 안에 존재하는 직위 (도메인 Group → 레인지 Position)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#existsOrExistedIn">
+    <rdfs:label xml:lang="ko">소속 단체</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 직위가 존재하는 단체 (도메인 Position → 레인지 Group)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasMemberOf">
+    <rdfs:label xml:lang="ko">소속</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 인물이 소속된 단체·그룹 (도메인 Person → 레인지 Group)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadMember">
+    <rdfs:label xml:lang="ko">구성원</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 단체에 소속된 인물 (도메인 Group → 레인지 Person)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#includesOrIncluded">
+    <rdfs:label xml:lang="ko">하위 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록집합이 포함하는 기록·기록집합 (도메인 RecordSet → 레인지 Record|RecordSet)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasIncludedIn">
+    <rdfs:label xml:lang="ko">상위 기록집합</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록이 속한 기록집합 (도메인 Record|RecordSet → 레인지 RecordSet)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadInstantiation">
+    <rdfs:label xml:lang="ko">구현체</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 기록의 물리적·디지털 실현물 (도메인 RecordResource → 레인지 Instantiation)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasInstantiationOf">
+    <rdfs:label xml:lang="ko">원기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 구현체가 실현한 기록 (도메인 Instantiation → 레인지 RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasParticipantIn">
+    <rdfs:label xml:lang="ko">참여 사건</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 개체가 참여한 사건 (도메인 Thing → 레인지 Event)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadParticipant">
+    <rdfs:label xml:lang="ko">참여자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 사건에 참여한 개체 (도메인 Event → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isAssociatedWithPlace">
+    <rdfs:label xml:lang="ko">관련 장소</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 개체와 연관된 장소 (도메인 Thing → 레인지 Place)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isAssociatedWithDate">
+    <rdfs:label xml:lang="ko">관련 날짜</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Core] 이 개체와 연관된 날짜 (도메인 Thing → 레인지 Date)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#textualValue">
+    <rdfs:label xml:lang="ko">표기값</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 명칭·날짜·수량의 문자 표현 (도메인 Appellation|Date|Extent → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#normalizedDateValue">
+    <rdfs:label xml:lang="ko">정규화 날짜</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기계 판독용 표준 날짜 (도메인 Date → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#expressedDate">
+    <rdfs:label xml:lang="ko">원표기 날짜</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 원문에 적힌 그대로의 날짜 (도메인 Date → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#recordResourceExtent">
+    <rdfs:label xml:lang="ko">수량</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기록의 물리적·논리적 크기 (도메인 RecordResource → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasPublisher">
+    <rdfs:label xml:lang="ko">발행처</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 기록을 발행한 행위자 (도메인 RecordResource → 레인지 Agent)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isPublisherOf">
+    <rdfs:label xml:lang="ko">발행 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 행위자가 발행한 기록 (도메인 Agent → 레인지 RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadHolder">
+    <rdfs:label xml:lang="ko">소장처</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 기록을 소장한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasHolderOf">
+    <rdfs:label xml:lang="ko">소장 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 행위자가 소장한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasCollector">
+    <rdfs:label xml:lang="ko">수집자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 기록을 수집한 행위자 (도메인 Instantiation|RecordResource → 레인지 Agent)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isCollectorOf">
+    <rdfs:label xml:lang="ko">수집 기록</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 행위자가 수집한 기록 (도메인 Agent → 레인지 Instantiation|RecordResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadLocation">
+    <rdfs:label xml:lang="ko">위치</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 개체가 위치한 장소 (도메인 Thing → 레인지 Place)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#resultsOrResultedFrom">
+    <rdfs:label xml:lang="ko">발생 원천</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 개체를 결과로 낳은 사건 (도메인 Thing → 레인지 Event)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#resultsOrResultedIn">
+    <rdfs:label xml:lang="ko">결과</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 사건이 낳은 결과 (도메인 Event → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasAffectedBy">
+    <rdfs:label xml:lang="ko">영향받은 사건</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 개체에 영향을 준 사건 (도메인 Thing → 레인지 Event)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isOrWasRegulatedBy">
+    <rdfs:label xml:lang="ko">적용 규칙</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 개체를 규율하는 법령·지침 (도메인 Thing → 레인지 Rule)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#documents">
+    <rdfs:label xml:lang="ko">입증 대상</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 이 기록이 입증하는 활동 (도메인 Instantiation|RecordResource → 레인지 Activity)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadName">
+    <rdfs:label xml:lang="ko">명칭</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 명칭 개체 연결 (도메인 Thing → 레인지 Name)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadIdentifier">
+    <rdfs:label xml:lang="ko">식별자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 식별자 개체 연결 (도메인 Thing → 레인지 Identifier)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#hasOrHadLanguage">
+    <rdfs:label xml:lang="ko">언어</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 기록의 언어 (도메인 Agent|Record|RecordPart → 레인지 Language)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isRelatedTo">
+    <rdfs:label xml:lang="ko">관련 자원</rdfs:label>
+    <rdfs:comment xml:lang="ko">[Ext] 일반적 관련 관계 (도메인 Thing → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
+</rdf:RDF>

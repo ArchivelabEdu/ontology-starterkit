@@ -1,0 +1,300 @@
+/* 관계망 — 6개 레이아웃
+   네트워크(힘) · 아크 · 방사형 · 코드 · 하이브 · 보드
+   캔버스 렌더. 클래스·관계 필터, 검색, 노드 클릭 시 이웃만 강조. */
+import { CLS, REL_KO, clsColor, css, esc, $ } from './app.js';
+
+const S = {
+  G: null, layout: 'network', clsOn: new Set(), relOn: new Set(),
+  nodes: [], edges: [], focus: null, search: '', raf: 0, hover: null,
+};
+const LAYOUTS = [
+  ['network', '◍ 네트워크'], ['arc', '⌒ 아크'], ['radial', '✺ 방사형'],
+  ['chord', '◠ 코드'], ['hive', '⋔ 하이브'], ['board', '▤ 보드'],
+];
+
+export function initGraph(G) {
+  S.G = G;
+  S.clsOn = new Set(Object.keys(CLS));
+  S.relOn = new Set([...new Set(G.edges.map(e => e.p))]);
+  $('#nNode').textContent = G.nodes.length;
+  $('#nEdge').textContent = G.edges.length;
+
+  $('#layoutSeg').innerHTML = LAYOUTS.map(([k, t]) =>
+    `<button class="${k === S.layout ? 'on' : ''}" data-l="${k}" onclick="setLayout('${k}')">${t}</button>`).join('');
+
+  const clsUsed = [...new Set(G.nodes.map(n => n.cls))];
+  $('#clsChips').innerHTML = clsUsed.map(c =>
+    `<button class="chip on c-${CLS[c].key}" data-c="${c}" onclick="toggleCls('${c}')">
+      <i class="dot"></i>${CLS[c].ko}</button>`).join('');
+
+  const relUsed = [...new Set(G.edges.map(e => e.p))]
+    .sort((a, b) => G.edges.filter(e => e.p === b).length - G.edges.filter(e => e.p === a).length);
+  $('#relChips').innerHTML =
+    `<button class="chip on c-all" onclick="toggleRel('*')">모든 관계</button>` +
+    relUsed.map(p => `<button class="chip on" data-p="${p}" onclick="toggleRel('${p}')"
+      style="color:var(--muted)">${esc(REL_KO[p] || p)}</button>`).join('');
+
+  $('#gLegend').innerHTML = clsUsed.map(c =>
+    `<span><i style="background:${clsColor(c)};border-radius:${CLS[c].shape === 'circle' ? '50%' : '2px'}"></i>${CLS[c].ko}</span>`).join('')
+    + '<span style="margin-left:auto">노드 클릭 = 이웃만 · 빈 곳 클릭 = 해제</span>';
+
+  const cv = $('#graph');
+  cv.addEventListener('pointermove', onMove);
+  cv.addEventListener('click', onClick);
+  cv.addEventListener('pointerleave', () => { S.hover = null; $('#gTip').style.display = 'none'; });
+  addEventListener('resize', () => { sizeCanvas(); compute(); });
+  sizeCanvas(); compute(); loop();
+}
+
+function sizeCanvas() {
+  const cv = $('#graph'); if (!cv) return;
+  const r = cv.getBoundingClientRect();
+  cv.width = Math.max(1, r.width * devicePixelRatio);
+  cv.height = Math.max(1, (r.height || 620) * devicePixelRatio);
+}
+
+window.setLayout = k => {
+  S.layout = k;
+  document.querySelectorAll('#layoutSeg button').forEach(b => b.classList.toggle('on', b.dataset.l === k));
+  compute();
+};
+window.toggleCls = c => {
+  S.clsOn.has(c) ? S.clsOn.delete(c) : S.clsOn.add(c);
+  document.querySelectorAll('#clsChips .chip').forEach(b => b.classList.toggle('on', S.clsOn.has(b.dataset.c)));
+  compute();
+};
+window.toggleRel = p => {
+  const all = [...new Set(S.G.edges.map(e => e.p))];
+  if (p === '*') S.relOn = S.relOn.size === all.length ? new Set() : new Set(all);
+  else S.relOn.has(p) ? S.relOn.delete(p) : S.relOn.add(p);
+  document.querySelectorAll('#relChips .chip').forEach(b => {
+    const pp = b.dataset.p;
+    b.classList.toggle('on', pp ? S.relOn.has(pp) : S.relOn.size === all.length);
+  });
+  compute();
+};
+window.graphSearch = v => { S.search = v.trim(); compute(); };
+window.resetGraph = () => {
+  S.focus = null; S.search = ''; $('#gSearch').value = '';
+  S.clsOn = new Set(Object.keys(CLS));
+  S.relOn = new Set([...new Set(S.G.edges.map(e => e.p))]);
+  document.querySelectorAll('#clsChips .chip,#relChips .chip').forEach(b => b.classList.add('on'));
+  compute();
+};
+export function redrawGraph() { if (S.G) compute(); }
+
+/* ── 표시 대상 계산 + 레이아웃 ── */
+function compute() {
+  const G = S.G; if (!G) return;
+  let ns = G.nodes.filter(n => S.clsOn.has(n.cls));
+  let es = G.edges.filter(e => S.relOn.has(e.p));
+  const ids = new Set(ns.map(n => n.id));
+  es = es.filter(e => ids.has(e.s) && ids.has(e.o));
+
+  if (S.focus) {                                  // 이웃만
+    const keep = new Set([S.focus]);
+    es.forEach(e => { if (e.s === S.focus) keep.add(e.o); if (e.o === S.focus) keep.add(e.s); });
+    ns = ns.filter(n => keep.has(n.id));
+    const k2 = new Set(ns.map(n => n.id));
+    es = es.filter(e => k2.has(e.s) && k2.has(e.o));
+  }
+  const deg = new Map(ns.map(n => [n.id, 0]));
+  es.forEach(e => { deg.set(e.s, deg.get(e.s) + 1); deg.set(e.o, deg.get(e.o) + 1); });
+
+  S.nodes = ns.map(n => ({ ...n, d: deg.get(n.id) || 0, x: 0, y: 0, vx: 0, vy: 0 }));
+  S.edges = es;
+  const map = new Map(S.nodes.map(n => [n.id, n]));
+  S.edges = es.map(e => ({ ...e, a: map.get(e.s), b: map.get(e.o) })).filter(e => e.a && e.b);
+  $('#nNode').textContent = S.nodes.length;
+  $('#nEdge').textContent = S.edges.length;
+  ({ network: lNetwork, arc: lArc, radial: lRadial, chord: lChord, hive: lHive, board: lBoard })[S.layout]();
+}
+
+const dims = () => ({ W: $('#graph').width, H: $('#graph').height });
+const order = ['Person', 'Position', 'CorporateBody', 'Event', 'Activity', 'Place', 'Rule', 'Record', 'RecordSet'];
+
+function lNetwork() {
+  const { W, H } = dims();
+  S.nodes.forEach((n, i) => {
+    const a = i * 2.399, r = Math.sqrt(i / S.nodes.length) * Math.min(W, H) * .38;
+    n.x = W / 2 + Math.cos(a) * r; n.y = H / 2 + Math.sin(a) * r;
+  });
+  for (let it = 0; it < 320; it++) {
+    S.edges.forEach(e => {
+      const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y, d = Math.hypot(dx, dy) || 1;
+      const f = (d - 120 * devicePixelRatio) * .008;
+      e.a.vx += dx / d * f; e.a.vy += dy / d * f; e.b.vx -= dx / d * f; e.b.vy -= dy / d * f;
+    });
+    for (let i = 0; i < S.nodes.length; i++) for (let j = i + 1; j < S.nodes.length; j++) {
+      const a = S.nodes[i], b = S.nodes[j];
+      const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy || 1;
+      const f = 26000 * devicePixelRatio / d2, d = Math.sqrt(d2);
+      a.vx -= dx / d * f; a.vy -= dy / d * f; b.vx += dx / d * f; b.vy += dy / d * f;
+    }
+    S.nodes.forEach(n => {
+      n.vx += (W / 2 - n.x) * .0022; n.vy += (H / 2 - n.y) * .0022;
+      n.x += n.vx *= .8; n.y += n.vy *= .8;
+    });
+  }
+  clampAll();
+}
+function lArc() {
+  const { W, H } = dims();
+  const sorted = [...S.nodes].sort((a, b) => order.indexOf(a.cls) - order.indexOf(b.cls) || b.d - a.d);
+  sorted.forEach((n, i) => {
+    n.x = 70 * devicePixelRatio + (i / Math.max(sorted.length - 1, 1)) * (W - 140 * devicePixelRatio);
+    n.y = H * .72;
+  });
+}
+function lRadial() {
+  const { W, H } = dims();
+  const hub = S.focus ? S.nodes.find(n => n.id === S.focus)
+    : [...S.nodes].sort((a, b) => b.d - a.d)[0];
+  if (!hub) return;
+  hub.x = W / 2; hub.y = H / 2;
+  const others = S.nodes.filter(n => n !== hub);
+  const ring1 = new Set(S.edges.filter(e => e.a === hub || e.b === hub)
+    .map(e => (e.a === hub ? e.b : e.a).id));
+  const r1 = others.filter(n => ring1.has(n.id)), r2 = others.filter(n => !ring1.has(n.id));
+  const R = Math.min(W, H);
+  r1.forEach((n, i) => { const a = (i / Math.max(r1.length, 1)) * Math.PI * 2; n.x = W / 2 + Math.cos(a) * R * .22; n.y = H / 2 + Math.sin(a) * R * .22; });
+  r2.forEach((n, i) => { const a = (i / Math.max(r2.length, 1)) * Math.PI * 2; n.x = W / 2 + Math.cos(a) * R * .42; n.y = H / 2 + Math.sin(a) * R * .42; });
+}
+function lChord() {
+  const { W, H } = dims();
+  const sorted = [...S.nodes].sort((a, b) => order.indexOf(a.cls) - order.indexOf(b.cls));
+  const R = Math.min(W, H) * .40;
+  sorted.forEach((n, i) => {
+    const a = (i / sorted.length) * Math.PI * 2 - Math.PI / 2;
+    n.x = W / 2 + Math.cos(a) * R; n.y = H / 2 + Math.sin(a) * R; n.ang = a;
+  });
+}
+function lHive() {
+  const { W, H } = dims();
+  const groups = {};
+  S.nodes.forEach(n => (groups[n.cls] ||= []).push(n));
+  const keys = Object.keys(groups).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  const R = Math.min(W, H) * .42;
+  keys.forEach((k, gi) => {
+    const a = (gi / keys.length) * Math.PI * 2 - Math.PI / 2;
+    groups[k].sort((x, y) => y.d - x.d).forEach((n, i) => {
+      const t = .18 + (i / Math.max(groups[k].length - 1, 1)) * .82;
+      n.x = W / 2 + Math.cos(a) * R * t; n.y = H / 2 + Math.sin(a) * R * t;
+    });
+  });
+}
+function lBoard() {
+  const { W, H } = dims();
+  const groups = {};
+  S.nodes.forEach(n => (groups[n.cls] ||= []).push(n));
+  const keys = Object.keys(groups).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  const colW = W / keys.length;
+  keys.forEach((k, gi) => {
+    groups[k].sort((x, y) => y.d - x.d).forEach((n, i) => {
+      n.x = colW * gi + colW / 2 + ((i % 2) - .5) * colW * .32;
+      n.y = 70 * devicePixelRatio + i * 34 * devicePixelRatio;
+    });
+  });
+  clampAll();
+}
+function clampAll() {
+  const { W, H } = dims(), m = 40 * devicePixelRatio;
+  S.nodes.forEach(n => {
+    n.x = Math.max(m, Math.min(W - m, n.x));
+    n.y = Math.max(m, Math.min(H - m, n.y));
+  });
+}
+
+/* ── 렌더 ── */
+function nodeR(n) { return (5 + Math.min(n.d, 12) * 1.15) * devicePixelRatio; }
+function matches(n) { return S.search && n.label.includes(S.search); }
+
+function shape(ctx, n, r, col) {
+  ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 1.5 * devicePixelRatio;
+  const s = CLS[n.cls]?.shape || 'circle';
+  ctx.beginPath();
+  if (s === 'circle') ctx.arc(n.x, n.y, r, 0, 7);
+  else if (s === 'square') ctx.rect(n.x - r * .85, n.y - r * .85, r * 1.7, r * 1.7);
+  else if (s === 'diamond') { ctx.moveTo(n.x, n.y - r); ctx.lineTo(n.x + r, n.y); ctx.lineTo(n.x, n.y + r); ctx.lineTo(n.x - r, n.y); ctx.closePath(); }
+  else if (s === 'triangle') { ctx.moveTo(n.x, n.y - r); ctx.lineTo(n.x + r * .92, n.y + r * .72); ctx.lineTo(n.x - r * .92, n.y + r * .72); ctx.closePath(); }
+  else if (s === 'pin') { ctx.arc(n.x, n.y - r * .2, r * .85, Math.PI, 0); ctx.lineTo(n.x, n.y + r); ctx.closePath(); }
+  else if (s === 'doc') ctx.rect(n.x - r * .7, n.y - r * .9, r * 1.4, r * 1.8);
+  else { for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2 - Math.PI / 2; const fn = i ? 'lineTo' : 'moveTo'; ctx[fn](n.x + Math.cos(a) * r, n.y + Math.sin(a) * r); } ctx.closePath(); }
+  ctx.fill();
+}
+
+function loop() {
+  const cv = $('#graph'); if (!cv) return;
+  const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+  const line = css('--line'), muted = css('--muted'), fg = css('--fg'), acc = css('--accent');
+  const dim = S.search ? .12 : 1;
+
+  // 엣지
+  S.edges.forEach(e => {
+    const hi = S.hover && (e.a === S.hover || e.b === S.hover);
+    ctx.strokeStyle = hi ? acc : line;
+    ctx.globalAlpha = hi ? .95 : (S.search ? .18 : .6);
+    ctx.lineWidth = (hi ? 2 : 1) * devicePixelRatio;
+    ctx.beginPath();
+    if (S.layout === 'arc') {
+      const mx = (e.a.x + e.b.x) / 2, r = Math.abs(e.b.x - e.a.x) / 2;
+      ctx.moveTo(e.a.x, e.a.y);
+      ctx.quadraticCurveTo(mx, e.a.y - r * .9, e.b.x, e.b.y);
+    } else if (S.layout === 'chord') {
+      ctx.moveTo(e.a.x, e.a.y);
+      ctx.quadraticCurveTo(W / 2, H / 2, e.b.x, e.b.y);
+    } else { ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); }
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+
+  // 노드
+  S.nodes.forEach(n => {
+    const r = nodeR(n);
+    const hi = n === S.hover || (S.search && matches(n));
+    ctx.globalAlpha = S.search ? (matches(n) ? 1 : dim) : 1;
+    if (hi) { ctx.globalAlpha = 1; ctx.shadowColor = clsColor(n.cls); ctx.shadowBlur = 14 * devicePixelRatio; }
+    shape(ctx, n, r, clsColor(n.cls));
+    ctx.shadowBlur = 0;
+    if (r > 7 * devicePixelRatio || hi || S.nodes.length < 46) {
+      ctx.fillStyle = hi ? fg : muted;
+      ctx.font = `${(hi ? 12.5 : 11) * devicePixelRatio}px "Nanum Myeongjo", serif`;
+      ctx.textAlign = 'center';
+      const label = n.label.length > 14 ? n.label.slice(0, 13) + '…' : n.label;
+      ctx.fillText(label, n.x, n.y + r + 13 * devicePixelRatio);
+    }
+    ctx.globalAlpha = 1;
+  });
+  S.raf = requestAnimationFrame(loop);
+}
+
+function pick(ev) {
+  const cv = $('#graph'), r = cv.getBoundingClientRect();
+  const x = (ev.clientX - r.left) * devicePixelRatio, y = (ev.clientY - r.top) * devicePixelRatio;
+  let best = null, bd = 1e9;
+  S.nodes.forEach(n => {
+    const d = Math.hypot(n.x - x, n.y - y);
+    if (d < nodeR(n) + 8 * devicePixelRatio && d < bd) { bd = d; best = n; }
+  });
+  return best;
+}
+function onMove(ev) {
+  const n = pick(ev); S.hover = n;
+  const tip = $('#gTip');
+  if (!n) { tip.style.display = 'none'; $('#graph').style.cursor = 'default'; return; }
+  $('#graph').style.cursor = 'pointer';
+  const rel = S.G.edges.filter(e => e.s === n.id || e.o === n.id).length;
+  tip.innerHTML = `<b>${esc(n.label)}</b>
+    <span>${CLS[n.cls]?.ko || n.cls}${n.date ? ' · ' + esc(n.date) : ''} · 관계 ${rel}</span>
+    ${n.desc ? `<span style="display:block;margin-top:.3rem">${esc(n.desc.slice(0, 70))}</span>` : ''}`;
+  const box = $('#graph').getBoundingClientRect();
+  tip.style.display = 'block';
+  tip.style.left = Math.min(ev.clientX - box.left + 14, box.width - 270) + 'px';
+  tip.style.top = (ev.clientY - box.top + 14) + 'px';
+}
+function onClick(ev) {
+  const n = pick(ev);
+  S.focus = n ? (S.focus === n.id ? null : n.id) : null;
+  compute();
+}

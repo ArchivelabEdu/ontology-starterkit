@@ -1,0 +1,512 @@
+/* 정세균 구술기록 아카이브 — 코어
+   graph.ttl → Oxigraph WASM(브라우저 내 SPARQL 1.1) → 히어로·지도·연표·언어 */
+import init, { Store } from 'https://cdn.jsdelivr.net/npm/oxigraph@0.4.11/web.js';
+import { initGraph, redrawGraph } from './graph.js';
+import { initQuery } from './query.js';
+import { initHero } from './hero.js';
+
+export const RICO = 'https://www.ica.org/standards/RiC/ontology#';
+export const PFX = `PREFIX rico: <${RICO}>
+PREFIX ric:  <http://archives.nanet.go.kr/id/>
+PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+`;
+export const $ = s => document.querySelector(s);
+export const esc = s => String(s ?? '').replace(/[&<>"]/g,
+  c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+export let store = null;
+export const G = { nodes: [], edges: [], byId: new Map() };
+
+/* 클래스 표시 규칙 — 색 변수 · 도형 · 한글명 */
+export const CLS = {
+  Person:        { v: '--person',   shape: 'circle',   ko: '인물',   key: 'person' },
+  CorporateBody: { v: '--org',      shape: 'square',   ko: '단체',   key: 'org' },
+  Position:      { v: '--position', shape: 'diamond',  ko: '직위',   key: 'position' },
+  Event:         { v: '--event',    shape: 'triangle', ko: '사건',   key: 'event' },
+  Activity:      { v: '--activity', shape: 'triangle', ko: '활동',   key: 'activity' },
+  Place:         { v: '--place',    shape: 'pin',      ko: '장소',   key: 'place' },
+  Record:        { v: '--record',   shape: 'doc',      ko: '기록',   key: 'record' },
+  RecordSet:     { v: '--record',   shape: 'doc',      ko: '기록집합', key: 'record' },
+  Rule:          { v: '--rule',     shape: 'hex',      ko: '규칙',   key: 'rule' },
+};
+export const REL_KO = {
+  occupiesOrOccupied: '재임 직위', isOrWasOccupiedBy: '재임자',
+  existsOrExistedIn: '소속 단체', hasOrHadPosition: '소속 직위',
+  isOrWasMemberOf: '소속', hasOrHadMember: '구성원',
+  isOrWasParticipantIn: '참여', hasOrHadParticipant: '참여자',
+  hasOrHadSubject: '주제', isOrWasSubjectOf: '주제인 기록',
+  hasCreator: '생산자', hasAuthor: '면담자', hasPublisher: '발행처',
+  isOrWasIncludedIn: '상위 기록집합', includesOrIncluded: '하위 기록',
+  isAssociatedWithPlace: '관련 장소', isOrWasRegulatedBy: '적용 규칙',
+  resultsOrResultedIn: '결과', isRelatedTo: '관련',
+  hasOrHadInstantiation: '구현체', isOrWasInstantiationOf: '원기록',
+};
+export const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
+export const clsColor = c => css((CLS[c] || { v: '--muted' }).v);
+
+/* ── SPARQL ── */
+export function q(sparql) { return store.query(PFX + sparql); }
+/** SELECT → [{var:값}]  (Oxigraph 바인딩 키는 '문자열'이다) */
+export function rows(sparql) {
+  const r = q(sparql);
+  if (!r.length) return [];
+  // OPTIONAL 때문에 행마다 바인딩된 변수가 다르다.
+  // 첫 행의 키만 쓰면 첫 행에 없는 변수가 전부 사라진다 → 전 행의 합집합을 쓴다.
+  const vars = new Set();
+  r.forEach(b => { for (const k of b.keys()) vars.add(k); });
+  return r.map(b => {
+    const o = {};
+    for (const v of vars) { const t = b.get(v); o[v] = t ? t.value : ''; }
+    return o;
+  });
+}
+
+/* ── 테마 ── */
+window.toggleTheme = () => {
+  const c = document.documentElement.getAttribute('data-theme');
+  const n = c === 'dark' ? 'light' : c === 'light' ? 'dark'
+    : (matchMedia('(prefers-color-scheme:dark)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', n);
+  localStorage.setItem('kit-theme', n);
+  redrawGraph(); drawLang();
+};
+{ const t = localStorage.getItem('kit-theme'); if (t) document.documentElement.setAttribute('data-theme', t); }
+
+/* ── 스크롤 스파이 ── */
+function spy() {
+  const ids = ['place', 'event', 'graph-sec', 'query', 'lang', 'about'];
+  let cur = '';
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top < 140) cur = id;
+  }
+  document.querySelectorAll('#nav a').forEach(a =>
+    a.classList.toggle('on', a.getAttribute('href') === '#' + cur));
+}
+addEventListener('scroll', spy, { passive: true });
+
+/* ══════════ 부팅 ══════════ */
+async function boot() {
+  try {
+    await init();
+    store = new Store();
+    store.load(await (await fetch('data/graph.ttl')).text(),
+      { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
+    const nT = store.size ?? [...store.match()].length;
+
+    buildModel();
+    $('#loadStatus').textContent =
+      `그래프 적재 완료 — 트리플 ${nT}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
+    $('#hsNode').textContent = G.nodes.length;
+    $('#hsEdge').textContent = G.edges.length;
+    $('#hsTriple').textContent = nT;
+    const yrs = G.nodes.map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
+    $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
+
+    initHero(G);
+    drawMap(); drawTimeline(); initGraph(G); initQuery(); drawLang();
+    spy();
+  } catch (e) {
+    $('#loadStatus').textContent = '적재 실패: ' + e.message;
+    console.error(e);
+  }
+}
+
+/* 그래프를 화면용 모델로 */
+function buildModel() {
+  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k WHERE {
+    ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n}
+    OPTIONAL{?s rico:beginningDate ?d}
+    OPTIONAL{?s rico:generalDescription ?g} OPTIONAL{?s rico:history ?g}
+    OPTIONAL{?s rico:scopeAndContent ?g}
+    OPTIONAL{?s geo:lat ?lat} OPTIONAL{?s geo:long ?lon}
+    OPTIONAL{?s rdfs:comment ?k} }`);
+  const seen = new Map();
+  nr.forEach(r => {
+    const cls = r.c.split('#')[1];
+    if (!CLS[cls]) return;
+    const cur = seen.get(r.s);
+    if (cur) {                       // 여러 OPTIONAL 로 중복 행이 나오므로 병합
+      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k']) if (!cur[f] && r[f]) cur[f] = r[f];
+      return;
+    }
+    seen.set(r.s, { ...r, cls });
+  });
+  G.nodes = [...seen.values()].map(r => ({
+    id: r.s, cls: r.cls, label: r.n || r.s.split('/').pop(),
+    date: r.d || '', desc: r.g || '', kind: r.k || '',
+    lat: r.lat ? +r.lat : null, lon: r.lon ? +r.lon : null,
+  }));
+  G.byId = new Map(G.nodes.map(n => [n.id, n]));
+  const er = rows(`SELECT ?s ?p ?o WHERE {
+    ?s ?p ?o . FILTER(isIRI(?o) && STRSTARTS(STR(?p), "${RICO}")) }`);
+  G.edges = er.filter(e => G.byId.has(e.s) && G.byId.has(e.o))
+    .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] }));
+  G.nodes.forEach(n => n.deg = 0);
+  G.edges.forEach(e => { G.byId.get(e.s).deg++; G.byId.get(e.o).deg++; });
+}
+
+/* ══════════ 지도 ══════════ */
+const MAP = { map: null, markers: new Map(), filter: new Set(), tour: null, tourIdx: 0 };
+const TOUR = ['place-jinan', 'place-jeonju', 'place-korea-univ', 'place-newyork',
+  'place-ssangyong', 'place-assembly'];
+
+function placeNodes() {
+  return G.nodes.filter(n => n.cls === 'Place' && n.lat != null);
+}
+function drawMap() {
+  const ps = placeNodes();
+  $('#nPlace').textContent = ps.length;
+  const kinds = [...new Set(ps.map(p => p.kind).filter(Boolean))];
+  MAP.filter = new Set(kinds);
+  $('#mapChips').innerHTML =
+    `<button class="chip on c-all" onclick="mapFilter('*')">전체</button>` +
+    kinds.map(k => `<button class="chip on c-place" data-k="${esc(k)}" onclick="mapFilter('${esc(k)}')">
+      <i class="dot"></i>${esc(k)}</button>`).join('');
+
+  MAP.map = L.map('map', { scrollWheelZoom: false, minZoom: 3, worldCopyJump: true })
+    .setView([36.5, 127.8], 6);
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark'
+    || (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
+  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`,
+    { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }).addTo(MAP.map);
+  MAP.map.on('click', () => MAP.map.scrollWheelZoom.enable());
+
+  ps.forEach(p => {
+    const col = css('--place');
+    const m = L.marker([p.lat, p.lon], {
+      icon: L.divIcon({
+        className: '', iconSize: [26, 34], iconAnchor: [13, 34],
+        html: `<svg width="26" height="34" viewBox="0 0 26 34">
+          <path d="M13 0C5.8 0 0 5.8 0 13c0 9.7 13 21 13 21s13-11.3 13-21C26 5.8 20.2 0 13 0z"
+            fill="${col}" opacity=".9"/><circle cx="13" cy="13" r="4.5" fill="#fff"/></svg>`
+      })
+    }).addTo(MAP.map);
+    const linked = G.edges.filter(e => e.o === p.id).length;
+    m.bindPopup(`<b style="font-size:.95rem">${esc(p.label)}</b><br>
+      <span style="color:#777;font-size:.8rem">${esc(p.kind)}${p.desc ? ' · ' + esc(p.desc) : ''}</span>
+      ${linked ? `<br><span style="font-size:.78rem">연결된 기록·사건 ${linked}건</span>` : ''}`);
+    m.on('click', () => selectPlace(p.id));
+    MAP.markers.set(p.id, m);
+  });
+  renderMapList();
+  fitMap();
+}
+const isKR = p => p.lat > 33 && p.lat < 39.5 && p.lon > 124 && p.lon < 132;
+function fitMap() {
+  let vis = placeNodes().filter(p => MAP.filter.has(p.kind));
+  if (!vis.length) return;
+  // 국내와 해외가 섞이면 세계 축척으로 물러나 한반도가 점이 된다.
+  // 국내가 하나라도 있으면 국내에 맞추고, 해외는 목록·투어로 찾아간다.
+  const kr = vis.filter(isKR);
+  if (kr.length) vis = kr;
+  MAP.map.fitBounds(L.latLngBounds(vis.map(p => [p.lat, p.lon])).pad(.25), { maxZoom: 11 });
+}
+window.mapFilter = k => {
+  const ps = placeNodes();
+  const kinds = [...new Set(ps.map(p => p.kind).filter(Boolean))];
+  if (k === '*') MAP.filter = MAP.filter.size === kinds.length ? new Set() : new Set(kinds);
+  else MAP.filter.has(k) ? MAP.filter.delete(k) : MAP.filter.add(k);
+  document.querySelectorAll('#mapChips .chip').forEach(c => {
+    const kk = c.dataset.k;
+    c.classList.toggle('on', kk ? MAP.filter.has(kk) : MAP.filter.size === kinds.length);
+  });
+  ps.forEach(p => {
+    const m = MAP.markers.get(p.id);
+    if (!m) return;
+    MAP.filter.has(p.kind) ? m.addTo(MAP.map) : MAP.map.removeLayer(m);
+  });
+  renderMapList(); fitMap();
+};
+function renderMapList() {
+  const vis = placeNodes().filter(p => MAP.filter.has(p.kind));
+  $('#mapCount').textContent = vis.length;
+  $('#mapItems').innerHTML = vis.map(p => {
+    const linked = G.edges.filter(e => e.o === p.id).length;
+    return `<div class="mi" data-id="${esc(p.id)}" onclick="selectPlace('${esc(p.id)}')">
+      <i class="dot" style="background:var(--place)"></i>
+      <div><b>${esc(p.label)}</b><span>${esc(p.kind)}${linked ? ` · 연결 ${linked}` : ''}</span></div></div>`;
+  }).join('');
+}
+window.selectPlace = id => {
+  const p = G.byId.get(id); if (!p) return;
+  MAP.map.flyTo([p.lat, p.lon], 12, { duration: .8 });
+  MAP.markers.get(id)?.openPopup();
+  document.querySelectorAll('.mi').forEach(e => e.classList.toggle('on', e.dataset.id === id));
+  document.querySelector(`.mi[data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'nearest' });
+};
+window.toggleTour = () => {
+  if (MAP.tour) { clearInterval(MAP.tour); MAP.tour = null; $('#tourBtn').textContent = '▶ 생애 따라가기'; $('#tourLabel').textContent = ''; return; }
+  MAP.tourIdx = 0; $('#tourBtn').textContent = '■ 정지';
+  const step = () => {
+    const ids = TOUR.map(t => 'http://archives.nanet.go.kr/id/' + t).filter(i => G.byId.has(i));
+    if (MAP.tourIdx >= ids.length) { window.toggleTour(); return; }
+    const id = ids[MAP.tourIdx];
+    selectPlace(id);
+    $('#tourLabel').textContent = `${MAP.tourIdx + 1}/${ids.length} · ${G.byId.get(id).label}`;
+    MAP.tourIdx++;
+  };
+  step(); MAP.tour = setInterval(step, 2600);
+};
+
+/* ══════════ 연표 ══════════ */
+const TL = { filter: new Set() };
+function eventNodes() {
+  return G.nodes.filter(n => (n.cls === 'Event' || n.cls === 'Activity') && n.date)
+    .map(n => ({ ...n, year: +String(n.date).slice(0, 4) }))
+    .filter(n => n.year > 1900).sort((a, b) => a.year - b.year);
+}
+function drawTimeline() {
+  const evs = eventNodes();
+  $('#nEvent').textContent = evs.length;
+  const kinds = [...new Set(evs.map(e => e.kind).filter(Boolean))];
+  TL.filter = new Set(kinds);
+  $('#tlChips').innerHTML =
+    `<button class="chip on c-all" onclick="tlFilter('*')">전체</button>` +
+    kinds.map(k => `<button class="chip on c-event" data-k="${esc(k)}" onclick="tlFilter('${esc(k)}')">
+      <i class="dot"></i>${esc(k)}</button>`).join('');
+  renderTimeline();
+}
+const KIND_COLOR = {
+  정치: '--event', 경제: '--person', 노동: '--place', 의정: '--rule',
+  언론: '--record', 정당: '--org', 학창: '--activity', 학업: '--activity',
+  직장: '--position', 기록: '--record',
+};
+function renderTimeline() {
+  const evs = eventNodes().filter(e => TL.filter.has(e.kind));
+  const track = $('#tlTrack'), axis = $('#tlAxis');
+  if (!evs.length) { track.innerHTML = '<p class="status">표시할 사건이 없습니다.</p>'; return; }
+  const y0 = Math.min(...evs.map(e => e.year)) - 2, y1 = Math.max(...evs.map(e => e.year)) + 2;
+  const pos = y => ((y - y0) / (y1 - y0)) * 100;
+  axis.innerHTML = '<div class="tl-line"></div>' +
+    Array.from({ length: Math.ceil((y1 - y0) / 5) + 1 }, (_, i) => y0 + i * 5)
+      .filter(y => y <= y1).map(y => `<div class="yr" style="left:${pos(y)}%">${y}</div>`).join('');
+  // 겹침 회피: 레인 배정
+  const lanes = [];
+  const placed = evs.map(e => {
+    const x = pos(e.year);
+    let lane = lanes.findIndex(last => x - last > 9);
+    if (lane === -1) { lane = lanes.length; lanes.push(x); } else lanes[lane] = x;
+    return { ...e, x, lane };
+  });
+  const H = 46;
+  track.style.height = (lanes.length * H + 30) + 'px';
+  track.innerHTML = placed.map(e => {
+    const col = css(KIND_COLOR[e.kind] || '--muted');
+    return `<div class="tl-ev" data-id="${esc(e.id)}" style="left:${e.x}%;top:0;color:${col}"
+        onclick="tlDetail('${esc(e.id)}')">
+      <div class="stem" style="height:${e.lane * H + 6}px"></div>
+      <div class="bub" title="${esc(e.label)}">${esc(e.label)}</div>
+      <div class="yr">${e.date}</div></div>`;
+  }).join('');
+}
+window.tlFilter = k => {
+  const kinds = [...new Set(eventNodes().map(e => e.kind).filter(Boolean))];
+  if (k === '*') TL.filter = TL.filter.size === kinds.length ? new Set() : new Set(kinds);
+  else TL.filter.has(k) ? TL.filter.delete(k) : TL.filter.add(k);
+  document.querySelectorAll('#tlChips .chip').forEach(c => {
+    const kk = c.dataset.k;
+    c.classList.toggle('on', kk ? TL.filter.has(kk) : TL.filter.size === kinds.length);
+  });
+  renderTimeline();
+};
+window.tlDetail = id => {
+  const n = G.byId.get(id); if (!n) return;
+  const rel = G.edges.filter(e => e.s === id || e.o === id).map(e => {
+    const other = G.byId.get(e.s === id ? e.o : e.s);
+    return other ? `<span class="chip" style="cursor:default"><i class="dot"
+      style="background:${clsColor(other.cls)}"></i>${esc(other.label)}
+      <span style="color:var(--muted);font-size:.75rem">${esc(REL_KO[e.p] || e.p)}</span></span>` : '';
+  }).join('');
+  $('#tlDetail').innerHTML = `<div class="panel" style="padding:1rem 1.2rem;margin-top:1rem">
+    <div style="display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap">
+      <b style="font-family:var(--serif);font-size:1.1rem">${esc(n.label)}</b>
+      <span class="status">${esc(n.date)}${n.kind ? ' · ' + esc(n.kind) : ''}</span></div>
+    ${n.desc ? `<p style="margin:.4rem 0 .6rem;font-size:.92rem">${esc(n.desc)}</p>` : ''}
+    <div class="chips" style="margin:.3rem 0 0">${rel || '<span class="status">연결된 개체 없음</span>'}</div>
+  </div>`;
+  $('#tlDetail').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+};
+
+/* ══════════ 언어 ══════════ */
+const LANG = { mode: 'network', words: [], byChapter: [] };
+const STOP = new Set(['그리고', '하지만', '그런데', '있는', '없는', '하는', '이런', '저런', '그런', '그래서',
+  '것이', '것을', '것도', '거예요', '그때', '해서', '때문에', '우리', '저는', '제가', '많이', '아주',
+  '이렇게', '그렇게', '어떻게', '무슨', '그러니까', '이제', '정말', '조금', '하나', '이런저런',
+  '있었', '했어요', '하고', '그거', '뭐가', '이라고', '이라는', '라고', '한다는', '거는', '것은',
+  // 형태소 분석기를 쓰지 않으므로 자주 남는 기능어를 직접 걷어낸다
+  '밖에', '않고', '않은', '않았', '그건', '그게', '이게', '저게', '내가', '너무', '그냥', '가는', '오는',
+  '되는', '되고', '됐다', '했다', '한다', '한테', '에게', '에서', '으로', '이나', '라도', '까지', '부터',
+  '보다', '같은', '같이', '자기', '자꾸', '다시', '먼저', '나중', '당시', '그것', '이것', '저것', '무엇',
+  '거기', '여기', '저기', '어디', '언제', '얼마', '동안', '가지', '정도', '경우', '이야기', '얘기',
+  '생각', '사람', '이제는', '그때는', '인가', '있다', '없다', '싶은', '싶다', '주는', '주고',
+  '전혀', '중에', '년에', '술을', '잔도', '말할', '먹어', '때는', '일이', '받는', '있고', '없고']);
+/* 활용형 꼬리. 명사에는 거의 붙지 않는 것만 골랐다(제도·태도 같은 말을 지우지 않기 위해). */
+const VERB_TAIL = /(면서|았는데|었는데|는데|해서|했고|했지|했다|하고|하면|하는|한다|어요|아요|겠다|었다|았다|잖아|거예|거야|보면|보니|으면|했으면|하랴|이랴)$/;
+/* 조사를 떼어 낸다. 형태소 분석기가 없으므로 '뒤에서 한 번만, 남는 글자가 2자 이상일 때만'.
+   '종이 → 종'(1자) 같은 오작동은 이 길이 조건이 막는다. */
+const JOSA = ['으로써', '으로서', '에서는', '에게는', '이라는', '이라고', '까지도', '부터는',
+  '에서', '에게', '으로', '까지', '부터', '이나', '라도', '한테', '보다', '처럼', '마다', '조차',
+  '이란', '이든', '만큼', '이라', '에는', '에도', '와의', '과의', '의는',
+  '은', '는', '이', '가', '을', '를', '에', '의', '도', '로', '와', '과', '만', '요'];
+function stem(w) {
+  for (const j of JOSA) {
+    if (w.length - j.length >= 2 && w.endsWith(j)) return w.slice(0, -j.length);
+  }
+  return w;
+}
+
+async function loadCorpus() {
+  let text = '';
+  try { text = await (await fetch('data/corpus.txt')).text(); } catch (e) { }
+  const paras = text.split(/\n\s*\n/).filter(p => p.trim());
+  const tok = t => (t.match(/[가-힣]{2,}/g) || [])
+    .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
+  const freq = {};
+  paras.forEach(p => tok(p).forEach(w => freq[w] = (freq[w] || 0) + 1));
+  LANG.words = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 70)
+    .map(([w, n]) => ({ w, n }));
+  // 단락(≈회차) × 어휘
+  LANG.byChapter = paras.map((p, i) => {
+    const f = {}; tok(p).forEach(w => f[w] = (f[w] || 0) + 1);
+    return { i, label: `${i + 1}단락`, freq: f, total: tok(p).length };
+  });
+  // 동시출현 (같은 문장)
+  const co = new Map();
+  paras.forEach(p => p.split(/[.!?]\s/).forEach(sent => {
+    const ws = [...new Set(tok(sent))].filter(w => LANG.words.some(x => x.w === w));
+    for (let i = 0; i < ws.length; i++) for (let j = i + 1; j < ws.length; j++) {
+      const k = [ws[i], ws[j]].sort().join(' ');
+      co.set(k, (co.get(k) || 0) + 1);
+    }
+  }));
+  LANG.co = [...co.entries()].map(([k, n]) => { const [a, b] = k.split(' '); return { a, b, n }; })
+    .filter(e => e.n >= 1).sort((x, y) => y.n - x.n).slice(0, 120);
+}
+
+const LANG_MODES = [
+  { k: 'network', t: '어휘 관계망', note: '같은 문장에 함께 나온 어휘를 선으로 이었습니다. 원 크기는 빈도, 색은 군집. 단어를 누르면 그 단어가 들어간 원문이 뜹니다.' },
+  { k: 'flow', t: '시간대별 흐름', note: '단락 순서를 가로축으로, 어휘 비중을 쌓아 흐르는 띠로 그렸습니다. 관심사가 어떻게 이동하는지 보입니다.' },
+  { k: 'print', t: '문서 지문', note: '단락 × 어휘 히트맵. 어느 대목에 무슨 말이 집중됐는지 한눈에 보입니다.' },
+];
+async function drawLang() {
+  if (!LANG.words.length) await loadCorpus();
+  $('#langSeg').innerHTML = LANG_MODES.map(m =>
+    `<button class="${m.k === LANG.mode ? 'on' : ''}" onclick="setLang('${m.k}')">${m.t}</button>`).join('');
+  $('#langNote').textContent = LANG_MODES.find(m => m.k === LANG.mode).note;
+  const stage = $('#lang-stage');
+  stage.innerHTML = '';
+  if (!LANG.words.length) { stage.innerHTML = '<p class="status" style="padding:1rem">코퍼스 없음</p>'; return; }
+  ({ network: langNetwork, flow: langFlow, print: langPrint })[LANG.mode](stage);
+}
+window.setLang = k => { LANG.mode = k; drawLang(); };
+
+function svgEl(stage, w, h) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', `0 0 ${w} ${h}`); s.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  stage.appendChild(s); return s;
+}
+const PAL = ['--person', '--org', '--place', '--event', '--position', '--rule'];
+
+function langNetwork(stage) {
+  const W = 1000, H = 460, s = svgEl(stage, W, H);
+  const idx = new Map(LANG.words.map((w, i) => [w.w, i]));
+  const N = LANG.words.map((w, i) => ({
+    ...w, x: W / 2 + Math.cos(i * 2.4) * (120 + (i % 9) * 32),
+    y: H / 2 + Math.sin(i * 2.4) * (90 + (i % 7) * 26), vx: 0, vy: 0,
+  }));
+  const E = LANG.co.filter(e => idx.has(e.a) && idx.has(e.b))
+    .map(e => ({ a: N[idx.get(e.a)], b: N[idx.get(e.b)], n: e.n }));
+  const max = LANG.words[0].n;
+  for (let it = 0; it < 220; it++) {          // 간단한 힘 배치
+    E.forEach(e => {
+      const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y, d = Math.hypot(dx, dy) || 1;
+      const f = (d - 70) * 0.006 * Math.min(e.n, 3);
+      e.a.vx += dx / d * f; e.a.vy += dy / d * f; e.b.vx -= dx / d * f; e.b.vy -= dy / d * f;
+    });
+    for (let i = 0; i < N.length; i++) for (let j = i + 1; j < N.length; j++) {
+      const dx = N[j].x - N[i].x, dy = N[j].y - N[i].y, d2 = dx * dx + dy * dy || 1;
+      const f = 900 / d2;
+      const d = Math.sqrt(d2);
+      N[i].vx -= dx / d * f; N[i].vy -= dy / d * f; N[j].vx += dx / d * f; N[j].vy += dy / d * f;
+    }
+    N.forEach(n => {
+      n.vx += (W / 2 - n.x) * 0.0016; n.vy += (H / 2 - n.y) * 0.0016;
+      n.x += n.vx *= .82; n.y += n.vy *= .82;
+      n.x = Math.max(40, Math.min(W - 40, n.x)); n.y = Math.max(24, Math.min(H - 24, n.y));
+    });
+  }
+  s.innerHTML = E.map(e => `<line x1="${e.a.x}" y1="${e.a.y}" x2="${e.b.x}" y2="${e.b.y}"
+      stroke="${css('--line')}" stroke-width="${Math.min(e.n, 3)}" opacity=".55"/>`).join('')
+    + N.map((n, i) => {
+      const r = 5 + (n.n / max) * 20, col = css(PAL[i % PAL.length]);
+      return `<g class="lw" style="cursor:pointer" data-w="${esc(n.w)}">
+        <circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${col}" opacity=".22"/>
+        <circle cx="${n.x}" cy="${n.y}" r="${r * .45}" fill="${col}"/>
+        <text x="${n.x}" y="${n.y - r - 4}" text-anchor="middle" font-size="${11 + (n.n / max) * 9}"
+          font-family="var(--serif)" fill="${css('--fg')}">${esc(n.w)}</text></g>`;
+    }).join('');
+  s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+}
+
+function langFlow(stage) {
+  const W = 1000, H = 460, s = svgEl(stage, W, H);
+  const top = LANG.words.slice(0, 12);
+  const ch = LANG.byChapter;
+  const series = top.map(w => ch.map(c => (c.freq[w.w] || 0) / Math.max(c.total, 1)));
+  const nx = i => 60 + (i / Math.max(ch.length - 1, 1)) * (W - 110);
+  const stackTop = ch.map((_, ci) => series.reduce((a, s2) => a + s2[ci], 0));
+  const maxStack = Math.max(...stackTop, .001);
+  let acc = ch.map(() => 0);
+  const paths = series.map((sv, si) => {
+    const up = [], dn = [];
+    sv.forEach((v, ci) => {
+      const y0 = H - 40 - (acc[ci] / maxStack) * (H - 90);
+      const y1 = H - 40 - ((acc[ci] + v) / maxStack) * (H - 90);
+      up.push([nx(ci), y1]); dn.unshift([nx(ci), y0]); acc[ci] += v;
+    });
+    const curve = pts => pts.map((p, i) => i ? `L${p[0]},${p[1]}` : `M${p[0]},${p[1]}`).join('');
+    const col = css(PAL[si % PAL.length]);
+    const mid = up[Math.floor(up.length / 2)];
+    return { d: curve(up) + curve(dn).replace('M', 'L') + 'Z', col, label: top[si].w, mid };
+  });
+  s.innerHTML = paths.map(p => `<path d="${p.d}" fill="${p.col}" opacity=".55"/>`).join('')
+    + ch.map((c, i) => `<text x="${nx(i)}" y="${H - 18}" text-anchor="middle" font-size="11"
+        fill="${css('--muted')}">${esc(c.label)}</text>`).join('')
+    + paths.map(p => `<text x="${p.mid[0]}" y="${p.mid[1] + 12}" text-anchor="middle" font-size="12"
+        font-family="var(--serif)" fill="${css('--fg')}" style="cursor:pointer"
+        class="lw" data-w="${esc(p.label)}">${esc(p.label)}</text>`).join('');
+  s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+}
+
+function langPrint(stage) {
+  const top = LANG.words.slice(0, 22), ch = LANG.byChapter;
+  const W = 1000, H = 460, s = svgEl(stage, W, H);
+  const cw = (W - 150) / ch.length, rh = Math.min(16, (H - 70) / top.length);
+  const max = Math.max(...top.map(w => Math.max(...ch.map(c => c.freq[w.w] || 0))), 1);
+  s.innerHTML = top.map((w, ri) => ch.map((c, ci) => {
+    const v = (c.freq[w.w] || 0) / max;
+    return `<rect x="${140 + ci * cw}" y="${30 + ri * rh}" width="${cw - 2}" height="${rh - 2}"
+      rx="2" fill="${css('--accent')}" opacity="${.06 + v * .9}"><title>${esc(w.w)} · ${esc(c.label)} · ${c.freq[w.w] || 0}회</title></rect>`;
+  }).join('')).join('')
+    + top.map((w, ri) => `<text x="132" y="${30 + ri * rh + rh * .72}" text-anchor="end" font-size="11"
+        fill="${css('--fg')}" class="lw" style="cursor:pointer" data-w="${esc(w.w)}">${esc(w.w)}</text>`).join('')
+    + ch.map((c, ci) => `<text x="${140 + ci * cw + cw / 2}" y="22" text-anchor="middle" font-size="10.5"
+        fill="${css('--muted')}">${esc(c.label)}</text>`).join('');
+  s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+}
+
+async function showWordSource(w) {
+  let text = '';
+  try { text = await (await fetch('data/corpus.txt')).text(); } catch (e) { }
+  const hits = text.split(/\n\s*\n/).map((p, i) => ({ i, p }))
+    .filter(x => x.p.includes(w)).slice(0, 3);
+  $('#langNote').innerHTML = hits.length
+    ? `<b>“${esc(w)}”가 나온 대목</b><br>` + hits.map(h =>
+      `<span style="display:block;margin:.35rem 0">${h.i + 1}단락 — ${esc(h.p.slice(0, 150))
+        .replace(new RegExp(esc(w), 'g'), `<mark>${esc(w)}</mark>`)}…</span>`).join('')
+    : `“${esc(w)}” 원문을 찾지 못했습니다.`;
+}
+
+boot();
