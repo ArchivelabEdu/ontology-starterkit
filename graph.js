@@ -125,26 +125,49 @@ const order = ['Person', 'Position', 'CorporateBody', 'Event', 'Activity', 'Plac
 
 function lNetwork() {
   const { W, H } = dims();
+  const N = S.nodes.length;
   S.nodes.forEach((n, i) => {
-    const a = i * 2.399, r = Math.sqrt(i / S.nodes.length) * Math.min(W, H) * .38;
+    const a = i * 2.399, r = Math.sqrt(i / N) * Math.min(W, H) * .38;
     n.x = W / 2 + Math.cos(a) * r; n.y = H / 2 + Math.sin(a) * r;
   });
-  for (let it = 0; it < 320; it++) {
-    S.edges.forEach(e => {
+  // 모든 쌍을 밀어내면 O(n²)이라 노드가 수백 개만 돼도 몇 초씩 멈춘다.
+  // 격자에 담아 '이웃 칸'끼리만 민다 — 멀리 있는 노드는 어차피 힘이 0에 가깝다.
+  const REP = 26000 * devicePixelRatio;
+  const CELL = Math.max(60, Math.sqrt(REP) * 1.6);
+  const ITER = N > 400 ? 140 : N > 150 ? 220 : 320;
+  const grid = new Map();
+  const key = (x, y) => ((x / CELL) | 0) + ',' + ((y / CELL) | 0);
+
+  for (let it = 0; it < ITER; it++) {
+    for (const e of S.edges) {
       const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y, d = Math.hypot(dx, dy) || 1;
       const f = (d - 120 * devicePixelRatio) * .008;
       e.a.vx += dx / d * f; e.a.vy += dy / d * f; e.b.vx -= dx / d * f; e.b.vy -= dy / d * f;
-    });
-    for (let i = 0; i < S.nodes.length; i++) for (let j = i + 1; j < S.nodes.length; j++) {
-      const a = S.nodes[i], b = S.nodes[j];
-      const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy || 1;
-      const f = 26000 * devicePixelRatio / d2, d = Math.sqrt(d2);
-      a.vx -= dx / d * f; a.vy -= dy / d * f; b.vx += dx / d * f; b.vy += dy / d * f;
     }
-    S.nodes.forEach(n => {
+    grid.clear();
+    for (const n of S.nodes) {
+      const k = key(n.x, n.y);
+      (grid.get(k) || grid.set(k, []).get(k)).push(n);
+    }
+    for (const [k, cell] of grid) {
+      const [cx, cy] = k.split(',').map(Number);
+      const near = [];
+      for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+        const c = grid.get((cx + ox) + ',' + (cy + oy));
+        if (c) near.push(c);
+      }
+      for (const a of cell) for (const bucket of near) for (const b of bucket) {
+        if (a === b) continue;
+        const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy || 1;
+        if (d2 > CELL * CELL) continue;
+        const f = REP / d2, d = Math.sqrt(d2);
+        a.vx -= dx / d * f; a.vy -= dy / d * f;
+      }
+    }
+    for (const n of S.nodes) {
       n.vx += (W / 2 - n.x) * .0022; n.vy += (H / 2 - n.y) * .0022;
       n.x += n.vx *= .8; n.y += n.vy *= .8;
-    });
+    }
   }
   clampAll();
 }

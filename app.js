@@ -261,8 +261,10 @@ window.toggleTour = () => {
 /* ══════════ 연표 ══════════ */
 const TL = { filter: new Set() };
 function eventNodes() {
+  // 본문에서 추출한 사건에는 유형(rdfs:comment)이 없다. 빈 유형을 그대로 두면
+  // 유형 필터에서 통째로 빠져 화면에 하나도 안 나온다. 제 이름을 붙여 준다.
   return G.nodes.filter(n => (n.cls === 'Event' || n.cls === 'Activity') && n.date)
-    .map(n => ({ ...n, year: +String(n.date).slice(0, 4) }))
+    .map(n => ({ ...n, kind: n.kind || '구술 본문', year: +String(n.date).slice(0, 4) }))
     .filter(n => n.year > 1900).sort((a, b) => a.year - b.year);
 }
 function drawTimeline() {
@@ -294,11 +296,11 @@ function renderTimeline() {
   const lanes = [];
   const placed = evs.map(e => {
     const x = pos(e.year);
-    let lane = lanes.findIndex(last => x - last > 9);
+    let lane = lanes.findIndex(last => x - last > 5);
     if (lane === -1) { lane = lanes.length; lanes.push(x); } else lanes[lane] = x;
     return { ...e, x, lane };
   });
-  const H = 46;
+  const H = 40;
   track.style.height = (lanes.length * H + 30) + 'px';
   track.innerHTML = placed.map(e => {
     const col = css(KIND_COLOR[e.kind] || '--muted');

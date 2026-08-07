@@ -11,6 +11,17 @@ const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관
 const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule'];
 const R = { q: '', cls: new Set(), built: false };
 
+/* RiC-O 가 owl:inverseOf 로 짝지어 둔 속성들. 프로파일 §4 에서 검증한 9쌍. */
+const PAIRS = [
+  ['hasCreator', 'isCreatorOf'], ['hasAuthor', 'isAuthorOf'],
+  ['hasOrHadSubject', 'isOrWasSubjectOf'], ['occupiesOrOccupied', 'isOrWasOccupiedBy'],
+  ['hasOrHadPosition', 'existsOrExistedIn'], ['isOrWasMemberOf', 'hasOrHadMember'],
+  ['includesOrIncluded', 'isOrWasIncludedIn'],
+  ['hasOrHadInstantiation', 'isOrWasInstantiationOf'],
+  ['isOrWasParticipantIn', 'hasOrHadParticipant'],
+];
+const INVERSE = Object.fromEntries(PAIRS.flatMap(([a, b]) => [[a, b], [b, a]]));
+
 /* ── 색인 ── */
 function index() {
   return G.nodes.map(n => {
@@ -130,8 +141,13 @@ function item(sid) {
   const rows = [];
   for (const [p, list] of Object.entries(out))
     rows.push({ dir: '→', p, ko: REL_KO[p] || p, list: list.filter(Boolean) });
-  for (const [p, list] of Object.entries(inn))
-    rows.push({ dir: '←', p, ko: (REL_KO[p] || p), list: list.filter(Boolean), rev: true });
+  for (const [p, list] of Object.entries(inn)) {
+    // 들어오는 관계는 RiC-O 가 정의한 '역속성'의 이름으로 부른다.
+    // "소속 단체인 것" 같은 말을 만들어 쓰지 않는다 — 표준에 이미 이름이 있다.
+    const inv = INVERSE[p];
+    rows.push({ dir: '←', p: inv || p, ko: inv ? REL_KO[inv] : `${REL_KO[p] || p} — 이 개체를 가리킴`,
+      list: list.filter(Boolean), rev: !inv });
+  }
   const total = rows.reduce((s, r) => s + r.list.length, 0);
 
   const facts = [
@@ -156,7 +172,7 @@ function item(sid) {
     <h3>연결된 개체 <span>${total}</span></h3>
     ${total ? rows.map(r => `
       <div class="link-row">
-        <div class="rel">${r.dir} ${esc(r.ko)}${r.rev ? '<em>인 것</em>' : ''}
+        <div class="rel">${r.dir} ${esc(r.ko)}
           <code>rico:${esc(r.p)}</code></div>
         <div class="chips-l">${r.list.map(o => `
           <a class="ent" href="#/item/${encodeURIComponent(short(o.id))}">
