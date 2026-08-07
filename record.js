@@ -106,6 +106,7 @@ function card(n) {
     ${n.date ? `<time>${esc(n.date)}</time>` : ''}
     ${n.desc ? `<p>${mark(String(n.desc).slice(0, 70))}</p>` : ''}
     <i class="deg">연결 ${n.deg}${n.same?.length ? ` · 외부 ${n.same.length}` : ''}</i>
+    <code class="uu" title="UUID">${esc(n.uuid || '—')}</code>
   </a>`;
 }
 
@@ -126,11 +127,19 @@ const long = s => s.startsWith('http') ? s : RIC + s;
 
 function route() {
   const m = location.hash.match(/^#\/item\/(.+)$/);
-  if (m) item(decodeURIComponent(m[1]));
-  else close();
+  if (m) { item(decodeURIComponent(m[1])); return; }
+  close();
+  // 기록은 스크롤 중간의 한 토막이 아니라 **따로 선 페이지**다.
+  // 800건을 훑는 일과 한 장면을 보는 일은 성격이 다르기 때문이다.
+  const rec = location.hash === '#/records' || location.hash === '#record';
+  document.documentElement.classList.toggle('records-on', rec);
+  document.body.classList.toggle('records-open', rec);
+  if (rec) { $('#recQ')?.focus({ preventScroll: true }); scrollTo({ top: 0 }); }
 }
 window.openItem = id => { location.hash = '#/item/' + encodeURIComponent(short(id)); };
-window.closeItem = () => { history.pushState('', '', location.pathname + location.search + '#record'); close(); };
+window.closeItem = () => { location.hash = '#/records'; };
+window.openRecords = () => { location.hash = '#/records'; };
+window.closeRecords = () => { location.hash = ''; scrollTo({ top: 0 }); };
 
 function close() {
   const el = $('#itemView');
@@ -143,7 +152,7 @@ function item(sid) {
   const n = G.byId.get(long(sid));
   const el = $('#itemView');
   if (!n) {
-    el.innerHTML = `<div class="item-wrap"><a class="back" href="#record" onclick="closeItem();return false">← 기록 찾아보기</a>
+    el.innerHTML = `<div class="item-wrap"><a class="back" href="#/records">← 기록 찾아보기</a>
       <div class="warnbox">그런 개체가 없습니다: <code>${esc(sid)}</code></div></div>`;
     el.classList.add('on'); document.body.classList.add('item-open');
     return;
@@ -183,7 +192,7 @@ function item(sid) {
   ].filter(Boolean);
 
   el.innerHTML = `<div class="item-wrap">
-    <a class="back" href="#record" onclick="closeItem();return false">← 기록 찾아보기</a>
+    <a class="back" href="#/records">← 기록 찾아보기</a>
 
     <div class="item-head${n.img ? ' with-img' : ''}">
       ${n.img ? `<figure class="portrait"><img src="${esc(n.img)}" alt="${esc(n.label)}">

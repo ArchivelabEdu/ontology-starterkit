@@ -40,12 +40,10 @@ header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 
 .hw{max-width:1240px;margin:0 auto;padding:.65rem 1.4rem;display:flex;gap:1rem;align-items:center}
 /* 로고 — 이 사이트의 주장을 그대로 그린 마크: 인물 ● — 직위 ◆ — 단체 ■ */
 .logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
-.logo .mk{width:34px;height:12px;flex:none;overflow:visible}
+.logo .mk{width:22px;height:10px;flex:none;overflow:visible}
 .logo .mk line{stroke:var(--muted);stroke-width:1;opacity:.55}
 .logo .mk .n{fill:var(--accent);transition:fill .25s}
-.logo .mk .d{fill:none;stroke:var(--accent);stroke-width:1.6;transition:stroke .25s}
 .logo:hover .mk .n1{fill:var(--person)}
-.logo:hover .mk .d{stroke:var(--position)}
 .logo:hover .mk .n2{fill:var(--org)}
 .logo .tt{font-family:var(--serif);font-weight:700;font-size:.98rem;letter-spacing:-.015em;line-height:1.25}
 .logo small{display:block;font-family:var(--sans);font-weight:400;font-size:.66rem;color:var(--muted);
@@ -103,8 +101,9 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
   background:var(--line);transition:background .3s,height .2s}
 .hero-dots button:hover{height:6px}
 .hero-dots button.on{background:var(--accent);height:6px}
-.hero-hint{position:absolute;top:.5rem;right:.5rem;font-size:.72rem;color:var(--muted);
-  background:color-mix(in srgb,var(--panel) 80%,transparent);padding:.2rem .5rem;border-radius:6px}
+.hero-hint{position:absolute;bottom:.4rem;left:0;font-size:.68rem;color:var(--muted);
+  background:none;padding:0;letter-spacing:.01em;opacity:.55;transition:opacity .3s}
+.hero-stage:hover .hero-hint{opacity:1}
 
 
 /* ───── 히어로 2안 — 전면 이미지 ───── */
@@ -188,9 +187,14 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .h2-rail button.on{color:#e8b08c}
 .h2-rail button.on i{width:34px}
 
-#heroSwap{position:fixed;right:1rem;bottom:1rem;z-index:800;display:flex;gap:.15rem;
-  background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.2rem;
-  box-shadow:var(--shadow)}
+/* 히어로를 벗어나면 사라진다. 페이지 내내 따라다니면 눈에 거슬린다. */
+#heroZone{position:relative}
+#heroSwap{position:absolute;right:max(1.4rem,calc(50vw - 610px));top:5.4rem;z-index:800;
+  display:flex;gap:.15rem;background:color-mix(in srgb,var(--panel) 82%,transparent);
+  backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:999px;padding:.2rem;
+  box-shadow:var(--shadow);opacity:.45;transition:opacity .3s}
+#heroSwap:hover{opacity:1}
+body.past-hero #heroSwap{opacity:0;pointer-events:none}
 #heroSwap button{border:none;background:transparent;color:var(--muted);font:inherit;font-size:.74rem;
   padding:.3rem .7rem;border-radius:999px;cursor:pointer}
 #heroSwap button.on{background:var(--accent);color:#fff;font-weight:600}
@@ -224,6 +228,8 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .rec-card time{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .rec-card p{margin:.25rem 0 0;font-size:.78rem;color:var(--muted);line-height:1.5}
 .rec-card .deg{display:block;margin-top:.4rem;font-size:.7rem;color:var(--muted);font-style:normal}
+.rec-card .uu{display:block;margin-top:.2rem;font-family:var(--mono);font-size:.6rem;
+  color:var(--muted);opacity:.55;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 mark{background:var(--accent-soft);color:inherit;padding:0 .1em;border-radius:2px}
 .rec-more{margin-top:.6rem}
 
@@ -273,6 +279,47 @@ body.item-open{overflow:hidden}
   padding-top:1.2rem;border-top:1px solid var(--line)}
 @media(max-width:640px){.link-row{grid-template-columns:1fr;gap:.3rem}}
 
+
+/* ───── 기록 페이지 ───── */
+#recordsPage{display:none}
+:root.records-on #recordsPage{display:block;max-width:1240px;margin:0 auto;padding:1.4rem 1.4rem 5rem}
+:root.records-on #heroZone,:root.records-on main,:root.records-on footer{display:none}
+.rec-back{display:inline-block;margin-bottom:1rem;font-size:.86rem;text-decoration:none}
+
+/* ───── 연표 카드 ───── */
+.tl-ev .bub.has-img{display:inline-flex;align-items:center;gap:.35rem;padding-left:.25rem}
+.tl-ev .bub.has-img img{width:18px;height:18px;object-fit:cover;border-radius:4px;flex:none}
+.tl-card{display:grid;grid-template-columns:auto 1fr;gap:1.1rem;padding:1rem 1.2rem;margin-top:1rem}
+.tl-card .cover{width:112px;height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.tl-card .body{min-width:0}
+.tl-card .head{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.tl-card .head b{font-family:var(--serif);font-size:1.12rem}
+.tl-card .head .btn{margin-left:auto}
+.tl-card p{margin:.45rem 0 .7rem;font-size:.92rem;color:var(--muted)}
+.tl-card .chips{margin:0}
+.ent-chip{text-decoration:none;color:var(--fg)}
+.ent-chip:hover{border-color:var(--accent-2)}
+.ent-chip.has-img{padding-left:.25rem}
+.ent-chip img{width:20px;height:20px;object-fit:cover;border-radius:50%;flex:none}
+.ent-chip .rel{color:var(--muted);font-size:.74rem}
+@media(max-width:560px){.tl-card{grid-template-columns:1fr}.tl-card .cover{width:100%;height:180px}}
+
+/* ───── 전체화면 보기 ───── */
+.sec-head{position:relative}
+.fs-btn{position:absolute;right:0;top:.2rem;display:inline-flex;align-items:center;gap:.35rem;
+  padding:.32rem .7rem;border:1px solid var(--line);border-radius:8px;background:var(--panel);
+  color:var(--muted);font:inherit;font-size:.78rem;cursor:pointer;transition:all .15s}
+.fs-btn:hover{border-color:var(--accent-2);color:var(--fg)}
+section.fs{position:fixed;inset:0;z-index:940;background:var(--bg);margin:0;padding:1.2rem 1.4rem;
+  overflow:auto;max-width:none}
+section.fs .sec-head p{display:none}
+section.fs .panel,section.fs #graph,section.fs #map{border-radius:12px}
+section.fs #map,section.fs .map-wrap{height:calc(100vh - 230px)}
+section.fs #graph{height:calc(100vh - 320px)}
+section.fs .tl-wrap{max-height:calc(100vh - 260px)}
+section.fs #lang-stage{height:calc(100vh - 260px)}
+section.fs .q-grid{min-height:calc(100vh - 300px)}
+body.fs-on{overflow:hidden}
 /* ───── 섹션 공통 ───── */
 main{max-width:1240px;margin:0 auto;padding:0 1.4rem 6rem}
 section{padding-top:4.5rem;scroll-margin-top:60px}
@@ -422,23 +469,23 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 </head>
 <body>
 <header><div class="hw">
-  <a class="logo" href="#" onclick="scrollTo({top:0,behavior:'smooth'});return false">
-    <svg class="mk" viewBox="0 0 34 12" aria-hidden="true">
-      <line x1="4" y1="6" x2="17" y2="6"/><line x1="17" y1="6" x2="30" y2="6"/>
-      <circle class="n n1" cx="4" cy="6" r="3.2"/>
-      <path class="d" d="M17 2.4 20.6 6 17 9.6 13.4 6Z"/>
-      <rect class="n n2" x="26.8" y="2.8" width="6.4" height="6.4" rx="1"/>
+  <a class="logo" href="#" onclick="goHome();return false" title="처음으로">
+    <svg class="mk" viewBox="0 0 22 10" aria-hidden="true">
+      <line x1="4" y1="5" x2="18" y2="5"/>
+      <circle class="n n1" cx="3.2" cy="5" r="2.6"/>
+      <circle class="n n2" cx="18.8" cy="5" r="2.6"/>
     </svg>
     <span class="tt">정세균 구술기록 아카이브<small>국회의장단 구술총서 08 · 지식그래프</small></span>
   </a>
   <nav id="nav">
-    <a href="#record">기록</a><a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
+    <a href="#/records">기록</a><a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
     <a href="#query">질의</a><a href="#lang">언어</a><a href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
 
 <!-- ═══════ 히어로 ═══════ -->
+<div id="heroZone">
 <div class="hero">
   <div class="hero-copy">
     <div class="kicker">Oral History · Knowledge Graph</div>
@@ -479,6 +526,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <button class="on" data-v="1" onclick="setHeroVariant('1')">1안 · 입자</button>
   <button data-v="2" onclick="setHeroVariant('2')">2안 · 전면</button>
 </div>
+</div>
 
 <main>
   <p class="status" id="loadStatus">그래프 적재 중…</p>
@@ -486,6 +534,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <!-- ═══════ 장소 ═══════ -->
   <section id="place">
     <div class="sec-head">
+      <button class="fs-btn" onclick="fullscreen('place')">⤢ 전체화면</button>
       <div class="kicker">Archive Map</div>
       <h2>구술이 지나간 자리</h2>
       <p>구술에 등장하는 장소 <b id="nPlace">–</b>곳을 지도에 펼쳤습니다.
@@ -505,6 +554,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <!-- ═══════ 연표 ═══════ -->
   <section id="event">
     <div class="sec-head">
+      <button class="fs-btn" onclick="fullscreen('event')">⤢ 전체화면</button>
       <div class="kicker">Timeline</div>
       <h2>1972 유신에서 2018 퇴임까지</h2>
       <p>사건 <b id="nEvent">–</b>건. 색은 영역, 높이는 겹침을 피한 배치입니다.
@@ -521,6 +571,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <!-- ═══════ 관계망 ═══════ -->
   <section id="graph-sec">
     <div class="sec-head">
+      <button class="fs-btn" onclick="fullscreen('graph-sec')">⤢ 전체화면</button>
       <div class="kicker">Linked Data</div>
       <h2>관계망 — 인물·직위·단체·사건의 그물</h2>
       <p>개체 <b id="nNode">–</b>개가 <b id="nEdge">–</b>개의 관계로 이어져 있습니다.
@@ -540,27 +591,10 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     </div>
   </section>
 
-  <!-- ═══════ 기록 찾아보기 ═══════ -->
-  <section id="record">
-    <div class="sec-head">
-      <div class="kicker">Records</div>
-      <h2>기록 찾아보기</h2>
-      <p>구술총서에서 뽑아낸 기록·인물·단체·직위·사건·장소를 한자리에 모았습니다.
-         검색은 이름뿐 아니라 <b>연결된 개체의 이름</b>까지 훑습니다 —
-         “한보”로 찾으면 한보사태에 연결된 인물과 기록도 함께 나옵니다.</p>
-    </div>
-    <div class="rec-bar">
-      <input id="recQ" type="search" placeholder="이름·설명·연결된 개체로 검색…"
-             oninput="recSearch(this.value)" autocomplete="off">
-      <span class="status"><b id="recCount">0</b>건</span>
-    </div>
-    <div class="chips" id="recFacets"></div>
-    <div id="recBody"></div>
-  </section>
-
   <!-- ═══════ 질의 ═══════ -->
   <section id="query">
     <div class="sec-head">
+      <button class="fs-btn" onclick="fullscreen('query')">⤢ 전체화면</button>
       <div class="kicker">Query · SPARQL · AI</div>
       <h2>온톨로지에게 묻다</h2>
       <p>질문을 고르면 실제 SPARQL이 이 그래프에서 실행되어 <b>근거 트리플과 함께</b> 답합니다.
@@ -630,6 +664,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <!-- ═══════ 언어 ═══════ -->
   <section id="lang">
     <div class="sec-head">
+      <button class="fs-btn" onclick="fullscreen('lang')">⤢ 전체화면</button>
       <div class="kicker">Language</div>
       <h2>구술의 언어</h2>
       <p>원문 8단락에서 뽑은 어휘를 세 방식으로 봅니다. 탭을 바꿔 보세요.</p>
@@ -667,6 +702,25 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module" src="app.js"></script>
+<div id="recordsPage">
+  <section id="record">
+    <a class="rec-back" href="#" onclick="closeRecords();return false">← 아카이브로</a>
+    <div class="sec-head">
+      <div class="kicker">Records</div>
+      <h2>기록 찾아보기</h2>
+      <p>구술총서에서 뽑아낸 기록·인물·단체·직위·사건·장소를 한자리에 모았습니다.
+         검색은 이름뿐 아니라 <b>연결된 개체의 이름</b>까지 훑습니다 —
+         “한보”로 찾으면 한보사태에 연결된 인물과 기록도 함께 나옵니다.</p>
+    </div>
+    <div class="rec-bar">
+      <input id="recQ" type="search" placeholder="이름·설명·연결된 개체로 검색…"
+             oninput="recSearch(this.value)" autocomplete="off">
+      <span class="status"><b id="recCount">0</b>건</span>
+    </div>
+    <div class="chips" id="recFacets"></div>
+    <div id="recBody"></div>
+  </section>
+</div>
 <div id="itemView"></div>
 </body>
 </html>

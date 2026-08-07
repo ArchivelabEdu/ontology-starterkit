@@ -87,7 +87,46 @@ function spy() {
   }
   document.querySelectorAll('#nav a').forEach(a =>
     a.classList.toggle('on', a.getAttribute('href') === '#' + cur));
+  // 히어로를 지나면 1안/2안 토글을 숨긴다
+  const hz = document.getElementById('heroZone');
+  if (hz) document.body.classList.toggle('past-hero', hz.getBoundingClientRect().bottom < 80);
 }
+
+/* ── 전체화면 보기 ──
+   섹션 하나를 화면 가득 띄운다. 지도·관계망은 캔버스라 크기가 바뀌면
+   다시 재야 하므로 전환 뒤에 각자에게 알려 준다. */
+window.fullscreen = id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const on = !el.classList.contains('fs');
+  document.querySelectorAll('section.fs').forEach(s => s.classList.remove('fs'));
+  el.classList.toggle('fs', on);
+  document.body.classList.toggle('fs-on', on);
+  el.querySelectorAll('.fs-btn').forEach(b => b.textContent = on ? '⤡ 닫기' : '⤢ 전체화면');
+  setTimeout(() => {
+    if (id === 'place' && MAP.map) MAP.map.invalidateSize();
+    if (id === 'graph-sec') redrawGraph();
+    if (id === 'lang') drawLang();
+    if (id === 'event') renderTimeline();
+  }, 60);
+};
+/** 사이트명을 누르면 어디에 있든 아카이브 첫 화면으로.
+    기록 페이지·아이템 뷰·전체화면이 열려 있으면 먼저 닫는다. */
+window.goHome = () => {
+  document.querySelectorAll('section.fs').forEach(x => window.fullscreen(x.id));
+  // 해시만 지우면 hashchange 가 안 뜨는 경우가 있어 상태도 직접 되돌린다
+  history.replaceState('', '', location.pathname + location.search);
+  document.documentElement.classList.remove('records-on');
+  document.body.classList.remove('records-open', 'item-open');
+  document.getElementById('itemView')?.classList.remove('on');
+  scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const open = document.querySelector('section.fs');
+  if (open) window.fullscreen(open.id);
+});
 addEventListener('scroll', spy, { passive: true });
 
 /* ══════════ 부팅 ══════════ */
@@ -107,7 +146,10 @@ async function boot() {
     $('#hsNode').textContent = G.nodes.length;
     $('#hsEdge').textContent = G.edges.length;
     $('#hsTriple').textContent = nT;
-    const yrs = G.nodes.map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
+    // 구술이 다루는 범위는 '사건'의 연도다. 인물 생년(위키데이터에서 받아 온)까지
+    // 세면 1913 같은 값이 끼어 수록 범위가 아닌 게 된다.
+    const yrs = G.nodes.filter(n => n.cls === 'Event' || n.cls === 'Activity')
+      .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
     $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
 
     initHero(G);
@@ -332,7 +374,8 @@ function renderTimeline() {
     return `<div class="tl-ev" data-id="${esc(e.id)}" style="left:${e.x}px;top:0;color:${col}"
         onclick="tlDetail('${esc(e.id)}')">
       <div class="stem" style="height:${e.lane * H + 6}px"></div>
-      <div class="bub" title="${esc(e.label)}">${esc(e.label)}</div>
+      <div class="bub${e.img ? ' has-img' : ''}" title="${esc(e.label)}">
+        ${e.img ? `<img src="${esc(e.img)}" alt="" loading="lazy">` : ''}${esc(e.label)}</div>
       <div class="yr">${e.date}</div></div>`;
   }).join('');
 }
@@ -346,20 +389,32 @@ window.tlFilter = k => {
   });
   renderTimeline();
 };
+/** 사건 하나를 눌렀을 때 아래에 펼치는 카드.
+    칩은 장식이 아니라 **누르는 것**이다 — 그 개체의 상세로 간다. */
 window.tlDetail = id => {
   const n = G.byId.get(id); if (!n) return;
+  const sid = u => String(u).replace('http://archives.nanet.go.kr/id/', '');
   const rel = G.edges.filter(e => e.s === id || e.o === id).map(e => {
-    const other = G.byId.get(e.s === id ? e.o : e.s);
-    return other ? `<span class="chip" style="cursor:default"><i class="dot"
-      style="background:${clsColor(other.cls)}"></i>${esc(other.label)}
-      <span style="color:var(--muted);font-size:.75rem">${esc(REL_KO[e.p] || e.p)}</span></span>` : '';
+    const o = G.byId.get(e.s === id ? e.o : e.s);
+    if (!o) return '';
+    return `<a class="chip ent-chip${o.img ? ' has-img' : ''}"
+        href="#/item/${encodeURIComponent(sid(o.id))}" title="${esc(o.label)} 상세 보기">
+      ${o.img ? `<img src="${esc(o.img)}" alt="" loading="lazy">`
+              : `<i class="dot" style="background:${clsColor(o.cls)}"></i>`}
+      ${esc(o.label)}
+      <span class="rel">${esc(REL_KO[e.p] || e.p)}</span></a>`;
   }).join('');
-  $('#tlDetail').innerHTML = `<div class="panel" style="padding:1rem 1.2rem;margin-top:1rem">
-    <div style="display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap">
-      <b style="font-family:var(--serif);font-size:1.1rem">${esc(n.label)}</b>
-      <span class="status">${esc(n.date)}${n.kind ? ' · ' + esc(n.kind) : ''}</span></div>
-    ${n.desc ? `<p style="margin:.4rem 0 .6rem;font-size:.92rem">${esc(n.desc)}</p>` : ''}
-    <div class="chips" style="margin:.3rem 0 0">${rel || '<span class="status">연결된 개체 없음</span>'}</div>
+  $('#tlDetail').innerHTML = `<div class="panel tl-card">
+    ${n.img ? `<img class="cover" src="${esc(n.img)}" alt="">` : ''}
+    <div class="body">
+      <div class="head">
+        <b>${esc(n.label)}</b>
+        <span class="status">${esc(n.date)}${n.kind ? ' · ' + esc(n.kind) : ''}</span>
+        <a class="btn sm" href="#/item/${encodeURIComponent(sid(n.id))}">상세 보기 →</a>
+      </div>
+      ${n.desc ? `<p>${esc(n.desc)}</p>` : ''}
+      <div class="chips">${rel || '<span class="status">연결된 개체 없음</span>'}</div>
+    </div>
   </div>`;
   $('#tlDetail').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 };

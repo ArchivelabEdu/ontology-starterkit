@@ -118,6 +118,7 @@ function compute() {
   $('#nNode').textContent = S.nodes.length;
   $('#nEdge').textContent = S.edges.length;
   ({ network: lNetwork, arc: lArc, radial: lRadial, chord: lChord, hive: lHive, board: lBoard })[S.layout]();
+  if (S.layout !== 'network') markHub();
 }
 
 const dims = () => ({ W: $('#graph').width, H: $('#graph').height });
@@ -137,6 +138,11 @@ function lNetwork() {
   const ITER = N > 400 ? 140 : N > 150 ? 220 : 320;
   const grid = new Map();
   const key = (x, y) => ((x / CELL) | 0) + ',' + ((y / CELL) | 0);
+  // 주인공은 아예 가운데에 못을 박고 배치한다. 다 배치한 뒤 통째로 옮기면
+  // 나머지가 화면 밖으로 나가 가장자리에 눌어붙는다.
+  const hub = S.focus ? S.nodes.find(n => n.id === S.focus)
+    : [...S.nodes].sort((a, b) => b.d - a.d)[0];
+  S.hub = hub;
 
   for (let it = 0; it < ITER; it++) {
     for (const e of S.edges) {
@@ -168,8 +174,16 @@ function lNetwork() {
       n.vx += (W / 2 - n.x) * .0022; n.vy += (H / 2 - n.y) * .0022;
       n.x += n.vx *= .8; n.y += n.vy *= .8;
     }
+    if (hub) { hub.x = W / 2; hub.y = H / 2; hub.vx = hub.vy = 0; }
   }
   clampAll();
+}
+
+/** 힘 배치가 아닌 레이아웃(아크·보드 등)에서 주인공을 기억해 둔다.
+    후광을 그릴 때만 쓴다 — 좌표는 건드리지 않는다. */
+function markHub() {
+  S.hub = S.focus ? S.nodes.find(n => n.id === S.focus)
+    : [...S.nodes].sort((a, b) => b.d - a.d)[0];
 }
 function lArc() {
   const { W, H } = dims();
@@ -300,6 +314,16 @@ function loop() {
   const line = css('--line'), muted = css('--muted'), fg = css('--fg'), acc = css('--accent');
   const dim = S.search ? .12 : 1;
 
+  /* 가만히 둬도 조금씩 숨 쉬게 한다. 완전히 멈춰 있으면 그림처럼 보이고,
+     크게 움직이면 읽기 어렵다 — 노드 반지름의 절반 남짓만. */
+  const T = (S.t = (S.t || 0) + 1) * .012;
+  S.nodes.forEach((n, i) => {
+    if (n.ph === undefined) n.ph = (i * 2.399) % 6.283;
+    const amp = 1.6 * devicePixelRatio * (1 + (n === S.hub ? 0 : .4));
+    n.ox = Math.sin(T + n.ph) * amp;
+    n.oy = Math.cos(T * .84 + n.ph * 1.3) * amp;
+  });
+
   // 엣지
   S.edges.forEach(e => {
     const hi = S.hover && (e.a === S.hover || e.b === S.hover);
@@ -307,14 +331,16 @@ function loop() {
     ctx.globalAlpha = hi ? .95 : (S.search ? .18 : .6);
     ctx.lineWidth = (hi ? 2 : 1) * devicePixelRatio;
     ctx.beginPath();
+    const ax = e.a.x + (e.a.ox || 0), ay = e.a.y + (e.a.oy || 0);
+    const bx = e.b.x + (e.b.ox || 0), by = e.b.y + (e.b.oy || 0);
     if (S.layout === 'arc') {
-      const mx = (e.a.x + e.b.x) / 2, r = Math.abs(e.b.x - e.a.x) / 2;
-      ctx.moveTo(e.a.x, e.a.y);
-      ctx.quadraticCurveTo(mx, e.a.y - r * .9, e.b.x, e.b.y);
+      const mx = (ax + bx) / 2, r = Math.abs(bx - ax) / 2;
+      ctx.moveTo(ax, ay);
+      ctx.quadraticCurveTo(mx, ay - r * .9, bx, by);
     } else if (S.layout === 'chord') {
-      ctx.moveTo(e.a.x, e.a.y);
-      ctx.quadraticCurveTo(W / 2, H / 2, e.b.x, e.b.y);
-    } else { ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); }
+      ctx.moveTo(ax, ay);
+      ctx.quadraticCurveTo(W / 2, H / 2, bx, by);
+    } else { ctx.moveTo(ax, ay); ctx.lineTo(bx, by); }
     ctx.stroke();
   });
   ctx.globalAlpha = 1;
@@ -325,14 +351,20 @@ function loop() {
     const hi = n === S.hover || (S.search && matches(n));
     ctx.globalAlpha = S.search ? (matches(n) ? 1 : dim) : 1;
     if (hi) { ctx.globalAlpha = 1; ctx.shadowColor = clsColor(n.cls); ctx.shadowBlur = 14 * devicePixelRatio; }
-    shape(ctx, n, r, clsColor(n.cls));
+    // 흔들림은 그릴 때만 더한다. 실제 좌표(n.x)는 그대로 둬야 클릭 판정이 안 흔들린다.
+    const d = { ...n, x: n.x + (n.ox || 0), y: n.y + (n.oy || 0) };
+    if (n === S.hub && !S.search) {                    // 주인공에겐 옅은 후광
+      ctx.save(); ctx.globalAlpha = .1; ctx.fillStyle = clsColor(n.cls);
+      ctx.beginPath(); ctx.arc(d.x, d.y, r + 9 * devicePixelRatio, 0, 7); ctx.fill(); ctx.restore();
+    }
+    shape(ctx, d, r, clsColor(n.cls));
     ctx.shadowBlur = 0;
     if (r > 7 * devicePixelRatio || hi || S.nodes.length < 46) {
       ctx.fillStyle = hi ? fg : muted;
       ctx.font = `${(hi ? 12.5 : 11) * devicePixelRatio}px "Nanum Myeongjo", serif`;
       ctx.textAlign = 'center';
       const label = n.label.length > 14 ? n.label.slice(0, 13) + '…' : n.label;
-      ctx.fillText(label, n.x, n.y + r + 13 * devicePixelRatio);
+      ctx.fillText(label, d.x, d.y + r + 13 * devicePixelRatio);
     }
     ctx.globalAlpha = 1;
   });
