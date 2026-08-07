@@ -99,17 +99,28 @@ function draw() {
 window.recMore = c => { R.more.add(c); draw(); };
 
 function card(n) {
-  return `<a class="rec-card" href="#/item/${encodeURIComponent(short(n.id))}">
+  return `<a class="rec-card${n.img ? ' has-img' : ''}" href="#/item/${encodeURIComponent(short(n.id))}">
+    ${n.img ? `<img class="thumb" src="${esc(n.img)}" alt="" loading="lazy">` : ''}
     <span class="c" style="color:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
     <b>${mark(n.label)}</b>
     ${n.date ? `<time>${esc(n.date)}</time>` : ''}
     ${n.desc ? `<p>${mark(String(n.desc).slice(0, 70))}</p>` : ''}
-    <i class="deg">연결 ${n.deg}</i>
+    <i class="deg">연결 ${n.deg}${n.same?.length ? ` · 외부 ${n.same.length}` : ''}</i>
   </a>`;
 }
 
 /* ── 라우팅 ── */
 const RIC = 'http://archives.nanet.go.kr/id/';
+/* 외부 URI 를 사람이 읽는 이름으로. 어디로 가는 링크인지 보이지 않으면 소용이 없다. */
+const EXT = [
+  [/wikidata\.org\/entity\/(Q\d+)/, '위키데이터', m => m[1]],
+  [/viaf\.org\/viaf\/(\d+)/, 'VIAF', m => m[1]],
+  [/ko\.wikipedia\.org\/wiki\/(.+)/, '한국어 위키백과', m => decodeURIComponent(m[1]).replace(/_/g, ' ')],
+];
+const extName = u => {
+  for (const [re, ko, f] of EXT) { const m = String(u).match(re); if (m) return [ko, f(m)]; }
+  return ['외부 링크', String(u).replace(/^https?:\/\//, '').slice(0, 40)];
+};
 const short = u => String(u).startsWith(RIC) ? u.slice(RIC.length) : u;
 const long = s => s.startsWith('http') ? s : RIC + s;
 
@@ -162,15 +173,26 @@ function item(sid) {
     n.kind && ['분류', esc(n.kind)],
     (n.lat != null) && ['좌표', `${n.lat}, ${n.lon}`],
     ['식별자', `<code>ric:${esc(short(n.id))}</code>`],
+    n.uuid && ['UUID', `<code>${esc(n.uuid)}</code>`],
+    n.same?.length && ['동일 개체', n.same.map(u => {
+      const [ko, id] = extName(u);
+      return `<a class="ext" href="${esc(u)}" target="_blank" rel="noopener">
+        ${esc(ko)} <span>${esc(id)}</span> ↗</a>`;
+    }).join(' ') + `<div class="note">owl:sameAs — 다른 데이터셋의 같은 개체. 대칭·이행 관계이므로
+      확인한 것만 붙입니다.</div>`],
   ].filter(Boolean);
 
   el.innerHTML = `<div class="item-wrap">
     <a class="back" href="#record" onclick="closeItem();return false">← 기록 찾아보기</a>
 
-    <div class="item-head">
-      <span class="badge" style="background:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
-      <h2>${esc(n.label)}</h2>
-      ${n.desc ? `<p class="lead">${esc(n.desc)}</p>` : ''}
+    <div class="item-head${n.img ? ' with-img' : ''}">
+      ${n.img ? `<figure class="portrait"><img src="${esc(n.img)}" alt="${esc(n.label)}">
+        ${n.imgSrc ? `<figcaption>${esc(n.imgSrc)}</figcaption>` : ''}</figure>` : ''}
+      <div>
+        <span class="badge" style="background:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
+        <h2>${esc(n.label)}</h2>
+        ${n.desc ? `<p class="lead">${esc(n.desc)}</p>` : ''}
+      </div>
     </div>
 
     <table class="item-facts">${facts.map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>

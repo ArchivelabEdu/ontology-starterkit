@@ -242,8 +242,27 @@ function clampAll() {
 function nodeR(n) { return (5 + Math.min(n.d, 12) * 1.15) * devicePixelRatio; }
 function matches(n) { return S.search && n.label.includes(S.search); }
 
-function shape(ctx, n, r, col) {
-  ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 1.5 * devicePixelRatio;
+/* 썸네일 — 도형 안에 사진을 넣는다.
+   800개를 한꺼번에 받으면 안 되므로, 화면에서 충분히 큰 노드만 그때그때 받는다.
+   받아 둔 것은 캐시에 남아 레이아웃을 바꿔도 다시 받지 않는다. */
+const IMG = new Map();
+let loading = 0;
+function thumb(url) {
+  if (!url) return null;
+  const c = IMG.get(url);
+  if (c === undefined) {
+    if (loading > 6) return null;                  // 동시에 너무 많이 받지 않는다
+    loading++;
+    const im = new Image();
+    im.onload = () => { IMG.set(url, im); loading--; };
+    im.onerror = () => { IMG.set(url, 'x'); loading--; };
+    IMG.set(url, '…'); im.src = url;
+    return null;
+  }
+  return (c === '…' || c === 'x') ? null : c;
+}
+
+function path(ctx, n, r) {
   const s = CLS[n.cls]?.shape || 'circle';
   ctx.beginPath();
   if (s === 'circle') ctx.arc(n.x, n.y, r, 0, 7);
@@ -253,7 +272,25 @@ function shape(ctx, n, r, col) {
   else if (s === 'pin') { ctx.arc(n.x, n.y - r * .2, r * .85, Math.PI, 0); ctx.lineTo(n.x, n.y + r); ctx.closePath(); }
   else if (s === 'doc') ctx.rect(n.x - r * .7, n.y - r * .9, r * 1.4, r * 1.8);
   else { for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2 - Math.PI / 2; const fn = i ? 'lineTo' : 'moveTo'; ctx[fn](n.x + Math.cos(a) * r, n.y + Math.sin(a) * r); } ctx.closePath(); }
-  ctx.fill();
+}
+
+function shape(ctx, n, r, col) {
+  const im = r > 9 * devicePixelRatio ? thumb(n.img) : null;
+  path(ctx, n, r);
+  if (im) {
+    // 도형으로 잘라 내고 그 안에 사진을 채운다. 테두리는 클래스 색으로 남겨
+    // 사진이 들어가도 '무슨 종류인지'는 계속 읽히게 한다.
+    ctx.save(); ctx.clip();
+    const side = r * 2.2;
+    const ar = im.width / im.height;
+    const w = ar >= 1 ? side * ar : side, h = ar >= 1 ? side : side / ar;
+    ctx.drawImage(im, n.x - w / 2, n.y - h / 2 - r * .12, w, h);
+    ctx.restore();
+    ctx.strokeStyle = col; ctx.lineWidth = 2 * devicePixelRatio;
+    path(ctx, n, r); ctx.stroke();
+  } else {
+    ctx.fillStyle = col; ctx.fill();
+  }
 }
 
 function loop() {

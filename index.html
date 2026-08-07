@@ -216,6 +216,9 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .rec-card{display:block;padding:.7rem .85rem;border:1px solid var(--line);border-radius:12px;
   background:var(--panel);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
 .rec-card:hover{border-color:var(--accent-2);transform:translateY(-1px)}
+.rec-card.has-img{display:grid;grid-template-columns:44px 1fr;gap:.6rem;align-items:start}
+.rec-card .thumb{width:44px;height:56px;object-fit:cover;border-radius:7px;
+  border:1px solid var(--line);grid-row:span 4;background:var(--bg)}
 .rec-card .c{font-size:.68rem;letter-spacing:.04em}
 .rec-card b{display:block;font-size:.94rem;margin:.15rem 0 .1rem;line-height:1.35}
 .rec-card time{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -232,6 +235,18 @@ body.item-open{overflow:hidden}
 .item-wrap .back{display:inline-block;margin-bottom:1.6rem;font-size:.86rem;text-decoration:none}
 .item-head .badge{display:inline-block;padding:.16rem .6rem;border-radius:999px;color:#fff;
   font-size:.72rem;font-weight:600;letter-spacing:.02em}
+.item-head.with-img{display:grid;grid-template-columns:180px 1fr;gap:1.4rem;align-items:start}
+.item-head .portrait{margin:0}
+.item-head .portrait img{width:180px;height:auto;max-height:240px;object-fit:cover;
+  border-radius:12px;border:1px solid var(--line);display:block;background:var(--panel)}
+.item-head .portrait figcaption{font-size:.66rem;color:var(--muted);margin-top:.35rem;line-height:1.4}
+.ext{display:inline-flex;align-items:center;gap:.3rem;padding:.16rem .5rem;border-radius:6px;
+  border:1px solid var(--line);text-decoration:none;font-size:.8rem;margin-right:.3rem}
+.ext:hover{border-color:var(--accent-2)}
+.ext span{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.item-facts .note{font-size:.72rem;color:var(--muted);margin-top:.35rem;line-height:1.5}
+@media(max-width:560px){.item-head.with-img{grid-template-columns:1fr}
+  .item-head .portrait img{width:140px}}
 .item-head h2{font-family:var(--serif);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.4rem);
   letter-spacing:-.03em;margin:.5rem 0 .4rem;word-break:keep-all}
 .item-head .lead{color:var(--muted);margin:0 0 1.4rem;font-size:1rem;word-break:keep-all}

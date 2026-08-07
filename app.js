@@ -12,6 +12,8 @@ export const PFX = `PREFIX rico: <${RICO}>
 PREFIX ric:  <http://archives.nanet.go.kr/id/>
 PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 `;
 export const $ = s => document.querySelector(s);
 export const esc = s => String(s ?? '').replace(/[&<>"]/g,
@@ -123,28 +125,38 @@ async function boot() {
 
 /* 그래프를 화면용 모델로 */
 function buildModel() {
-  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k WHERE {
+  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img WHERE {
     ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n}
     OPTIONAL{?s rico:beginningDate ?d}
     OPTIONAL{?s rico:generalDescription ?g} OPTIONAL{?s rico:history ?g}
     OPTIONAL{?s rico:scopeAndContent ?g}
     OPTIONAL{?s geo:lat ?lat} OPTIONAL{?s geo:long ?lon}
-    OPTIONAL{?s rdfs:comment ?k} }`);
+    OPTIONAL{?s rdfs:comment ?k}
+    OPTIONAL{?s foaf:depiction ?img} }`);
+  // owl:sameAs 와 UUID 는 한 개체에 여럿 붙으므로 따로 모은다
+  const same = new Map(), uu = new Map();
+  rows(`SELECT ?s ?u WHERE { ?s owl:sameAs ?u }`).forEach(r => {
+    if (!same.has(r.s)) same.set(r.s, []);
+    same.get(r.s).push(r.u);
+  });
+  rows(`SELECT ?s ?i WHERE { ?s rico:identifier ?i . FILTER(STRSTARTS(?i,"urn:uuid:")) }`)
+    .forEach(r => uu.set(r.s, r.i.slice(9)));
   const seen = new Map();
   nr.forEach(r => {
     const cls = r.c.split('#')[1];
     if (!CLS[cls]) return;
     const cur = seen.get(r.s);
     if (cur) {                       // 여러 OPTIONAL 로 중복 행이 나오므로 병합
-      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k']) if (!cur[f] && r[f]) cur[f] = r[f];
+      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k', 'img']) if (!cur[f] && r[f]) cur[f] = r[f];
       return;
     }
     seen.set(r.s, { ...r, cls });
   });
   G.nodes = [...seen.values()].map(r => ({
     id: r.s, cls: r.cls, label: r.n || r.s.split('/').pop(),
-    date: r.d || '', desc: r.g || '', kind: r.k || '',
+    date: r.d || '', desc: r.g || '', kind: r.k || '', img: r.img || '',
     lat: r.lat ? +r.lat : null, lon: r.lon ? +r.lon : null,
+    same: same.get(r.s) || [], uuid: uu.get(r.s) || '',
   }));
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
   const er = rows(`SELECT ?s ?p ?o WHERE {
