@@ -195,6 +195,13 @@ function renderDots() {
 }
 function hint(t) { const e = document.getElementById('heroHint'); if (e) e.textContent = t; }
 
+/** 캡션을 누르면 그 장면이 가리키는 개체로 */
+window.heroOpen = () => {
+  const id = P?.meta?.[P.next]?.entity;
+  if (id && typeof window.openItem === 'function') window.openItem(id);
+  else location.hash = '#record';
+};
+
 function onMove(e) {
   const r = P.cv.getBoundingClientRect();
   P.mouse.x = (e.clientX - r.left) * devicePixelRatio;

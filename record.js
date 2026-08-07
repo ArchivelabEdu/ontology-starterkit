@@ -1,0 +1,189 @@
+/* 기록 — 찾아보기 · 아이템 페이지
+   ─────────────────────────────────────────────────────────────
+   BakedSearch 와 같은 생각으로 만들었다. 검색 서버를 두지 않고, 이미 브라우저에
+   올라와 있는 그래프(G)를 그대로 색인 삼아 훑는다. 수천 건 규모까지는 이걸로 충분하다.
+
+   아이템 페이지의 핵심은 '연결된 개체'다. 무엇과 이어져 있는지가 아니라
+   **어떤 관계로** 이어져 있는지를 보여야 한다. 그게 표와 그래프의 차이다. */
+import { G, CLS, REL_KO, RICO, esc, $, clsColor } from './app.js';
+
+const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
+const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule'];
+const R = { q: '', cls: new Set(), built: false };
+
+/* ── 색인 ── */
+function index() {
+  return G.nodes.map(n => {
+    const rel = G.edges.filter(e => e.s === n.id || e.o === n.id);
+    return {
+      ...n, deg: rel.length,
+      hay: [n.label, n.desc, n.kind, n.date,
+        ...rel.map(e => G.byId.get(e.s === n.id ? e.o : e.s)?.label || '')].join(' ').toLowerCase(),
+    };
+  });
+}
+
+export function initRecord() {
+  if (R.built) return;
+  R.built = true;
+  R.items = index();
+
+  const used = ORDER.filter(c => R.items.some(n => n.cls === c));
+  $('#recFacets').innerHTML = `<button class="chip on c-all" onclick="recFacet('*')">전체</button>` +
+    used.map(c => `<button class="chip on c-${CLS[c].key}" data-c="${c}" onclick="recFacet('${c}')">
+      <i class="dot"></i>${CLS[c].ko} <b>${R.items.filter(n => n.cls === c).length}</b></button>`).join('');
+  R.cls = new Set(used);
+  draw();
+
+  addEventListener('hashchange', route);
+  route();
+}
+
+window.recSearch = v => { R.q = v.trim().toLowerCase(); draw(); };
+window.recFacet = c => {
+  const used = ORDER.filter(x => R.items.some(n => n.cls === x));
+  if (c === '*') R.cls = R.cls.size === used.length ? new Set() : new Set(used);
+  else R.cls.has(c) ? R.cls.delete(c) : R.cls.add(c);
+  document.querySelectorAll('#recFacets .chip').forEach(b => {
+    const k = b.dataset.c;
+    b.classList.toggle('on', k ? R.cls.has(k) : R.cls.size === used.length);
+  });
+  draw();
+};
+
+function hit(n) {
+  return R.cls.has(n.cls) && (!R.q || n.hay.includes(R.q));
+}
+function mark(s) {
+  if (!R.q) return esc(s);
+  const i = String(s).toLowerCase().indexOf(R.q);
+  if (i < 0) return esc(s);
+  return esc(String(s).slice(0, i)) + '<mark>' + esc(String(s).slice(i, i + R.q.length))
+    + '</mark>' + esc(String(s).slice(i + R.q.length));
+}
+
+function draw() {
+  const found = R.items.filter(hit);
+  $('#recCount').textContent = found.length;
+  if (!found.length) {
+    $('#recBody').innerHTML = `<div class="warnbox">찾은 것이 없습니다.
+      검색어를 줄이거나 위의 유형 필터를 더 켜 보세요.</div>`;
+    return;
+  }
+  const groups = ORDER.filter(c => found.some(n => n.cls === c));
+  $('#recBody').innerHTML = groups.map(c => {
+    const ns = found.filter(n => n.cls === c).sort((a, b) => b.deg - a.deg || a.label.localeCompare(b.label));
+    return `<div class="rec-group">
+      <h4><i class="dot" style="background:${clsColor(c)}"></i>${CLS[c].ko}
+        <span>${ns.length}</span></h4>
+      <div class="rec-grid">${ns.map(card).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function card(n) {
+  return `<a class="rec-card" href="#/item/${encodeURIComponent(short(n.id))}">
+    <span class="c" style="color:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
+    <b>${mark(n.label)}</b>
+    ${n.date ? `<time>${esc(n.date)}</time>` : ''}
+    ${n.desc ? `<p>${mark(String(n.desc).slice(0, 70))}</p>` : ''}
+    <i class="deg">연결 ${n.deg}</i>
+  </a>`;
+}
+
+/* ── 라우팅 ── */
+const RIC = 'http://archives.nanet.go.kr/id/';
+const short = u => String(u).startsWith(RIC) ? u.slice(RIC.length) : u;
+const long = s => s.startsWith('http') ? s : RIC + s;
+
+function route() {
+  const m = location.hash.match(/^#\/item\/(.+)$/);
+  if (m) item(decodeURIComponent(m[1]));
+  else close();
+}
+window.openItem = id => { location.hash = '#/item/' + encodeURIComponent(short(id)); };
+window.closeItem = () => { history.pushState('', '', location.pathname + location.search + '#record'); close(); };
+
+function close() {
+  const el = $('#itemView');
+  el.classList.remove('on');
+  document.body.classList.remove('item-open');
+  el.innerHTML = '';
+}
+
+function item(sid) {
+  const n = G.byId.get(long(sid));
+  const el = $('#itemView');
+  if (!n) {
+    el.innerHTML = `<div class="item-wrap"><a class="back" href="#record" onclick="closeItem();return false">← 기록 찾아보기</a>
+      <div class="warnbox">그런 개체가 없습니다: <code>${esc(sid)}</code></div></div>`;
+    el.classList.add('on'); document.body.classList.add('item-open');
+    return;
+  }
+
+  /* 연결 — 나가는 관계와 들어오는 관계를 나눠 모은다. 방향이 곧 뜻이기 때문이다. */
+  const out = {}, inn = {};
+  G.edges.forEach(e => {
+    if (e.s === n.id) (out[e.p] ||= []).push(G.byId.get(e.o));
+    if (e.o === n.id) (inn[e.p] ||= []).push(G.byId.get(e.s));
+  });
+  const rows = [];
+  for (const [p, list] of Object.entries(out))
+    rows.push({ dir: '→', p, ko: REL_KO[p] || p, list: list.filter(Boolean) });
+  for (const [p, list] of Object.entries(inn))
+    rows.push({ dir: '←', p, ko: (REL_KO[p] || p), list: list.filter(Boolean), rev: true });
+  const total = rows.reduce((s, r) => s + r.list.length, 0);
+
+  const facts = [
+    ['유형', CLS[n.cls].ko + ` <code>rico:${n.cls}</code>`],
+    n.date && ['날짜', esc(n.date)],
+    n.kind && ['분류', esc(n.kind)],
+    (n.lat != null) && ['좌표', `${n.lat}, ${n.lon}`],
+    ['식별자', `<code>ric:${esc(short(n.id))}</code>`],
+  ].filter(Boolean);
+
+  el.innerHTML = `<div class="item-wrap">
+    <a class="back" href="#record" onclick="closeItem();return false">← 기록 찾아보기</a>
+
+    <div class="item-head">
+      <span class="badge" style="background:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
+      <h2>${esc(n.label)}</h2>
+      ${n.desc ? `<p class="lead">${esc(n.desc)}</p>` : ''}
+    </div>
+
+    <table class="item-facts">${facts.map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>
+
+    <h3>연결된 개체 <span>${total}</span></h3>
+    ${total ? rows.map(r => `
+      <div class="link-row">
+        <div class="rel">${r.dir} ${esc(r.ko)}${r.rev ? '<em>인 것</em>' : ''}
+          <code>rico:${esc(r.p)}</code></div>
+        <div class="chips-l">${r.list.map(o => `
+          <a class="ent" href="#/item/${encodeURIComponent(short(o.id))}">
+            <i class="dot" style="background:${clsColor(o.cls)}"></i>${esc(o.label)}
+            <span>${CLS[o.cls].ko}</span></a>`).join('')}</div>
+      </div>`).join('')
+      : `<div class="warnbox">이 개체에는 아직 연결이 없습니다.
+           관계를 더 넣으면 여기에 쌓입니다 — 그게 이 실습의 목표입니다.</div>`}
+
+    <div class="item-foot">
+      <button class="btn sm" onclick="focusInGraph('${esc(n.id)}')">관계망에서 보기 →</button>
+      ${n.lat != null ? `<button class="btn sm" onclick="closeItem();selectPlace('${esc(n.id)}')">지도에서 보기 →</button>` : ''}
+      <span class="status">출처 · ${SRC}</span>
+    </div>
+  </div>`;
+  el.classList.add('on');
+  document.body.classList.add('item-open');
+  el.scrollTop = 0;
+}
+
+/** 관계망 섹션으로 가서 그 개체의 이웃만 남긴다 */
+window.focusInGraph = id => {
+  close();
+  location.hash = '#graph-sec';
+  const full = long(short(id));
+  setTimeout(() => {
+    if (typeof window.graphFocus === 'function') window.graphFocus(full);
+    document.getElementById('graph-sec')?.scrollIntoView({ behavior: 'smooth' });
+  }, 60);
+};

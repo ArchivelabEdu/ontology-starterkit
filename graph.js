@@ -82,6 +82,16 @@ window.resetGraph = () => {
   compute();
 };
 export function redrawGraph() { if (S.G) compute(); }
+/** 아이템 페이지에서 넘어올 때 — 그 개체의 이웃만 남기고 클래스·관계 필터는 모두 켠다 */
+window.graphFocus = id => {
+  if (!S.G) return;
+  S.clsOn = new Set(Object.keys(CLS));
+  S.relOn = new Set([...new Set(S.G.edges.map(e => e.p))]);
+  document.querySelectorAll('#clsChips .chip,#relChips .chip').forEach(b => b.classList.add('on'));
+  S.search = ''; const gs = $('#gSearch'); if (gs) gs.value = '';
+  S.focus = id;
+  compute();
+};
 
 /* ── 표시 대상 계산 + 레이아웃 ── */
 function compute() {

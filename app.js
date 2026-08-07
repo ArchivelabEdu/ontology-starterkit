@@ -4,6 +4,8 @@ import init, { Store } from 'https://cdn.jsdelivr.net/npm/oxigraph@0.4.11/web.js
 import { initGraph, redrawGraph } from './graph.js';
 import { initQuery } from './query.js';
 import { initHero } from './hero.js';
+import { initHero2 } from './hero2.js';
+import { initRecord } from './record.js';
 
 export const RICO = 'https://www.ica.org/standards/RiC/ontology#';
 export const PFX = `PREFIX rico: <${RICO}>
@@ -75,7 +77,7 @@ window.toggleTheme = () => {
 
 /* ── 스크롤 스파이 ── */
 function spy() {
-  const ids = ['place', 'event', 'graph-sec', 'query', 'lang', 'about'];
+  const ids = ['record', 'place', 'event', 'graph-sec', 'query', 'lang', 'about'];
   let cur = '';
   for (const id of ids) {
     const el = document.getElementById(id);
@@ -105,7 +107,13 @@ async function boot() {
     $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
 
     initHero(G);
-    drawMap(); drawTimeline(); initGraph(G); initQuery(); drawLang();
+    // 히어로 안(1: 입자 몰핑 / 2: 전면 이미지)은 저장된 선택을 따른다
+    const hv = localStorage.getItem('kit-hero') || '1';
+    document.documentElement.setAttribute('data-hero', hv);
+    document.querySelectorAll('#heroSwap button')
+      .forEach(b => b.classList.toggle('on', b.dataset.v === hv));
+    if (hv === '2') initHero2();
+    drawMap(); drawTimeline(); initGraph(G); initRecord(); initQuery(); drawLang();
     spy();
   } catch (e) {
     $('#loadStatus').textContent = '적재 실패: ' + e.message;

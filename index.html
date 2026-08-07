@@ -38,10 +38,18 @@ a{color:var(--accent)}
 header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .hw{max-width:1240px;margin:0 auto;padding:.65rem 1.4rem;display:flex;gap:1rem;align-items:center}
-.logo{display:flex;align-items:center;gap:.55rem;font-family:var(--serif);font-weight:800;font-size:1.02rem}
-.logo .mk{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:grid;place-items:center;color:#fff;font-size:.7rem;font-family:var(--sans)}
-.logo small{display:block;font-family:var(--sans);font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:.02em}
+/* 로고 — 이 사이트의 주장을 그대로 그린 마크: 인물 ● — 직위 ◆ — 단체 ■ */
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
+.logo .mk{width:34px;height:12px;flex:none;overflow:visible}
+.logo .mk line{stroke:var(--muted);stroke-width:1;opacity:.55}
+.logo .mk .n{fill:var(--accent);transition:fill .25s}
+.logo .mk .d{fill:none;stroke:var(--accent);stroke-width:1.6;transition:stroke .25s}
+.logo:hover .mk .n1{fill:var(--person)}
+.logo:hover .mk .d{stroke:var(--position)}
+.logo:hover .mk .n2{fill:var(--org)}
+.logo .tt{font-family:var(--serif);font-weight:700;font-size:.98rem;letter-spacing:-.015em;line-height:1.25}
+.logo small{display:block;font-family:var(--sans);font-weight:400;font-size:.66rem;color:var(--muted);
+  letter-spacing:.04em;margin-top:.1rem}
 nav{margin-left:auto;display:flex;gap:.1rem;align-items:center;flex-wrap:wrap}
 nav a{padding:.4rem .72rem;border-radius:8px;color:var(--fg);text-decoration:none;font-size:.86rem;
   border-bottom:2px solid transparent}
@@ -76,12 +84,18 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
    래퍼가 크기를 잡고 캔버스는 그 안에 절대배치로 채운다. */
 .hero-stage{position:relative;flex:1;min-height:0}
 #portrait{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
-.hero-cap{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;
-  padding:.7rem 0 .35rem;border-top:1px solid var(--line);margin-top:.6rem}
+.hero-cap{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;width:100%;
+  padding:.7rem 0 .35rem;border-top:1px solid var(--line);margin-top:.6rem;
+  background:none;border-left:none;border-right:none;border-bottom:none;
+  font:inherit;text-align:left;cursor:pointer}
+.hero-cap:hover{border-top-color:var(--accent)}
+.hero-cap .go{font-size:.72rem;color:var(--accent);font-style:normal;margin-left:auto;
+  opacity:0;transform:translateX(-5px);transition:opacity .25s,transform .25s}
+.hero-cap:hover .go{opacity:1;transform:none}
 .hero-cap b{font-family:var(--serif);font-size:1.45rem;color:var(--accent);letter-spacing:-.01em;
   font-variant-numeric:tabular-nums;line-height:1}
 .hero-cap span{font-size:.86rem;color:var(--fg);font-weight:600}
-.hero-cap em{font-size:.7rem;color:var(--muted);font-style:normal;margin-left:auto}
+.hero-cap em{font-size:.7rem;color:var(--muted);font-style:normal}
 .hero-cap b,.hero-cap span,.hero-cap em{transition:opacity .4s}
 .hero-cap.fade b,.hero-cap.fade span,.hero-cap.fade em{opacity:0}
 .hero-dots{display:flex;gap:.35rem}
@@ -91,6 +105,157 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .hero-dots button.on{background:var(--accent);height:6px}
 .hero-hint{position:absolute;top:.5rem;right:.5rem;font-size:.72rem;color:var(--muted);
   background:color-mix(in srgb,var(--panel) 80%,transparent);padding:.2rem .5rem;border-radius:6px}
+
+
+/* ───── 히어로 2안 — 전면 이미지 ───── */
+:root[data-hero="2"] .hero{display:none}
+:root[data-hero="1"] #hero2,html:not([data-hero]) #hero2{display:none}
+
+#hero2{position:relative;width:100vw;margin-left:calc(50% - 50vw);
+  height:min(94vh,860px);overflow:hidden;background:#14120f;--px:0;--py:0}
+.h2-stage{position:absolute;inset:0}
+.h2-shot{position:absolute;inset:0;opacity:0;pointer-events:none}
+.h2-shot.on{opacity:1}
+.h2-shot.in{opacity:1;z-index:2}
+
+/* 배경 — 같은 사진을 흐리게 깔아 화면을 채운다. 세로 사진을 억지로 늘리지 않기 위해서다. */
+.h2-bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;
+  filter:blur(34px) saturate(.72) brightness(.42);
+  transform:translate(calc(var(--px) * -14px),calc(var(--py) * -10px));
+  will-change:transform}
+
+/* 전경 — 원본 비율(3:4) 그대로, 오른쪽에 크게 */
+.h2-fg{position:absolute;top:50%;left:min(66%,calc(50vw + 100px));
+  height:78%;aspect-ratio:3/4;transform:translate(-50%,-50%)
+    translate(calc(var(--px) * 20px),calc(var(--py) * 14px));
+  box-shadow:0 30px 90px rgba(0,0,0,.55);will-change:transform}
+.h2-slice{position:absolute;top:0;bottom:0;overflow:hidden;
+  left:calc(var(--s) / var(--n) * 100%);width:calc(100% / var(--n) + .5px)}
+/* 슬라이스마다 이미지를 '전체 폭'으로 두고 자기 몫만큼 왼쪽으로 밀어야 한 장으로 이어진다 */
+.h2-slice img{position:absolute;top:0;height:100%;max-width:none;
+  width:calc(var(--n) * 100%);left:calc(var(--s) * -100%);object-fit:cover;
+  animation:h2burns 26s ease-in-out infinite alternate;transform-origin:center}
+@keyframes h2burns{from{scale:1}to{scale:1.09}}
+.h2-shot.in .h2-slice{clip-path:inset(0 0 100% 0);
+  transition:clip-path 1.0s cubic-bezier(.66,0,.2,1);
+  transition-delay:calc(var(--s) * .09s)}
+.h2-shot.in.open .h2-slice{clip-path:inset(0 0 0 0)}
+.h2-shot.in .h2-bg{opacity:0;transition:opacity .9s}
+.h2-shot.in.open .h2-bg{opacity:1}
+
+.h2-scrim{position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:
+    linear-gradient(100deg,rgba(18,16,13,.92) 0%,rgba(18,16,13,.62) 40%,rgba(18,16,13,0) 62%),
+    linear-gradient(0deg,rgba(18,16,13,.8) 0%,transparent 34%)}
+.h2-grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.5'/></svg>")}
+
+.h2-copy{position:absolute;z-index:5;left:max(1.4rem,calc(50vw - 610px));top:50%;
+  transform:translateY(-56%);width:min(42ch,40vw);color:#f6f1e8;
+  word-break:keep-all;overflow-wrap:anywhere}
+.h2-copy .kicker{color:#e0a988}
+.h2-copy .kicker::after{background:linear-gradient(90deg,#e0a988,transparent)}
+.h2-copy h1{font-family:var(--serif);font-weight:800;font-size:clamp(1.9rem,3.9vw,3.3rem);
+  line-height:1.2;letter-spacing:-.035em;margin:0 0 1.1rem;color:#fff;word-break:keep-all;
+  text-shadow:0 2px 30px rgba(0,0,0,.35)}
+.h2-copy h1 em{font-style:normal;color:#e8b08c}
+.h2-copy h1 em::after{display:none}
+.h2-copy p{color:#d8cfc2;font-size:.98rem;margin:0 0 1.7rem;word-break:keep-all}
+.h2-copy .btn.ghost{background:transparent;border-color:rgba(255,255,255,.4);color:#f6f1e8}
+.h2-copy .btn.ghost:hover{background:rgba(255,255,255,.1)}
+
+.h2-cap{position:absolute;z-index:6;left:max(1.4rem,calc(50vw - 610px));bottom:2.6rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;max-width:min(60ch,64vw);
+  background:none;border:none;padding:.4rem 0;cursor:pointer;text-align:left;font:inherit;
+  border-bottom:1px solid rgba(255,255,255,.22);transition:border-color .3s}
+.h2-cap:hover{border-bottom-color:#e8b08c}
+.h2-cap b{font-family:var(--serif);font-size:1.6rem;color:#e8b08c;font-variant-numeric:tabular-nums;line-height:1}
+.h2-cap span{font-size:.92rem;color:#f2ece2;font-weight:600}
+.h2-cap em{font-size:.7rem;color:#9d948a;font-style:normal}
+.h2-cap .go{font-size:.74rem;color:#e8b08c;font-style:normal;opacity:0;transform:translateX(-6px);
+  transition:opacity .25s,transform .25s;margin-left:.2rem}
+.h2-cap:hover .go{opacity:1;transform:none}
+.h2-cap.fade b,.h2-cap.fade span,.h2-cap.fade em{opacity:0}
+.h2-cap b,.h2-cap span,.h2-cap em{transition:opacity .35s}
+
+.h2-rail{position:absolute;z-index:6;right:max(1.4rem,calc(50vw - 610px));top:50%;
+  transform:translateY(-50%);display:flex;flex-direction:column;gap:.1rem;align-items:flex-end}
+.h2-rail button{display:flex;align-items:center;gap:.5rem;background:none;border:none;cursor:pointer;
+  padding:.3rem 0;font:inherit;font-size:.72rem;color:rgba(246,241,232,.42);
+  font-variant-numeric:tabular-nums;transition:color .25s}
+.h2-rail button i{width:16px;height:1px;background:currentColor;transition:width .3s}
+.h2-rail button:hover{color:#f6f1e8}
+.h2-rail button.on{color:#e8b08c}
+.h2-rail button.on i{width:34px}
+
+#heroSwap{position:fixed;right:1rem;bottom:1rem;z-index:800;display:flex;gap:.15rem;
+  background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.2rem;
+  box-shadow:var(--shadow)}
+#heroSwap button{border:none;background:transparent;color:var(--muted);font:inherit;font-size:.74rem;
+  padding:.3rem .7rem;border-radius:999px;cursor:pointer}
+#heroSwap button.on{background:var(--accent);color:#fff;font-weight:600}
+
+@media(max-width:820px){
+  #hero2{height:min(88vh,640px)}
+  .h2-copy{max-width:82vw;top:auto;bottom:9rem;transform:none}
+  .h2-rail{display:none}
+}
+
+
+/* ───── 기록 찾아보기 ───── */
+.rec-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.2rem 0 .6rem}
+.rec-bar input{flex:1;min-width:220px;padding:.6rem .9rem;border:1px solid var(--line);border-radius:10px;
+  background:var(--panel);color:var(--fg);font:inherit;font-size:.92rem}
+.rec-bar input:focus{outline:none;border-color:var(--accent)}
+.rec-group{margin:1.6rem 0 0}
+.rec-group h4{display:flex;align-items:center;gap:.45rem;font-size:.86rem;margin:0 0 .6rem;
+  color:var(--fg);font-weight:600;letter-spacing:.01em}
+.rec-group h4 .dot{width:8px;height:8px;border-radius:50%}
+.rec-group h4 span{color:var(--muted);font-weight:400}
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.55rem}
+.rec-card{display:block;padding:.7rem .85rem;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+.rec-card:hover{border-color:var(--accent-2);transform:translateY(-1px)}
+.rec-card .c{font-size:.68rem;letter-spacing:.04em}
+.rec-card b{display:block;font-size:.94rem;margin:.15rem 0 .1rem;line-height:1.35}
+.rec-card time{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.rec-card p{margin:.25rem 0 0;font-size:.78rem;color:var(--muted);line-height:1.5}
+.rec-card .deg{display:block;margin-top:.4rem;font-size:.7rem;color:var(--muted);font-style:normal}
+mark{background:var(--accent-soft);color:inherit;padding:0 .1em;border-radius:2px}
+
+/* ───── 아이템 페이지 ───── */
+body.item-open{overflow:hidden}
+#itemView{position:fixed;inset:0;z-index:950;background:var(--bg);overflow-y:auto;display:none}
+#itemView.on{display:block}
+.item-wrap{max-width:820px;margin:0 auto;padding:2.2rem 1.4rem 5rem}
+.item-wrap .back{display:inline-block;margin-bottom:1.6rem;font-size:.86rem;text-decoration:none}
+.item-head .badge{display:inline-block;padding:.16rem .6rem;border-radius:999px;color:#fff;
+  font-size:.72rem;font-weight:600;letter-spacing:.02em}
+.item-head h2{font-family:var(--serif);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.4rem);
+  letter-spacing:-.03em;margin:.5rem 0 .4rem;word-break:keep-all}
+.item-head .lead{color:var(--muted);margin:0 0 1.4rem;font-size:1rem;word-break:keep-all}
+.item-facts{border-collapse:collapse;width:100%;margin:1.2rem 0 2rem;font-size:.88rem}
+.item-facts th{width:6.5rem;text-align:left;color:var(--muted);font-weight:400;padding:.4rem 0;
+  vertical-align:top;border-top:1px solid var(--line)}
+.item-facts td{padding:.4rem 0;border-top:1px solid var(--line)}
+.item-facts code{font-family:var(--mono);font-size:.82em;color:var(--muted)}
+#itemView h3{font-size:1.02rem;margin:2rem 0 .8rem;font-weight:700}
+#itemView h3 span{color:var(--accent);font-variant-numeric:tabular-nums}
+.link-row{display:grid;grid-template-columns:minmax(9rem,13rem) 1fr;gap:.8rem;
+  padding:.7rem 0;border-top:1px solid var(--line);align-items:start}
+.link-row .rel{font-size:.82rem;color:var(--fg);font-weight:600}
+.link-row .rel em{font-style:normal;color:var(--muted);font-weight:400}
+.link-row .rel code{display:block;font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  font-weight:400;margin-top:.15rem}
+.chips-l{display:flex;flex-wrap:wrap;gap:.35rem}
+.ent{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .65rem;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);font-size:.83rem;text-decoration:none;color:var(--fg)}
+.ent:hover{border-color:var(--accent-2)}
+.ent .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.ent span{color:var(--muted);font-size:.72rem}
+.item-foot{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:2.2rem;
+  padding-top:1.2rem;border-top:1px solid var(--line)}
+@media(max-width:640px){.link-row{grid-template-columns:1fr;gap:.3rem}}
 
 /* ───── 섹션 공통 ───── */
 main{max-width:1240px;margin:0 auto;padding:0 1.4rem 6rem}
@@ -240,9 +405,17 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 </head>
 <body>
 <header><div class="hw">
-  <div class="logo"><span class="mk">丁</span><span>정세균 구술기록 아카이브<small>국회의장단 구술총서 08 · 지식그래프</small></span></div>
+  <a class="logo" href="#" onclick="scrollTo({top:0,behavior:'smooth'});return false">
+    <svg class="mk" viewBox="0 0 34 12" aria-hidden="true">
+      <line x1="4" y1="6" x2="17" y2="6"/><line x1="17" y1="6" x2="30" y2="6"/>
+      <circle class="n n1" cx="4" cy="6" r="3.2"/>
+      <path class="d" d="M17 2.4 20.6 6 17 9.6 13.4 6Z"/>
+      <rect class="n n2" x="26.8" y="2.8" width="6.4" height="6.4" rx="1"/>
+    </svg>
+    <span class="tt">정세균 구술기록 아카이브<small>국회의장단 구술총서 08 · 지식그래프</small></span>
+  </a>
   <nav id="nav">
-    <a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
+    <a href="#record">기록</a><a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
     <a href="#query">질의</a><a href="#lang">언어</a><a href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
@@ -272,13 +445,22 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <canvas id="portrait"></canvas>
       <div class="hero-hint" id="heroHint">마우스를 올려 보세요</div>
     </div>
-    <div class="hero-cap">
+    <button class="hero-cap" id="heroCap" type="button" onclick="heroOpen()">
       <b id="heroYear">–</b>
       <span id="heroLabel"></span>
       <em id="heroCredit"></em>
-    </div>
+      <i class="go">개체 보기 →</i>
+    </button>
     <div class="hero-dots" id="heroDots"></div>
   </div>
+</div>
+
+<!-- ═══════ 히어로 2안 (전면 이미지) ═══════ -->
+<div id="hero2"></div>
+
+<div id="heroSwap">
+  <button class="on" data-v="1" onclick="setHeroVariant('1')">1안 · 입자</button>
+  <button data-v="2" onclick="setHeroVariant('2')">2안 · 전면</button>
 </div>
 
 <main>
@@ -339,6 +521,24 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <div class="g-tip" id="gTip"></div>
       <div class="g-legend" id="gLegend"></div>
     </div>
+  </section>
+
+  <!-- ═══════ 기록 찾아보기 ═══════ -->
+  <section id="record">
+    <div class="sec-head">
+      <div class="kicker">Records</div>
+      <h2>기록 찾아보기</h2>
+      <p>구술총서에서 뽑아낸 기록·인물·단체·직위·사건·장소를 한자리에 모았습니다.
+         검색은 이름뿐 아니라 <b>연결된 개체의 이름</b>까지 훑습니다 —
+         “한보”로 찾으면 한보사태에 연결된 인물과 기록도 함께 나옵니다.</p>
+    </div>
+    <div class="rec-bar">
+      <input id="recQ" type="search" placeholder="이름·설명·연결된 개체로 검색…"
+             oninput="recSearch(this.value)" autocomplete="off">
+      <span class="status"><b id="recCount">0</b>건</span>
+    </div>
+    <div class="chips" id="recFacets"></div>
+    <div id="recBody"></div>
   </section>
 
   <!-- ═══════ 질의 ═══════ -->
@@ -450,5 +650,6 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module" src="app.js"></script>
+<div id="itemView"></div>
 </body>
 </html>
