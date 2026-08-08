@@ -169,14 +169,14 @@ async function boot() {
 
 /* 그래프를 화면용 모델로 */
 function buildModel() {
-  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img WHERE {
+  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img ?imgsrc WHERE {
     ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n}
     OPTIONAL{?s rico:beginningDate ?d}
     OPTIONAL{?s rico:generalDescription ?g} OPTIONAL{?s rico:history ?g}
     OPTIONAL{?s rico:scopeAndContent ?g}
     OPTIONAL{?s geo:lat ?lat} OPTIONAL{?s geo:long ?lon}
     OPTIONAL{?s rdfs:comment ?k}
-    OPTIONAL{?s foaf:depiction ?img} }`);
+    OPTIONAL{?s foaf:depiction ?img} OPTIONAL{?s rdfs:label ?imgsrc} }`);
   // owl:sameAs 와 UUID 는 한 개체에 여럿 붙으므로 따로 모은다
   const same = new Map(), uu = new Map();
   rows(`SELECT ?s ?u WHERE { ?s owl:sameAs ?u }`).forEach(r => {
@@ -191,14 +191,14 @@ function buildModel() {
     if (!CLS[cls]) return;
     const cur = seen.get(r.s);
     if (cur) {                       // 여러 OPTIONAL 로 중복 행이 나오므로 병합
-      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k', 'img']) if (!cur[f] && r[f]) cur[f] = r[f];
+      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k', 'img', 'imgsrc']) if (!cur[f] && r[f]) cur[f] = r[f];
       return;
     }
     seen.set(r.s, { ...r, cls });
   });
   G.nodes = [...seen.values()].map(r => ({
     id: r.s, cls: r.cls, label: r.n || r.s.split('/').pop(),
-    date: r.d || '', desc: r.g || '', kind: r.k || '', img: r.img || '',
+    date: r.d || '', desc: r.g || '', kind: r.k || '', img: r.img || '', imgSrc: r.imgsrc || '',
     lat: r.lat ? +r.lat : null, lon: r.lon ? +r.lon : null,
     same: same.get(r.s) || [], uuid: uu.get(r.s) || '',
   }));
@@ -511,7 +511,8 @@ window.tlDetail = id => {
       <span class="rel">${esc(REL_KO[e.p] || e.p)}</span></a>`;
   }).join('');
   $('#tlDetail').innerHTML = `<div class="panel tl-card">
-    ${n.img ? `<img class="cover" src="${esc(n.img)}" alt="">` : ''}
+    ${n.img ? `<figure class="cover"><img src="${esc(n.img)}" alt="">
+        ${n.imgSrc ? `<figcaption>${esc(n.imgSrc)}</figcaption>` : ''}</figure>` : ''}
     <div class="body">
       <div class="head">
         <b>${esc(n.label)}</b>
