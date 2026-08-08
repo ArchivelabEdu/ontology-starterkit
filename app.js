@@ -527,7 +527,7 @@ window.tlDetail = id => {
 };
 
 /* ══════════ 언어 ══════════ */
-const LANG = { mode: 'network', words: [], byChapter: [] };
+const LANG = { mode: 'network', words: [], byChapter: [], paras: [] };
 const STOP = new Set(['그리고', '하지만', '그런데', '있는', '없는', '하는', '이런', '저런', '그런', '그래서',
   '것이', '것을', '것도', '거예요', '그때', '해서', '때문에', '우리', '저는', '제가', '많이', '아주',
   '이렇게', '그렇게', '어떻게', '무슨', '그러니까', '이제', '정말', '조금', '하나', '이런저런',
@@ -540,7 +540,7 @@ const STOP = new Set(['그리고', '하지만', '그런데', '있는', '없는',
   '생각', '사람', '이제는', '그때는', '인가', '있다', '없다', '싶은', '싶다', '주는', '주고',
   '전혀', '중에', '년에', '술을', '잔도', '말할', '먹어', '때는', '일이', '받는', '있고', '없고']);
 /* 활용형 꼬리. 명사에는 거의 붙지 않는 것만 골랐다(제도·태도 같은 말을 지우지 않기 위해). */
-const VERB_TAIL = /(면서|았는데|었는데|는데|해서|했고|했지|했다|하고|하면|하는|한다|어요|아요|겠다|었다|았다|잖아|거예|거야|보면|보니|으면|했으면|하랴|이랴)$/;
+const VERB_TAIL = /(면서|았는데|었는데|는데|해서|했고|했지|했다|하고|하면|하는|한다|어요|아요|겠다|었다|았다|잖아|거예|거야|보면|보니|으면|했으면|하랴|이랴|니다|습니|더라)$/;
 /* 조사를 떼어 낸다. 형태소 분석기가 없으므로 '뒤에서 한 번만, 남는 글자가 2자 이상일 때만'.
    '종이 → 종'(1자) 같은 오작동은 이 길이 조건이 막는다. */
 const JOSA = ['으로써', '으로서', '에서는', '에게는', '이라는', '이라고', '까지도', '부터는',
@@ -558,6 +558,7 @@ async function loadCorpus() {
   let text = '';
   try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
   const paras = text.split(/\n\s*\n/).filter(p => p.trim());
+  LANG.paras = paras;
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
     .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
   const freq = {};
@@ -585,7 +586,8 @@ async function loadCorpus() {
 const LANG_MODES = [
   { k: 'network', t: '어휘 관계망', note: '같은 문장에 함께 나온 어휘를 선으로 이었습니다. 원 크기는 빈도, 색은 군집. 단어를 누르면 그 단어가 들어간 원문이 뜹니다.' },
   { k: 'flow', t: '시간대별 흐름', note: '단락 순서를 가로축으로, 어휘 비중을 쌓아 흐르는 띠로 그렸습니다. 관심사가 어떻게 이동하는지 보입니다.' },
-  { k: 'print', t: '문서 지문', note: '단락 × 어휘 히트맵. 어느 대목에 무슨 말이 집중됐는지 한눈에 보입니다.' },
+  { k: 'print', t: '문서 지문', note: '단락 × 어휘 히트맵. 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 줍니다.' },
+  { k: 'tfidf', t: '단락별 특징어', note: '빈도가 아니라 그 단락에만 유난히 몰린 말을 뽑습니다(tf-idf). 무엇에 대한 대목인지가 드러납니다.' },
 ];
 async function drawLang() {
   if (!LANG.words.length) await loadCorpus();
@@ -595,7 +597,7 @@ async function drawLang() {
   const stage = $('#lang-stage');
   stage.innerHTML = '';
   if (!LANG.words.length) { stage.innerHTML = '<p class="status" style="padding:1rem">코퍼스 없음</p>'; return; }
-  ({ network: langNetwork, flow: langFlow, print: langPrint })[LANG.mode](stage);
+  ({ network: langNetwork, flow: langFlow, print: langPrint, tfidf: langTfidf })[LANG.mode](stage);
 }
 window.setLang = k => { LANG.mode = k; drawLang(); };
 
@@ -647,6 +649,10 @@ function langNetwork(stage) {
   s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
 }
 
+/* 띠 이름이 서로 겹치던 문제를 고쳤다.
+   ① 이름을 가운데 칸이 아니라 그 띠가 가장 두꺼운 칸에 놓는다
+   ② 글자가 들어갈 만큼 두껍지 않은 띠는 안 적고 아래 범례로 보낸다
+   ③ 그래도 가까이 붙은 것끼리는 세로로 밀어 떼어 놓는다 */
 function langFlow(stage) {
   const W = 1000, H = 460, s = svgEl(stage, W, H);
   const top = LANG.words.slice(0, 12);
@@ -655,54 +661,111 @@ function langFlow(stage) {
   const nx = i => 60 + (i / Math.max(ch.length - 1, 1)) * (W - 110);
   const stackTop = ch.map((_, ci) => series.reduce((a, s2) => a + s2[ci], 0));
   const maxStack = Math.max(...stackTop, .001);
+  const HH = H - 90;
   let acc = ch.map(() => 0);
-  const paths = series.map((sv, si) => {
-    const up = [], dn = [];
+  const bands = series.map((sv, si) => {
+    const up = [], dn = [], thick = [];
     sv.forEach((v, ci) => {
-      const y0 = H - 40 - (acc[ci] / maxStack) * (H - 90);
-      const y1 = H - 40 - ((acc[ci] + v) / maxStack) * (H - 90);
-      up.push([nx(ci), y1]); dn.unshift([nx(ci), y0]); acc[ci] += v;
+      const y0 = H - 40 - (acc[ci] / maxStack) * HH;
+      const y1 = H - 40 - ((acc[ci] + v) / maxStack) * HH;
+      up.push([nx(ci), y1]); dn.unshift([nx(ci), y0]);
+      thick.push({ ci, t: y0 - y1, mid: (y0 + y1) / 2 });
+      acc[ci] += v;
     });
     const curve = pts => pts.map((p, i) => i ? `L${p[0]},${p[1]}` : `M${p[0]},${p[1]}`).join('');
-    const col = css(PAL[si % PAL.length]);
-    const mid = up[Math.floor(up.length / 2)];
-    return { d: curve(up) + curve(dn).replace('M', 'L') + 'Z', col, label: top[si].w, mid };
+    const best = thick.reduce((a, b) => b.t > a.t ? b : a, thick[0]);
+    return { d: curve(up) + curve(dn).replace('M', 'L') + 'Z', col: css(PAL[si % PAL.length]),
+      label: top[si].w, x: nx(best.ci), y: best.mid, t: best.t };
   });
-  s.innerHTML = paths.map(p => `<path d="${p.d}" fill="${p.col}" opacity=".55"/>`).join('')
+  const shown = bands.filter(b => b.t >= 12).sort((a, b) => a.y - b.y);
+  const hidden = bands.filter(b => b.t < 12);
+  for (let i = 1; i < shown.length; i++) {
+    const a = shown[i - 1], b = shown[i];
+    if (Math.abs(b.x - a.x) < 100 && b.y - a.y < 16) b.y = a.y + 16;
+  }
+  s.innerHTML = bands.map(p => `<path d="${p.d}" fill="${p.col}" opacity=".55"/>`).join('')
     + ch.map((c, i) => `<text x="${nx(i)}" y="${H - 18}" text-anchor="middle" font-size="11"
         fill="${css('--muted')}">${esc(c.label)}</text>`).join('')
-    + paths.map(p => `<text x="${p.mid[0]}" y="${p.mid[1] + 12}" text-anchor="middle" font-size="12"
-        font-family="var(--serif)" fill="${css('--fg')}" style="cursor:pointer"
-        class="lw" data-w="${esc(p.label)}">${esc(p.label)}</text>`).join('');
+    + shown.map(p => `<text x="${p.x}" y="${p.y + 4}" text-anchor="middle" font-size="12.5"
+        font-family="var(--serif)" fill="${css('--fg')}" stroke="${css('--bg')}" stroke-width="3.2"
+        paint-order="stroke" style="cursor:pointer" class="lw" data-w="${esc(p.label)}">${esc(p.label)}</text>`).join('');
   s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+  if (hidden.length) {
+    const box = document.createElement('div');
+    box.className = 'lang-legend';
+    box.innerHTML = `<span class="status">띠가 얇아 이름을 못 적은 어휘</span> ` + hidden.map(b =>
+      `<button class="lw" data-w="${esc(b.label)}"><i style="background:${b.col}"></i>${esc(b.label)}</button>`).join('');
+    stage.appendChild(box);
+    box.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+  }
 }
 
+/* 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 준다.
+   예전에는 왼쪽 어휘 이름만 눌렸고 칸에는 툴팁뿐이었다 — 정작 궁금한 것은 '이 칸이 왜 진한가'다. */
 function langPrint(stage) {
   const top = LANG.words.slice(0, 22), ch = LANG.byChapter;
   const W = 1000, H = 460, s = svgEl(stage, W, H);
   const cw = (W - 150) / ch.length, rh = Math.min(16, (H - 70) / top.length);
   const max = Math.max(...top.map(w => Math.max(...ch.map(c => c.freq[w.w] || 0))), 1);
   s.innerHTML = top.map((w, ri) => ch.map((c, ci) => {
-    const v = (c.freq[w.w] || 0) / max;
+    const n = c.freq[w.w] || 0;
     return `<rect x="${140 + ci * cw}" y="${30 + ri * rh}" width="${cw - 2}" height="${rh - 2}"
-      rx="2" fill="${css('--accent')}" opacity="${.06 + v * .9}"><title>${esc(w.w)} · ${esc(c.label)} · ${c.freq[w.w] || 0}회</title></rect>`;
+      rx="2" fill="${css('--accent')}" opacity="${.06 + (n / max) * .9}" style="cursor:pointer"
+      class="lw" data-w="${esc(w.w)}" data-p="${ci}"><title>${esc(w.w)} · ${esc(c.label)} · ${n}회 (눌러 보기)</title></rect>`;
   }).join('')).join('')
     + top.map((w, ri) => `<text x="132" y="${30 + ri * rh + rh * .72}" text-anchor="end" font-size="11"
         fill="${css('--fg')}" class="lw" style="cursor:pointer" data-w="${esc(w.w)}">${esc(w.w)}</text>`).join('')
     + ch.map((c, ci) => `<text x="${140 + ci * cw + cw / 2}" y="22" text-anchor="middle" font-size="10.5"
         fill="${css('--muted')}">${esc(c.label)}</text>`).join('');
-  s.querySelectorAll('.lw').forEach(g => g.onclick = () => showWordSource(g.dataset.w));
+  s.querySelectorAll('.lw').forEach(g => g.onclick = () =>
+    showWordSource(g.dataset.w, g.dataset.p ? +g.dataset.p : null));
 }
 
-async function showWordSource(w) {
-  let text = '';
-  try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
-  const hits = text.split(/\n\s*\n/).map((p, i) => ({ i, p }))
-    .filter(x => x.p.includes(w)).slice(0, 3);
-  $('#langNote').innerHTML = hits.length
-    ? `<b>“${esc(w)}”가 나온 대목</b><br>` + hits.map(h =>
-      `<span style="display:block;margin:.35rem 0">${h.i + 1}단락 — ${esc(h.p.slice(0, 150))
-        .replace(new RegExp(esc(w), 'g'), `<mark>${esc(w)}</mark>`)}…</span>`).join('')
+/* 단락별 특징어 — 빈도가 아니라 tf-idf. 빈도만 보면 어느 단락이든 '국회'가 1등이라
+   단락끼리 구별이 안 된다. 그 단락에만 몰린 말을 뽑아야 무엇에 대한 대목인지 드러난다. */
+function langTfidf(stage) {
+  const ch = LANG.byChapter, N = ch.length, df = {};
+  ch.forEach(c => Object.keys(c.freq).forEach(w => df[w] = (df[w] || 0) + 1));
+  const cols = ch.map(c => ({
+    c, sc: Object.entries(c.freq).filter(([, n]) => n >= 2)
+      .map(([w, n]) => ({ w, n, s: (n / Math.max(c.total, 1)) * Math.log((N + 1) / (df[w] || 1)) }))
+      .sort((a, b) => b.s - a.s).slice(0, 7),
+  }));
+  const maxS = Math.max(...cols.flatMap(x => x.sc.map(y => y.s)), 1e-9);
+  stage.innerHTML = `<div class="lang-tfidf">${cols.map(({ c, sc }) => `<div>
+    <h5>${esc(c.label)}</h5>
+    ${sc.length ? sc.map(x => `<button class="lw" data-w="${esc(x.w)}" data-p="${c.i}"
+      style="--v:${(x.s / maxS).toFixed(3)}">${esc(x.w)}<i>${x.n}</i></button>`).join('')
+      : `<span class="status">두 번 이상 나온 말이 없습니다</span>`}
+  </div>`).join('')}</div>`;
+  stage.querySelectorAll('.lw').forEach(g => g.onclick = () =>
+    showWordSource(g.dataset.w, g.dataset.p ? +g.dataset.p : null));
+}
+
+/* 어휘 하나를 누르면 그 문장을 그대로 보여 준다. 단락을 지정하면 그 단락만 본다.
+   그리고 그 말이 그래프에 개체로 들어와 있는지까지 알려 준다 — 원문에 자주 나오는데
+   그래프에 없다면, 그게 다음에 넣을 것이다. */
+function showWordSource(w, pi) {
+  const paras = LANG.paras || [];
+  const src = pi == null ? paras.map((p, i) => ({ i, p })) : [{ i: pi, p: paras[pi] || '' }];
+  const out = [];
+  src.forEach(({ i, p }) => String(p).split(/(?<=[.!?])\s+|\n+/).forEach(sent => {
+    if (sent.includes(w) && out.length < 6) out.push({ i, sent: sent.trim() });
+  }));
+  if (!out.length) src.forEach(({ i, p }) => {
+    if (String(p).includes(w) && out.length < 3) out.push({ i, sent: String(p).slice(0, 160) + '…' });
+  });
+  const hl = s => esc(s).replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), `<mark>${esc(w)}</mark>`);
+  const inG = G.nodes.filter(n => n.label && n.label.includes(w)).slice(0, 4);
+  $('#langNote').innerHTML = out.length
+    ? `<b>“${esc(w)}”가 나온 대목</b>${pi == null ? '' : ` · ${pi + 1}단락`}<br>`
+      + out.map(o => `<span style="display:block;margin:.35rem 0">${o.i + 1}단락 — ${hl(o.sent.slice(0, 220))}</span>`).join('')
+      + (inG.length
+        ? `<span style="display:block;margin-top:.5rem;color:var(--ok)">그래프에 있습니다 — `
+          + inG.map(n => `<a href="#/item/${encodeURIComponent(String(n.id).replace('http://archives.nanet.go.kr/id/',''))}">${esc(n.label)}</a>`).join(', ')
+          + `</span>`
+        : `<span style="display:block;margin-top:.5rem;color:var(--bad)">이 말은 그래프에 개체로 없습니다.
+             원문에 이만큼 나오는데 안 뽑았다면, 빠뜨린 것인지 뽑지 않기로 한 것인지 판단할 자리입니다.</span>`)
     : `“${esc(w)}” 원문을 찾지 못했습니다.`;
 }
 

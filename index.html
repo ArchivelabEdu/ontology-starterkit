@@ -499,6 +499,22 @@ pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding
 
 /* ───── 언어 ───── */
 #lang-stage{height:460px;position:relative}
+#lang-stage .lang-legend{display:flex;gap:.35rem;flex-wrap:wrap;align-items:center;
+  padding:.5rem .2rem 0;border-top:1px solid var(--line);margin-top:.4rem;font-size:.78rem}
+#lang-stage .lang-legend button{font:inherit;font-size:.78rem;cursor:pointer;background:var(--panel);
+  color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:.1rem .55rem;
+  display:inline-flex;gap:.3rem;align-items:center}
+#lang-stage .lang-legend i{width:8px;height:8px;border-radius:50%}
+.lang-tfidf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;padding:.5rem;
+  height:100%;overflow:auto}
+.lang-tfidf h5{margin:0 0 .35rem;font-size:.8rem;color:var(--muted);font-weight:600}
+.lang-tfidf button{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem;width:100%;
+  font:inherit;font-size:.86rem;cursor:pointer;color:var(--fg);border:0;border-radius:6px;
+  padding:.17rem .45rem;margin-bottom:.15rem;text-align:left;
+  background:color-mix(in srgb,var(--accent) calc(var(--v) * 42%),transparent)}
+.lang-tfidf button:hover{outline:1px solid var(--accent)}
+.lang-tfidf button i{font-style:normal;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+#langNote mark{background:var(--accent-soft);color:inherit;padding:0 .1em;border-radius:3px}
 #lang-stage canvas,#lang-stage svg{width:100%;height:100%;display:block}
 
 table{border-collapse:collapse;width:100%;font-size:.88rem}
@@ -718,7 +734,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <button class="fs-btn" onclick="fullscreen('lang')">⤢ 전체화면</button>
       <div class="kicker">Language</div>
       <h2>구술의 언어</h2>
-      <p>원문 8단락에서 뽑은 어휘를 세 방식으로 봅니다. 탭을 바꿔 보세요.</p>
+      <p>원문 8단락에서 뽑은 어휘를 네 방식으로 봅니다. 어느 화면에서든 <b>어휘를 누르면</b> 그 말이 나온 원문 문장과, 그 말이 <b>그래프에 개체로 들어와 있는지</b>를 함께 보여 줍니다.</p>
     </div>
     <div class="seg" id="langSeg" style="margin-bottom:.9rem"></div>
     <div class="panel"><div id="lang-stage"></div></div>
