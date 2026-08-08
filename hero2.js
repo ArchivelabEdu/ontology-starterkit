@@ -48,7 +48,7 @@ export async function initHero2() {
       <p>국회도서관 국회기록보존소가 2018년 채록한 정세균 전 국회의장의 구술기록을
          RiC-O 국제표준으로 구조화했습니다.</p>
       <div class="hero-cta">
-        <a class="btn primary" href="#query">온톨로지에게 묻기 →</a>
+        <a class="btn primary" href="#query">지식그래프에게 묻기 →</a>
         <a class="btn ghost" href="#record">기록 찾아보기</a>
       </div>
     </div>
