@@ -800,7 +800,7 @@ ric:event-audit-situation-room-plaque a rico:Event ;
   rico:beginningDate "2017-10-10" ;
   rico:identifier "event-audit-situation-room-plaque" ;
   rico:identifier "urn:uuid:e217ee43-6170-5a45-9044-760cf56c2912" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.261" .
 
@@ -1260,7 +1260,7 @@ ric:event-gukjeong-gamsa-1996 a rico:Event ;
   rico:beginningDate "1996" ;
   rico:identifier "event-gukjeong-gamsa-1996" ;
   rico:identifier "urn:uuid:bd8c7626-cf55-52a3-a5ff-f05e349ee3f2" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.64,70" .
 
@@ -1579,7 +1579,7 @@ ric:event-national-assembly-343 a rico:Event ;
   rico:endDate "2016-07-06" ;
   rico:identifier "event-national-assembly-343" ;
   rico:identifier "urn:uuid:a016f01c-b969-5371-bbe5-03537e7cdf14" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.258" .
 
@@ -1589,7 +1589,7 @@ ric:event-national-assembly-344 a rico:Event ;
   rico:endDate "2016-07-27" ;
   rico:identifier "event-national-assembly-344" ;
   rico:identifier "urn:uuid:324d78c1-d679-5bd7-9999-7ed645799855" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.258" .
 
@@ -1599,7 +1599,7 @@ ric:event-national-assembly-345 a rico:Event ;
   rico:endDate "2016-08-31" ;
   rico:identifier "event-national-assembly-345" ;
   rico:identifier "urn:uuid:a196d5ee-efdb-591d-b4c5-d44b910aa96f" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.258" .
 
@@ -1609,7 +1609,7 @@ ric:event-national-assembly-346 a rico:Event ;
   rico:endDate "2016-12-09" ;
   rico:identifier "event-national-assembly-346" ;
   rico:identifier "urn:uuid:38243b37-6904-53ed-9aca-02be83807184" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.258" .
 
@@ -1619,7 +1619,7 @@ ric:event-national-assembly-347 a rico:Event ;
   rico:endDate "2016-12-31" ;
   rico:identifier "event-national-assembly-347" ;
   rico:identifier "urn:uuid:b054285c-db0f-5643-8b3d-653f747fc24a" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.259" .
 
@@ -1629,7 +1629,7 @@ ric:event-national-assembly-348 a rico:Event ;
   rico:endDate "2017-01-20" ;
   rico:identifier "event-national-assembly-348" ;
   rico:identifier "urn:uuid:478b111d-0c95-5d84-ba2d-e7da9d33f908" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.260" .
 
@@ -1639,7 +1639,7 @@ ric:event-national-assembly-349 a rico:Event ;
   rico:endDate "2017-03-02" ;
   rico:identifier "event-national-assembly-349" ;
   rico:identifier "urn:uuid:962692a0-e20b-59ad-a96b-d596d5582866" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.260" .
 
@@ -1649,7 +1649,7 @@ ric:event-national-assembly-350 a rico:Event ;
   rico:endDate "2017-04-01" ;
   rico:identifier "event-national-assembly-350" ;
   rico:identifier "urn:uuid:e34def5a-3d07-5103-9f89-cf72bfd60e51" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.260" .
 
@@ -1659,7 +1659,7 @@ ric:event-national-assembly-351 a rico:Event ;
   rico:endDate "2017-06-27" ;
   rico:identifier "event-national-assembly-351" ;
   rico:identifier "urn:uuid:2af679f4-245f-52ed-80d4-07306da50432" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.260" .
 
@@ -1669,7 +1669,7 @@ ric:event-national-assembly-352 a rico:Event ;
   rico:endDate "2017-07-22" ;
   rico:identifier "event-national-assembly-352" ;
   rico:identifier "urn:uuid:6808d47c-202d-52d0-9579-006faab357b6" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.260" .
 
@@ -1679,7 +1679,7 @@ ric:event-national-assembly-353 a rico:Event ;
   rico:endDate "2017-08-31" ;
   rico:identifier "event-national-assembly-353" ;
   rico:identifier "urn:uuid:b4a7399e-b06b-552d-8513-6c4bf3d5136e" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.261" .
 
@@ -1689,7 +1689,7 @@ ric:event-national-assembly-354 a rico:Event ;
   rico:endDate "2017-12-09" ;
   rico:identifier "event-national-assembly-354" ;
   rico:identifier "urn:uuid:669b1543-4759-54ca-8a26-aeb524b715fb" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.261" .
 
@@ -1700,7 +1700,7 @@ ric:event-national-assembly-355 a rico:Event ;
   rico:endDate "2017-12-29" ;
   rico:identifier "event-national-assembly-355" ;
   rico:identifier "urn:uuid:9c42dce7-c578-51bc-b7b2-582313e2c125" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.261" .
 
@@ -1710,7 +1710,7 @@ ric:event-national-assembly-356 a rico:Event ;
   rico:endDate "2018-02-28" ;
   rico:identifier "event-national-assembly-356" ;
   rico:identifier "urn:uuid:580857aa-2d4c-52d6-987f-5aeb8280fd4b" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.262" .
 
@@ -1720,7 +1720,7 @@ ric:event-national-assembly-357 a rico:Event ;
   rico:endDate "2018-03-05" ;
   rico:identifier "event-national-assembly-357" ;
   rico:identifier "urn:uuid:3d3199de-3a76-5b90-9bb0-47bfddd4e84c" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.262" .
 
@@ -1730,7 +1730,7 @@ ric:event-national-assembly-358 a rico:Event ;
   rico:endDate "2018-03-30" ;
   rico:identifier "event-national-assembly-358" ;
   rico:identifier "urn:uuid:a1a9db64-e080-5cd4-bf92-8be47e9504ba" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.262" .
 
@@ -1740,7 +1740,7 @@ ric:event-national-assembly-359 a rico:Event ;
   rico:endDate "2018-05-01" ;
   rico:identifier "event-national-assembly-359" ;
   rico:identifier "urn:uuid:66682cc7-bc3f-5e90-9bbd-8f05f0010bba" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.262" .
 
@@ -1750,7 +1750,7 @@ ric:event-national-assembly-360 a rico:Event ;
   rico:endDate "2018-05-31" ;
   rico:identifier "event-national-assembly-360" ;
   rico:identifier "urn:uuid:3361b557-45b4-5b84-b942-5130611847b6" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.262" .
 
@@ -1768,7 +1768,7 @@ ric:event-national-audit-2016 a rico:Event ;
   rico:endDate "2016-10-19" ;
   rico:identifier "event-national-audit-2016" ;
   rico:identifier "urn:uuid:402491f7-248d-52ff-bbaa-854d61485593" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.259" .
 
@@ -1778,7 +1778,7 @@ ric:event-national-audit-2017 a rico:Event ;
   rico:endDate "2017-10-31" ;
   rico:identifier "event-national-audit-2017" ;
   rico:identifier "urn:uuid:fe046f91-b0f4-5814-af09-dfbeba094146" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.261" .
 
@@ -1893,7 +1893,7 @@ ric:event-plenary-cancellation-protest-2009 a rico:Event ;
   rico:beginningDate "2009-02-27" ;
   rico:identifier "event-plenary-cancellation-protest-2009" ;
   rico:identifier "urn:uuid:056ffb75-5055-546f-b233-227b4f18d0b7" ;
-  foaf:depiction "assets/media/na-국회-본회의장-전경.jpg" ;
+  foaf:depiction "assets/media/na-main-chamber.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형 — 이 사건의 사진이 아니라 열린 장소의 사진입니다" ;
   rico:descriptiveNote "p.153" .
 
@@ -2962,7 +2962,7 @@ ric:org-national-assembly a rico:CorporateBody ;
   rico:generalDescription "대한민국 국회." ;
   rico:identifier "org-national-assembly" ;
   rico:identifier "urn:uuid:3922df5f-4f56-54ef-8df2-5abf2581f281" ;
-  foaf:depiction "assets/media/na-국회의사당-전경.jpg" ;
+  foaf:depiction "assets/media/na-capitol.jpg" ;
   rdfs:label "대한민국 국회 · 공공누리 제1유형" ;
   rico:descriptiveNote "p.12,13,14,21,31,45,46,56,62,130,132,153,174,184,190,197,208,218,228,234,238,245,247,258,259,260,261,262" .
 
@@ -6553,9 +6553,9 @@ ric:rule-basic-livelihood rico:identifier "urn:uuid:fe8dbcb5-8253-5111-a1c6-3122
 ric:rule-constitution rico:identifier "urn:uuid:045bd212-b665-5372-94e2-5e1a333808d4" .
 ric:rule-nafr-act rico:identifier "urn:uuid:bab29acc-b804-53e0-8629-79408509f217" .
 ric:rule-pastaffairs rico:identifier "urn:uuid:417a2b59-7df3-50f7-a541-97a605b003f0" .
-ric:place-assembly foaf:depiction "assets/media/na-국회의사당-전경.jpg" .
+ric:place-assembly foaf:depiction "assets/media/na-capitol.jpg" .
 ric:place-assembly rdfs:label "대한민국 국회 · 공공누리 제1유형" .
-ric:org-assembly foaf:depiction "assets/media/na-국회의사당-전경.jpg" .
+ric:org-assembly foaf:depiction "assets/media/na-capitol.jpg" .
 ric:org-assembly rdfs:label "대한민국 국회 · 공공누리 제1유형" .
 ric:agent-jsk foaf:depiction "assets/media/person-jung-sye-kyun.jpg" .
 ric:agent-jsk owl:sameAs <http://www.wikidata.org/entity/Q11270093> .
