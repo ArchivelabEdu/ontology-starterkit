@@ -82,7 +82,7 @@ window.toggleTheme = () => {
    개체가 792개가 되면서 한 장이 너무 길어졌다. 이제 해시가 페이지를 고른다.
    기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
    여기서는 손대지 않고 자리만 비켜 준다. */
-const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'about'];
+const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'collection', 'about'];
 const navMark = href => document.querySelectorAll('#nav a')
   .forEach(a => a.classList.toggle('on', a.getAttribute('href') === href));
 
@@ -153,6 +153,60 @@ addEventListener('scroll', () => {
   if (hz) document.body.classList.toggle('past-hero', hz.getBoundingClientRect().bottom < 80);
 }, { passive: true });
 
+/* ══════════ 컬렉션 ══════════
+   컬렉션은 개체의 속성이 아니라 **발행 단위의 이름**이다 — 한 사이트에 여러 팀이 차례로
+   발행할 때 지금 보고 있는 것이 누구의 결과물인지 가리키는 라벨.
+   관리 시스템이 발행할 때 data/collection.json 을 함께 내보낸다.
+
+   **파일이 없는 것은 오류가 아니다.** 컬렉션 개념이 들어오기 전에 발행된 데이터라는 뜻이므로
+   기본 컬렉션으로 읽고 그 사실을 화면에 적는다. 이 규칙 덕분에 옛 발행본도 그대로 뜬다. */
+export const DEFAULT_COLLECTION = '정세균 구술';
+export const COL = { name: DEFAULT_COLLECTION, publishedAt: '', publishedByName: '', declared: false };
+
+async function loadCollection() {
+  try {
+    const r = await fetch('data/collection.json', { cache: 'no-cache' });
+    if (!r.ok) return;                    // 404 — 도입 이전 발행본. 기본값을 그대로 쓴다.
+    const j = await r.json();
+    const name = String(j.collection ?? '').trim();
+    if (!name) return;                    // 이름이 비어 있으면 지어내지 않고 기본값을 둔다
+    COL.name = name;
+    COL.declared = true;
+    COL.publishedAt = String(j.publishedAt ?? '');
+    COL.publishedByName = String(j.publishedByName ?? j.publishedBy ?? '');
+  } catch { /* 파일이 깨져 있어도 사이트는 기본 컬렉션으로 계속 뜬다 */ }
+}
+
+/* 컬렉션 페이지 — 이 사이트에 실린 발행본 한 건이 무엇을 담고 있는지.
+   수는 전부 적재된 그래프에서 직접 센다(손으로 적으면 데이터를 갈아끼울 때 어긋난다). */
+function drawCollection(nT) {
+  $('#colName').textContent = COL.name;
+  const cnt = new Map();
+  G.nodes.forEach(n => cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1));
+  const rowsHtml = [...cnt.entries()].sort((a, b) => b[1] - a[1])
+    .map(([c, n]) => `<tr><td>${esc(CLS[c]?.ko || c)}</td>
+      <td><code>rico:${esc(c)}</code></td><td style="text-align:right">${n}</td></tr>`).join('');
+  $('#colBody').innerHTML = `
+    <div class="panel" style="padding:1rem 1.2rem">
+      ${COL.declared
+      ? `<p>이 사이트에 실린 발행본은 컬렉션 <b>「${esc(COL.name)}」</b> 한 건입니다.
+           ${COL.publishedAt ? `발행 시각 <code>${esc(COL.publishedAt)}</code>` : '발행 시각 기록 없음'}
+           ${COL.publishedByName ? ` · 발행 주체 <b>${esc(COL.publishedByName)}</b>` : ' · 발행 주체 기록 없음'}.</p>
+         <p class="note">발행 주체는 관리 시스템에 <b>로그인해 발행을 실행한 계정</b>입니다.
+           검수를 승인한 사람은 여기에 적히지 않습니다 — 검수 화면에는 로그인이 없어 그 신원을 아무도 보증하지 않기 때문입니다.</p>`
+      : `<p>이 발행본에는 컬렉션 표시 파일(<code>data/collection.json</code>)이 <b>없습니다</b>.
+           오류가 아니라 컬렉션 개념이 들어오기 전에 발행된 데이터라는 뜻이라, 기본 컬렉션
+           <b>「${esc(DEFAULT_COLLECTION)}」</b>으로 읽었습니다.</p>`}
+      <p>개체 <b>${G.nodes.length}</b> · 관계 <b>${G.edges.length}</b> · 트리플 <b>${nT}</b></p>
+    </div>
+    <div class="panel" style="padding:.4rem 1.2rem 1rem;margin-top:1rem"><table>
+      <tr><th>유형</th><th>RiC-O 클래스</th><th style="text-align:right">개체 수</th></tr>
+      ${rowsHtml}
+    </table></div>
+    <p class="note" style="margin-top:1rem">유형별 목록은 <a href="#/records">기록</a> 페이지에서
+      걸러 볼 수 있습니다.</p>`;
+}
+
 /* ══════════ 부팅 ══════════ */
 async function boot() {
   try {
@@ -164,6 +218,7 @@ async function boot() {
       { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
     const nT = store.size ?? [...store.match()].length;
 
+    await loadCollection();
     buildModel();
     $('#loadStatus').textContent =
       `그래프 적재 완료 — 트리플 ${nT}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
@@ -179,6 +234,8 @@ async function boot() {
     // 홈 색인의 숫자는 그래프에서 직접 센다 — 손으로 적으면 데이터를 갈아끼울 때 어긋난다
     $('#ixRec').textContent = `${G.nodes.length}건`;
     $('#ixGraph').textContent = `관계 ${G.edges.length}`;
+    $('#ixCollection').textContent = COL.name;
+    drawCollection(nT);
 
     initHero(G);
     // 히어로 안(1: 입자 몰핑 / 2: 전면 이미지)은 저장된 선택을 따른다

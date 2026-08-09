@@ -290,7 +290,8 @@ body.item-open{overflow:hidden}
 main>section{display:none}
 :root[data-page="place"] #place,:root[data-page="event"] #event,
 :root[data-page="graph-sec"] #graph-sec,:root[data-page="query"] #query,
-:root[data-page="lang"] #lang,:root[data-page="about"] #about{display:block}
+:root[data-page="lang"] #lang,:root[data-page="collection"] #collection,
+:root[data-page="about"] #about{display:block}
 :root:not([data-page="home"]) #heroZone{display:none}
 #homeIndex{display:none}
 :root[data-page="home"] #homeIndex{display:grid;
@@ -563,7 +564,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   </a>
   <nav id="nav">
     <a href="#/records">기록</a><a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
-    <a href="#query">질의</a><a href="#lang">언어</a><a href="#about">해설</a>
+    <a href="#query">질의</a><a href="#lang">언어</a><a href="#collection">컬렉션</a><a href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
@@ -623,6 +624,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <a href="#graph-sec"><b>관계망</b><span>인물·직위·단체·사건이 이어진 그물</span><i id="ixGraph">–</i></a>
     <a href="#query"><b>질의</b><span>SPARQL 과 자연어로 지식그래프에 묻습니다</span><i>Oxigraph WASM</i></a>
     <a href="#lang"><b>언어</b><span>원문의 어휘를 네 방식으로 봅니다</span><i>원문 8단락</i></a>
+    <a href="#collection"><b>컬렉션</b><span>지금 이 사이트에 실린 발행본이 무엇인지</span><i id="ixCollection">–</i></a>
     <a href="#about"><b>해설</b><span>이 사이트가 무엇을 어떻게 보여주는지</span><i>①~④ 프로세스</i></a>
   </nav>
 
@@ -768,6 +770,19 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <div class="seg" id="langSeg" style="margin-bottom:.9rem"></div>
     <div class="panel"><div id="lang-stage"></div></div>
     <p class="note" id="langNote"></p>
+  </section>
+
+  <!-- ═══════ 컬렉션 ═══════
+       컬렉션은 개체의 속성이 아니라 발행 단위의 이름이다. 내용은 app.js 의 drawCollection 이
+       data/collection.json 과 적재된 그래프에서 직접 만든다 — 파일이 없으면 기본 컬렉션. -->
+  <section id="collection">
+    <div class="sec-head">
+      <div class="kicker">Collection</div>
+      <h2>컬렉션 — <span id="colName">–</span></h2>
+      <p>이 사이트가 지금 보여주는 것은 <b>한 번의 발행본</b>입니다. 컬렉션은 그 발행본의 이름이고,
+         여러 팀이 같은 사이트에 차례로 발행할 때 지금 보고 있는 것이 누구의 결과물인지 가리킵니다.</p>
+    </div>
+    <div id="colBody"></div>
   </section>
 
   <!-- ═══════ 해설 ═══════ -->
