@@ -221,7 +221,7 @@ function item(sid) {
 
     <div class="item-foot">
       <button class="btn sm" onclick="focusInGraph('${esc(n.id)}')">관계망에서 보기 →</button>
-      ${n.lat != null ? `<button class="btn sm" onclick="closeItem();selectPlace('${esc(n.id)}')">지도에서 보기 →</button>` : ''}
+      ${n.lat != null ? `<button class="btn sm" onclick="showOnMap('${esc(n.id)}')">지도에서 보기 →</button>` : ''}
       <span class="status">출처 · ${SRC}</span>
     </div>
   </div>`;
@@ -229,6 +229,14 @@ function item(sid) {
   document.body.classList.add('item-open');
   el.scrollTop = 0;
 }
+
+/** 지도 페이지로 가서 그 장소를 고른다.
+    예전에는 closeItem() 이 기록 페이지로 되돌려 놓아 지도가 안 보였다. */
+window.showOnMap = id => {
+  close();
+  location.hash = '#place';
+  setTimeout(() => window.selectPlace?.(id), 80);
+};
 
 /** 관계망 섹션으로 가서 그 개체의 이웃만 남긴다 */
 window.focusInGraph = id => {

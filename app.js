@@ -77,20 +77,40 @@ window.toggleTheme = () => {
 };
 { const t = localStorage.getItem('kit-theme'); if (t) document.documentElement.setAttribute('data-theme', t); }
 
-/* ── 스크롤 스파이 ── */
-function spy() {
-  const ids = ['record', 'place', 'event', 'graph-sec', 'query', 'lang', 'about'];
-  let cur = '';
-  for (const id of ids) {
-    const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top < 140) cur = id;
+/* ── 페이지 라우팅 ──
+   메뉴 한 항목이 곧 한 페이지다. 예전에는 전부 한 장에 쌓아 스크롤로 오갔는데,
+   개체가 792개가 되면서 한 장이 너무 길어졌다. 이제 해시가 페이지를 고른다.
+   기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
+   여기서는 손대지 않고 자리만 비켜 준다. */
+const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'about'];
+const navMark = href => document.querySelectorAll('#nav a')
+  .forEach(a => a.classList.toggle('on', a.getAttribute('href') === href));
+
+function route() {
+  const h = location.hash;
+  if (h.startsWith('#/')) {                 // 기록·아이템 — record.js 소관
+    document.documentElement.dataset.page = 'records';
+    document.body.classList.add('past-hero');
+    navMark('#/records');
+    return;
   }
-  document.querySelectorAll('#nav a').forEach(a =>
-    a.classList.toggle('on', a.getAttribute('href') === '#' + cur));
-  // 히어로를 지나면 1안/2안 토글을 숨긴다
-  const hz = document.getElementById('heroZone');
-  if (hz) document.body.classList.toggle('past-hero', hz.getBoundingClientRect().bottom < 80);
+  const id = PAGES.includes(h.slice(1)) ? h.slice(1) : 'home';
+  document.documentElement.dataset.page = id;
+  document.body.classList.toggle('past-hero', id !== 'home');
+  navMark(id === 'home' ? '' : '#' + id);
+  scrollTo({ top: 0 });
+  /* 숨어 있는 동안 컨테이너 크기가 0이라 지도·캔버스·연표가 제대로 안 그려진다.
+     보이게 된 뒤 다시 재라고 알려 준다 — 전체화면 전환 때와 같은 이유다.
+     rAF 가 아니라 setTimeout 을 쓴다: 배경 탭에서는 rAF 가 아예 돌지 않아
+     링크를 새 탭으로 연 사람은 그 탭을 볼 때까지 캔버스가 1px 인 채로 남는다. */
+  setTimeout(() => {
+    if (id === 'place' && MAP.map) MAP.map.invalidateSize();
+    if (id === 'event') renderTimeline();
+    if (id === 'graph-sec') redrawGraph();
+    if (id === 'lang') drawLang();
+  }, 60);
 }
+addEventListener('hashchange', route);
 
 /* ── 전체화면 보기 ──
    섹션 하나를 화면 가득 띄운다. 지도·관계망은 캔버스라 크기가 바뀌면
@@ -119,7 +139,7 @@ window.goHome = () => {
   document.documentElement.classList.remove('records-on');
   document.body.classList.remove('records-open', 'item-open');
   document.getElementById('itemView')?.classList.remove('on');
-  scrollTo({ top: 0, behavior: 'smooth' });
+  route();
 };
 
 addEventListener('keydown', e => {
@@ -127,7 +147,11 @@ addEventListener('keydown', e => {
   const open = document.querySelector('section.fs');
   if (open) window.fullscreen(open.id);
 });
-addEventListener('scroll', spy, { passive: true });
+addEventListener('scroll', () => {
+  if (document.documentElement.dataset.page !== 'home') return;
+  const hz = document.getElementById('heroZone');
+  if (hz) document.body.classList.toggle('past-hero', hz.getBoundingClientRect().bottom < 80);
+}, { passive: true });
 
 /* ══════════ 부팅 ══════════ */
 async function boot() {
@@ -152,6 +176,10 @@ async function boot() {
       .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
     $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
 
+    // 홈 색인의 숫자는 그래프에서 직접 센다 — 손으로 적으면 데이터를 갈아끼울 때 어긋난다
+    $('#ixRec').textContent = `${G.nodes.length}건`;
+    $('#ixGraph').textContent = `관계 ${G.edges.length}`;
+
     initHero(G);
     // 히어로 안(1: 입자 몰핑 / 2: 전면 이미지)은 저장된 선택을 따른다
     const hv = localStorage.getItem('kit-hero') || '1';
@@ -160,7 +188,11 @@ async function boot() {
       .forEach(b => b.classList.toggle('on', b.dataset.v === hv));
     if (hv === '2') initHero2();
     drawMap(); drawTimeline(); initGraph(G); initRecord(); initQuery(); drawLang();
-    spy();
+    // 카드의 수는 그 페이지가 실제로 보여 주는 수를 그대로 따른다.
+    // Place 클래스는 84개지만 지도에 뜨는 것은 좌표가 있는 44곳이다 — 84라고 적으면 거짓말이 된다.
+    $('#ixPlace').textContent = `${$('#nPlace').textContent}곳`;
+    $('#ixEvent').textContent = `${$('#nEvent').textContent}건`;
+    route();
   } catch (e) {
     $('#loadStatus').textContent = '적재 실패: ' + e.message;
     console.error(e);

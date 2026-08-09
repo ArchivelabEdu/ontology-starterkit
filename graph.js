@@ -81,7 +81,9 @@ window.resetGraph = () => {
   document.querySelectorAll('#clsChips .chip,#relChips .chip').forEach(b => b.classList.add('on'));
   compute();
 };
-export function redrawGraph() { if (S.G) compute(); }
+/* 다시 그리라는 말은 곧 크기가 달라졌다는 말이다 — 테마 전환·전체화면·페이지 전환 모두 그렇다.
+   캔버스를 다시 재지 않으면 숨어 있던 동안의 0px 를 그대로 쓴다. */
+export function redrawGraph() { if (S.G) { sizeCanvas(); compute(); } }
 /** 아이템 페이지에서 넘어올 때 — 그 개체의 이웃만 남기고 클래스·관계 필터는 모두 켠다 */
 window.graphFocus = id => {
   if (!S.G) return;
