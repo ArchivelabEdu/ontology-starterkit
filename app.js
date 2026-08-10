@@ -5,9 +5,13 @@ import { initGraph, redrawGraph } from './graph.js';
 import { initQuery } from './query.js';
 import { initHero } from './hero.js';
 import { initHero2 } from './hero2.js';
-import { initRecord } from './record.js';
+import { initRecord, rebuildRecord } from './record.js';
 
-export const RICO = 'https://www.ica.org/standards/RiC/ontology#';
+export const RICO = 'https://www.ica.org/standards/RiC/ontology#'
+/* 전체 IRI 에서 우리 네임스페이스를 떼어 읽기 좋은 지역명으로. record.js 도 같은 일을 하지만
+   거기 것은 모듈 안에 갇혀 있어 여기서 다시 둔다(순환 import 를 만들지 않기 위해). */
+const RIC = 'http://archives.nanet.go.kr/id/'
+export const short = u => (String(u).startsWith(RIC) ? String(u).slice(RIC.length) : String(u));
 export const PFX = `PREFIX rico: <${RICO}>
 PREFIX ric:  <http://archives.nanet.go.kr/id/>
 PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -83,21 +87,54 @@ window.toggleTheme = () => {
    기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
    여기서는 손대지 않고 자리만 비켜 준다. */
 const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'collection', 'about'];
+/* ── 주소 한 곳에서 읽기 ──
+   주소가 두 겹이다. 앞은 어느 컬렉션 안인가, 뒤는 어느 화면인가.
+     전체:      #place            #/records         #/item/<id>
+     컬렉션 안:  #/c/<col>/place   #/c/<col>/records  #/item/<id>
+   아이템은 컬렉션을 타지 않는다 — 한 기록의 상세는 어디서 왔든 같은 화면이다.
+   파싱을 한 군데로 모아 둔 이유는, 예전에 화면마다 따로 해석하다가 「컬렉션 안에서 기록으로
+   가면 컬렉션이 풀리는」 어긋남이 났기 때문이다. record.js 도 이걸 쓴다. */
+export function parseHash() {
+  let h = location.hash.replace(/^#/, '');
+  let col = '';
+  const m = h.match(/^\/c\/([^/]+)(.*)$/);
+  if (m) { col = decodeURIComponent(m[1]); h = m[2].replace(/^\//, ''); }
+  return { col, rest: h.replace(/^\//, '') };          // rest: '' | 'place' | 'records' | 'item/<id>'
+}
+
+/** 지금 컬렉션에 맞는 주소를 만든다. page 는 'place' · 'records' · '' 같은 알맹이만 준다. */
+export function colHref(page) {
+  const p = String(page).replace(/^[#/]+/, '');
+  if (CUR.col) return `#/c/${encodeURIComponent(short(CUR.col))}` + (p ? '/' + p : '');
+  if (!p) return '';
+  return (p === 'records' || p.startsWith('item/')) ? '#/' + p : '#' + p;
+}
+/** 메뉴·홈 색인 링크를 지금 컬렉션에 맞춰 다시 쓴다 — 컬렉션 안에서 메뉴를 눌러도 그 안에 머문다. */
+function navHrefs() {
+  document.querySelectorAll('#nav a[data-page], #homeIndex a[data-page]')
+    .forEach(a => { a.href = colHref(a.dataset.page); });
+}
 const navMark = href => document.querySelectorAll('#nav a')
   .forEach(a => a.classList.toggle('on', a.getAttribute('href') === href));
 
 function route() {
-  const h = location.hash;
-  if (h.startsWith('#/')) {                 // 기록·아이템 — record.js 소관
+  const { col, rest } = parseHash();
+  const want = COLS.find(c => short(c.id) === col)?.id ?? '';
+  if (want !== CUR.col) applyCollection(want ? short(want) : '');
+  navHrefs();
+
+  // 기록·아이템은 record.js 가 자기 페이지를 갖고 있다 — 자리만 비켜 준다
+  if (rest === 'records' || rest.startsWith('item/')) {
     document.documentElement.dataset.page = 'records';
     document.body.classList.add('past-hero');
-    navMark('#/records');
+    navMark(colHref('records'));
     return;
   }
-  const id = PAGES.includes(h.slice(1)) ? h.slice(1) : 'home';
+  // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지, 밖이면 홈
+  const id = PAGES.includes(rest) ? rest : (CUR.col ? 'collection' : 'home');
   document.documentElement.dataset.page = id;
   document.body.classList.toggle('past-hero', id !== 'home');
-  navMark(id === 'home' ? '' : '#' + id);
+  navMark(id === 'home' ? '' : colHref(id));
   scrollTo({ top: 0 });
   /* 숨어 있는 동안 컨테이너 크기가 0이라 지도·캔버스·연표가 제대로 안 그려진다.
      보이게 된 뒤 다시 재라고 알려 준다 — 전체화면 전환 때와 같은 이유다.
@@ -108,6 +145,7 @@ function route() {
     if (id === 'event') renderTimeline();
     if (id === 'graph-sec') redrawGraph();
     if (id === 'lang') drawLang();
+    if (id === 'collection') drawCollection();
   }, 60);
 }
 addEventListener('hashchange', route);
@@ -177,9 +215,39 @@ async function loadCollection() {
   } catch { /* 파일이 깨져 있어도 사이트는 기본 컬렉션으로 계속 뜬다 */ }
 }
 
+/* 컬렉션 목록 — 발행본이 여럿 쌓인 사이트의 첫 화면.
+   한 화면에 다 펼치지 않고 **하나를 골라 들어가게** 한다. 열 팀이 쌓이면 전체 보기는
+   개체가 수천이 되어 관계망이 뭉개지고, 무엇을 보고 있는지도 흐려진다. */
+function drawCollectionList() {
+  const cls = c => {
+    const cnt = new Map();
+    ALL.nodes.forEach(n => { if (c.members.has(n.id)) cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1); });
+    return [...cnt.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
+      .map(([k, v]) => `${CLS[k]?.ko || k} ${v}`).join(' · ');
+  };
+  $('#colName').textContent = CUR.col ? (COLS.find(c => c.id === CUR.col)?.title ?? '') : `${COLS.length}건`;
+  $('#colBody').innerHTML = `
+    <p class="note">이 사이트에는 발행본이 <b>${COLS.length}건</b> 실려 있습니다.
+      하나를 골라 들어가면 지도·연표·관계망·기록이 모두 그 컬렉션으로 좁혀집니다.
+      ${CUR.col ? `지금은 <b>「${esc(COLS.find(c => c.id === CUR.col)?.title ?? '')}」</b> 안에 있습니다.` : '지금은 전체를 보고 있습니다.'}</p>
+    <div class="col-grid">
+      ${COLS.map(c => `<a class="col-card${c.id === CUR.col ? ' on' : ''}" href="#/c/${encodeURIComponent(short(c.id))}">
+        <b>${esc(c.title)}</b><span>${esc(cls(c))}</span><i>개체 ${c.n}</i></a>`).join('')}
+    </div>
+    <div class="p3btns" style="margin-top:1rem">
+      <button class="btn sm${CUR.col ? '' : ' primary'}" onclick="location.hash=''">전체 보기 ${ALL.nodes.length}건</button>
+    </div>
+    <p class="note">컬렉션은 관리 시스템이 발행할 때 <code>rico:RecordSet</code> 개체로 그래프에 함께 실립니다.
+      기록은 <code>rico:isOrWasIncludedIn</code> 으로 컬렉션에 <b>들어 있고</b>, 인물·사건·장소는
+      <code>rico:isOrWasSubjectOf</code> 로 컬렉션의 <b>주제</b>가 됩니다 —
+      <code>isOrWasIncludedIn</code> 의 domain 이 <code>Record</code> 라 인물을 그리로 이으면 도메인 위반이기 때문입니다.</p>`;
+}
+
 /* 컬렉션 페이지 — 이 사이트에 실린 발행본 한 건이 무엇을 담고 있는지.
    수는 전부 적재된 그래프에서 직접 센다(손으로 적으면 데이터를 갈아끼울 때 어긋난다). */
-function drawCollection(nT) {
+function drawCollection(nT) {   // nT: 부팅 때만 넘어온다
+  // 컬렉션이 여럿이면 목록을 낸다 — 여기서 하나를 골라 들어간다.
+  if (COLS.length) { drawCollectionList(); return; }
   $('#colName').textContent = COL.name;
   const cnt = new Map();
   G.nodes.forEach(n => cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1));
@@ -250,6 +318,9 @@ async function boot() {
     $('#ixPlace').textContent = `${$('#nPlace').textContent}곳`;
     $('#ixEvent').textContent = `${$('#nEvent').textContent}건`;
     route();
+    /* 콘솔에서 들여다볼 수 있게 열어 둔다. 팀이 Claude Code 로 이 사이트를 고칠 때
+       `KIT.G.nodes` · `KIT.COLS` 를 직접 찍어 보는 편이 훨씬 빠르다. */
+    window.KIT = { G, ALL, COLS, CUR, short, applyCollection };
   } catch (e) {
     $('#loadStatus').textContent = '적재 실패: ' + e.message;
     console.error(e);
@@ -296,8 +367,58 @@ function buildModel() {
     ?s ?p ?o . FILTER(isIRI(?o) && STRSTARTS(STR(?p), "${RICO}")) }`);
   G.edges = er.filter(e => G.byId.has(e.s) && G.byId.has(e.o))
     .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] }));
+  buildCollections();
+  recount();
+}
+
+/* ══════════ 컬렉션 ══════════
+   발행 시스템은 컬렉션을 rico:RecordSet 개체로 내고, 소속을 트리플로 잇는다.
+     · 기록  → rico:isOrWasIncludedIn → 컬렉션   (domain=Record 라 기록만 들어갈 수 있다)
+     · 그 외 → rico:isOrWasSubjectOf  → 컬렉션   (domain=Thing · RecordSet ⊑ RecordResource)
+   인물을 isOrWasIncludedIn 으로 이으면 도메인 위반이라 속성이 둘로 갈렸다. 읽는 쪽에서는
+   **목적어가 컬렉션인 것만** 소속으로 친다 — isOrWasSubjectOf 는 보통 개체→기록 관계로도 쓰인다.
+
+   컬렉션 개체와 소속 트리플은 화면에서 걷어낸다. 컬렉션은 개체들과 나란한 이웃이 아니라
+   담는 그릇이라, 관계망에 두면 모든 점이 달라붙은 거대한 허브가 하나 생길 뿐이다.
+
+   **컬렉션이 하나도 없으면 지금까지와 똑같이 동작한다** — 관리 시스템에서 발행하기 전의
+   손으로 만든 graph.ttl 이 그대로 뜬다. 컬렉션은 발행이 시작되면 켜진다. */
+const COL_PRED = new Set(['isOrWasIncludedIn', 'isOrWasSubjectOf']);
+export const ALL = { nodes: [], edges: [] };
+export const COLS = [];              // [{ id, title, members:Set, n }]
+export const CUR = { col: '' };      // '' = 전체
+
+function recount() {
   G.nodes.forEach(n => n.deg = 0);
   G.edges.forEach(e => { G.byId.get(e.s).deg++; G.byId.get(e.o).deg++; });
+}
+
+function buildCollections() {
+  COLS.length = 0;
+  const isCol = new Map();           // 컬렉션 id → 제목
+  G.nodes.forEach(n => { if (n.cls === 'RecordSet' && short(n.id).startsWith('col-')) isCol.set(n.id, n.label); });
+  if (isCol.size) {
+    for (const [id, title] of isCol) COLS.push({ id, title, members: new Set([id]) });
+    const by = new Map(COLS.map(c => [c.id, c]));
+    G.edges.forEach(e => { if (COL_PRED.has(e.p) && by.has(e.o)) by.get(e.o).members.add(e.s); });
+    COLS.forEach(c => { c.n = c.members.size - 1; });
+    COLS.sort((a, b) => b.n - a.n || a.title.localeCompare(b.title));
+  }
+  // 컬렉션 개체와 소속 트리플은 화면 밖으로. 걷어낸 뒤를 전체(ALL)로 삼는다.
+  ALL.nodes = G.nodes.filter(n => !isCol.has(n.id));
+  ALL.edges = G.edges.filter(e => !(COL_PRED.has(e.p) && isCol.has(e.o)) && !isCol.has(e.s));
+  applyCollection(CUR.col, false);
+}
+
+/** 지금 볼 컬렉션을 고른다. G 를 갈아끼우므로 이걸 읽는 모든 화면이 따라온다. */
+export function applyCollection(id, redraw = true) {
+  const c = COLS.find(x => x.id === id || short(x.id) === id);
+  CUR.col = c ? c.id : '';
+  G.nodes = c ? ALL.nodes.filter(n => c.members.has(n.id)) : ALL.nodes.slice();
+  G.byId = new Map(G.nodes.map(n => [n.id, n]));
+  G.edges = (c ? ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o)) : ALL.edges.slice());
+  recount();
+  if (redraw) { drawMap(); drawTimeline(); initGraph(G); drawLang(); rebuildRecord(); }
 }
 
 /* ══════════ 지도 ══════════ */
@@ -352,6 +473,15 @@ function drawMap() {
     kinds.map(k => `<button class="chip on c-place" data-k="${esc(k)}" onclick="mapFilter('${esc(k)}')">
       <i class="dot"></i>${esc(k)}</button>`).join('');
 
+  /* 지도는 한 번만 만든다. 컬렉션을 바꾸면 drawMap 이 다시 불리는데, 그때마다 L.map 을 부르면
+     Leaflet 이 "Map container is already initialized" 를 던진다. 그 예외가 라우터까지 타고 올라가면
+     화면 전환이 통째로 멈춘다 — 실제로 그렇게 됐었다. 두 번째부터는 마커만 갈아 끼운다. */
+  if (MAP.map) {
+    MAP.markers.forEach(m => MAP.map.removeLayer(m));
+    MAP.markers.clear();
+    drawMarkers(ps);
+    return;
+  }
   MAP.map = L.map('map', { scrollWheelZoom: false, minZoom: 3, worldCopyJump: true })
     .setView([36.5, 127.8], 6);
   const dark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -360,6 +490,11 @@ function drawMap() {
     { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }).addTo(MAP.map);
   MAP.map.on('click', () => MAP.map.scrollWheelZoom.enable());
 
+  drawMarkers(ps);
+}
+
+/** 마커·목록·화면맞춤. 컬렉션이 바뀌면 지도는 두고 이것만 다시 한다. */
+function drawMarkers(ps) {
   ps.forEach(p => {
     const col = css('--place');
     const m = L.marker([p.lat, p.lon], {

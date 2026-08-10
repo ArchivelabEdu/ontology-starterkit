@@ -5,7 +5,7 @@
 
    아이템 페이지의 핵심은 '연결된 개체'다. 무엇과 이어져 있는지가 아니라
    **어떤 관계로** 이어져 있는지를 보여야 한다. 그게 표와 그래프의 차이다. */
-import { G, CLS, REL_KO, RICO, esc, $, clsColor } from './app.js';
+import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
 const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule'];
@@ -35,15 +35,29 @@ function index() {
   });
 }
 
+/** 컬렉션이 바뀌면 색인을 다시 만든다 — G 가 갈렸는데 색인이 옛것이면
+    박희태 컬렉션 안에서 정세균 기록이 나온다(실제로 그랬다). */
+export function rebuildRecord() {
+  R.items = index();
+  R.more.clear();
+  const used = ORDER.filter(c => R.items.some(n => n.cls === c));
+  R.cls = new Set(used);
+  facets(used);
+  draw();
+}
+function facets(used) {
+  $('#recFacets').innerHTML = `<button class="chip on c-all" onclick="recFacet('*')">전체</button>` +
+    used.map(c => `<button class="chip on c-${CLS[c].key}" data-c="${c}" onclick="recFacet('${c}')">
+      <i class="dot"></i>${CLS[c].ko} <b>${R.items.filter(n => n.cls === c).length}</b></button>`).join('');
+}
+
 export function initRecord() {
   if (R.built) return;
   R.built = true;
   R.items = index();
 
   const used = ORDER.filter(c => R.items.some(n => n.cls === c));
-  $('#recFacets').innerHTML = `<button class="chip on c-all" onclick="recFacet('*')">전체</button>` +
-    used.map(c => `<button class="chip on c-${CLS[c].key}" data-c="${c}" onclick="recFacet('${c}')">
-      <i class="dot"></i>${CLS[c].ko} <b>${R.items.filter(n => n.cls === c).length}</b></button>`).join('');
+  facets(used);
   R.cls = new Set(used);
   draw();
 
@@ -99,7 +113,7 @@ function draw() {
 window.recMore = c => { R.more.add(c); draw(); };
 
 function card(n) {
-  return `<a class="rec-card${n.img ? ' has-img' : ''}" href="#/item/${encodeURIComponent(short(n.id))}">
+  return `<a class="rec-card${n.img ? ' has-img' : ''}" href="${colHref('item/' + encodeURIComponent(short(n.id)))}">
     ${n.img ? `<img class="thumb" src="${esc(n.img)}" alt="" loading="lazy">` : ''}
     <span class="c" style="color:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
     <b>${mark(n.label)}</b>
@@ -126,20 +140,21 @@ const short = u => String(u).startsWith(RIC) ? u.slice(RIC.length) : u;
 const long = s => s.startsWith('http') ? s : RIC + s;
 
 function route() {
-  const m = location.hash.match(/^#\/item\/(.+)$/);
-  if (m) { item(decodeURIComponent(m[1])); return; }
+  // 주소 해석은 app.js 한 곳에서 한다 — 여기서 또 해석하면 컬렉션 접두를 놓친다
+  const { rest } = parseHash();
+  if (rest.startsWith('item/')) { item(decodeURIComponent(rest.slice(5))); return; }
   close();
   // 기록은 스크롤 중간의 한 토막이 아니라 **따로 선 페이지**다.
   // 800건을 훑는 일과 한 장면을 보는 일은 성격이 다르기 때문이다.
-  const rec = location.hash === '#/records' || location.hash === '#record';
+  const rec = rest === 'records';
   document.documentElement.classList.toggle('records-on', rec);
   document.body.classList.toggle('records-open', rec);
   if (rec) { $('#recQ')?.focus({ preventScroll: true }); scrollTo({ top: 0 }); }
 }
-window.openItem = id => { location.hash = '#/item/' + encodeURIComponent(short(id)); };
-window.closeItem = () => { location.hash = '#/records'; };
-window.openRecords = () => { location.hash = '#/records'; };
-window.closeRecords = () => { location.hash = ''; scrollTo({ top: 0 }); };
+window.openItem = id => { location.hash = colHref('item/' + encodeURIComponent(short(id))); };
+window.closeItem = () => { location.hash = colHref('records'); };
+window.openRecords = () => { location.hash = colHref('records'); };
+window.closeRecords = () => { location.hash = colHref(''); scrollTo({ top: 0 }); };
 
 function close() {
   const el = $('#itemView');
@@ -152,7 +167,7 @@ function item(sid) {
   const n = G.byId.get(long(sid));
   const el = $('#itemView');
   if (!n) {
-    el.innerHTML = `<div class="item-wrap"><a class="back" href="#/records">← 기록 찾아보기</a>
+    el.innerHTML = `<div class="item-wrap"><a class="back" href="${colHref('records')}">← 기록 찾아보기</a>
       <div class="warnbox">그런 개체가 없습니다: <code>${esc(sid)}</code></div></div>`;
     el.classList.add('on'); document.body.classList.add('item-open');
     return;
@@ -192,7 +207,7 @@ function item(sid) {
   ].filter(Boolean);
 
   el.innerHTML = `<div class="item-wrap">
-    <a class="back" href="#/records">← 기록 찾아보기</a>
+    <a class="back" href="${colHref('records')}">← 기록 찾아보기</a>
 
     <div class="item-head${n.img ? ' with-img' : ''}">
       ${n.img ? `<figure class="portrait"><img src="${esc(n.img)}" alt="${esc(n.label)}">
@@ -212,7 +227,7 @@ function item(sid) {
         <div class="rel">${r.dir} ${esc(r.ko)}
           <code>rico:${esc(r.p)}</code></div>
         <div class="chips-l">${r.list.map(o => `
-          <a class="ent" href="#/item/${encodeURIComponent(short(o.id))}">
+          <a class="ent" href="${colHref('item/' + encodeURIComponent(short(o.id)))}">
             <i class="dot" style="background:${clsColor(o.cls)}"></i>${esc(o.label)}
             <span>${CLS[o.cls].ko}</span></a>`).join('')}</div>
       </div>`).join('')
@@ -234,14 +249,14 @@ function item(sid) {
     예전에는 closeItem() 이 기록 페이지로 되돌려 놓아 지도가 안 보였다. */
 window.showOnMap = id => {
   close();
-  location.hash = '#place';
+  location.hash = colHref('place');
   setTimeout(() => window.selectPlace?.(id), 80);
 };
 
 /** 관계망 섹션으로 가서 그 개체의 이웃만 남긴다 */
 window.focusInGraph = id => {
   close();
-  location.hash = '#graph-sec';
+  location.hash = colHref('graph-sec');
   const full = long(short(id));
   setTimeout(() => {
     if (typeof window.graphFocus === 'function') window.graphFocus(full);

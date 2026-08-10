@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>정세균 구술기록 아카이브 — 지식그래프로 읽다</title>
+<title>국회의장단 구술기록 아카이브 — 지식그래프로 읽다</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -299,6 +299,14 @@ main>section{display:none}
 #homeIndex a{display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
   background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem}
 #homeIndex a:hover{border-color:var(--accent)}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:.9rem 0}
+.col-card{display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem}
+.col-card:hover{border-color:var(--accent)}
+.col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.col-card b{font-family:var(--serif);font-size:1.02rem}
+.col-card span{font-size:.8rem;color:var(--muted);line-height:1.5}
+.col-card i{font-style:normal;font-family:var(--mono);font-size:.74rem;color:var(--accent);margin-top:.2rem}
 #homeIndex b{font-family:var(--serif);font-size:1.05rem}
 #homeIndex span{font-size:.83rem;color:var(--muted);line-height:1.55}
 #homeIndex i{font-style:normal;font-family:var(--mono);font-size:.74rem;color:var(--accent);margin-top:.25rem}
@@ -560,11 +568,11 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <circle class="n n1" cx="3.2" cy="5" r="2.6"/>
       <circle class="n n2" cx="18.8" cy="5" r="2.6"/>
     </svg>
-    <span class="tt">정세균 구술기록 아카이브<small>국회의장단 구술총서 08 · 지식그래프</small></span>
+    <span class="tt">국회의장단 구술기록 아카이브<small id="brandSub">구술총서 · 지식그래프</small></span>
   </a>
   <nav id="nav">
-    <a href="#/records">기록</a><a href="#place">장소</a><a href="#event">연표</a><a href="#graph-sec">관계망</a>
-    <a href="#query">질의</a><a href="#lang">언어</a><a href="#collection">컬렉션</a><a href="#about">해설</a>
+    <a data-page="/records" href="#/records">기록</a><a data-page="place" href="#place">장소</a><a data-page="event" href="#event">연표</a><a data-page="graph-sec" href="#graph-sec">관계망</a>
+    <a data-page="query" href="#query">질의</a><a data-page="lang" href="#lang">언어</a><a href="#collection">컬렉션</a><a data-page="about" href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
@@ -618,14 +626,14 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 
   <!-- ═══════ 홈 색인 ═══════ -->
   <nav id="homeIndex" aria-label="섹션 바로가기">
-    <a href="#/records"><b>기록</b><span>인물·단체·직위·사건·장소를 찾아보고 한 건씩 펼쳐 봅니다</span><i id="ixRec">–</i></a>
-    <a href="#place"><b>장소</b><span>구술이 지나간 자리를 지도 위에서 따라갑니다</span><i id="ixPlace">–</i></a>
-    <a href="#event"><b>연표</b><span>사건을 시간 위에 놓고 봅니다</span><i id="ixEvent">–</i></a>
-    <a href="#graph-sec"><b>관계망</b><span>인물·직위·단체·사건이 이어진 그물</span><i id="ixGraph">–</i></a>
-    <a href="#query"><b>질의</b><span>SPARQL 과 자연어로 지식그래프에 묻습니다</span><i>Oxigraph WASM</i></a>
-    <a href="#lang"><b>언어</b><span>원문의 어휘를 네 방식으로 봅니다</span><i>원문 8단락</i></a>
+    <a data-page="/records" href="#/records"><b>기록</b><span>인물·단체·직위·사건·장소를 찾아보고 한 건씩 펼쳐 봅니다</span><i id="ixRec">–</i></a>
+    <a data-page="place" href="#place"><b>장소</b><span>구술이 지나간 자리를 지도 위에서 따라갑니다</span><i id="ixPlace">–</i></a>
+    <a data-page="event" href="#event"><b>연표</b><span>사건을 시간 위에 놓고 봅니다</span><i id="ixEvent">–</i></a>
+    <a data-page="graph-sec" href="#graph-sec"><b>관계망</b><span>인물·직위·단체·사건이 이어진 그물</span><i id="ixGraph">–</i></a>
+    <a data-page="query" href="#query"><b>질의</b><span>SPARQL 과 자연어로 지식그래프에 묻습니다</span><i>Oxigraph WASM</i></a>
+    <a data-page="lang" href="#lang"><b>언어</b><span>원문의 어휘를 네 방식으로 봅니다</span><i>원문 8단락</i></a>
     <a href="#collection"><b>컬렉션</b><span>지금 이 사이트에 실린 발행본이 무엇인지</span><i id="ixCollection">–</i></a>
-    <a href="#about"><b>해설</b><span>이 사이트가 무엇을 어떻게 보여주는지</span><i>①~④ 프로세스</i></a>
+    <a data-page="about" href="#about"><b>해설</b><span>이 사이트가 무엇을 어떻게 보여주는지</span><i>①~④ 프로세스</i></a>
   </nav>
 
   <!-- ═══════ 장소 ═══════ -->
