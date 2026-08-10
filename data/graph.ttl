@@ -195,12 +195,6 @@ ric:place-newyork a rico:Place ;
     geo:lat "40.7128" ; geo:long "-74.006" ;
     rdfs:comment "해외" .
 
-ric:place-losangeles a rico:Place ;
-    rico:name "로스앤젤레스" ;
-    rico:generalDescription "구술자가 쌍용 LA지점에서 5년 근무한 도시." ;
-    geo:lat "34.0522" ; geo:long "-118.2437" ;
-    rdfs:comment "해외" .
-
 ric:place-pepperdine a rico:Place ;
     rico:name "페퍼다인대학교" ;
     rico:generalDescription "구술자가 1990년 경영학 석사를 마친 대학." ;
@@ -468,7 +462,6 @@ ric:agent-sdy  rico:isOrWasParticipantIn  ric:event-interview .
 ric:agent-gnk  rico:isOrWasParticipantIn  ric:event-enter-politics .
 ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-jeonju .
 ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-shinheung .
-ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-losangeles .
 ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-pepperdine .
 ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-muju .
 ric:agent-jsk  rico:isAssociatedWithPlace  ric:place-jangsu .
@@ -4965,7 +4958,12 @@ ric:place-long-beach a rico:Place ;
   rico:descriptiveNote "p.42" .
 
 ric:place-los-angeles a rico:Place ;
+  # 같은 도시가 place-losangeles 로도 갈라져 있던 것을 합쳤다(2026-08-11).
+  # 이긴 쪽에 없던 설명과 옛 식별자(urn:uuid:960de860…)를 함께 옮겨, 그 uuid 를 참조하던 것이 끊기지 않게 한다.
+  rico:name "로스앤젤레스" ;
   rico:name "로스앤젤레스(LA)" ;
+  rico:generalDescription "구술자가 쌍용 LA지점에서 5년 근무한 도시." ;
+  rico:identifier "urn:uuid:960de860-cecb-5fd3-a295-8ce41eb3ddb9" ;
   rdfs:comment "해외" ;
   geo:lat "34.0522" ; geo:long "-118.2437" ;
   rico:identifier "place-los-angeles" ;
@@ -6529,7 +6527,6 @@ ric:place-jangsu rico:identifier "urn:uuid:4e966e57-6534-5a92-95f5-d98aa80e3cc3"
 ric:place-jeonju rico:identifier "urn:uuid:b67c43d6-1ba0-5459-8097-4991a7a6362e" .
 ric:place-jinan rico:identifier "urn:uuid:cd6fbfcf-e7c9-577c-aba1-ee4184c37a41" .
 ric:place-korea-univ rico:identifier "urn:uuid:9b692640-ad26-5dcd-a0c4-706ba2215c88" .
-ric:place-losangeles rico:identifier "urn:uuid:960de860-cecb-5fd3-a295-8ce41eb3ddb9" .
 ric:place-muju rico:identifier "urn:uuid:81cb7d14-a140-5e74-9d08-204f58a6e00c" .
 ric:place-nafr rico:identifier "urn:uuid:796ed0fd-1787-5e66-82a1-fefdff31b128" .
 ric:place-nanet rico:identifier "urn:uuid:db73def9-53e9-5b8a-8e04-cb64840dc48c" .
