@@ -86,7 +86,7 @@ window.toggleTheme = () => {
    개체가 792개가 되면서 한 장이 너무 길어졌다. 이제 해시가 페이지를 고른다.
    기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
    여기서는 손대지 않고 자리만 비켜 준다. */
-const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'collection', 'about'];
+const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'collection', 'about', 'pick'];
 /* ── 주소 한 곳에서 읽기 ──
    주소가 두 겹이다. 앞은 어느 컬렉션 안인가, 뒤는 어느 화면인가.
      전체:      #place            #/records         #/item/<id>
@@ -105,7 +105,11 @@ export function parseHash() {
 /** 지금 컬렉션에 맞는 주소를 만든다. page 는 'place' · 'records' · '' 같은 알맹이만 준다. */
 export function colHref(page) {
   const p = String(page).replace(/^[#/]+/, '');
-  if (CUR.col) return `#/c/${encodeURIComponent(short(CUR.col))}` + (p ? '/' + p : '');
+  if (CUR.cols.length) {
+    // 고른 것을 쉼표로 잇는다 — 주소만 건네면 상대도 같은 조합을 본다
+    const key = CUR.cols.map(c => encodeURIComponent(short(c))).join(',');
+    return `#/c/${key}` + (p ? '/' + p : '');
+  }
   if (!p) return '';
   return (p === 'records' || p.startsWith('item/')) ? '#/' + p : '#' + p;
 }
@@ -119,9 +123,20 @@ const navMark = href => document.querySelectorAll('#nav a')
 
 function route() {
   const { col, rest } = parseHash();
-  const want = COLS.find(c => short(c.id) === col)?.id ?? '';
-  if (want !== CUR.col) applyCollection(want ? short(want) : '');
+  const want = col ? col.split(',').filter(Boolean) : [];
+  const now = CUR.cols.map(c => short(c));
+  if (want.join(',') !== now.join(',')) applyCollection(want);
   navHrefs();
+
+  /* 아직 안 골랐으면 어느 화면으로 가든 고르는 자리로 돌린다.
+     빈 지도·빈 연표를 보여 주면 「데이터가 없나」로 읽히지, 「아직 안 골랐다」로 읽히지 않는다. */
+  if (!hasPick()) {
+    document.documentElement.dataset.page = 'pick';
+    document.body.classList.add('past-hero');
+    navMark('');
+    drawPicker();
+    return;
+  }
 
   // 기록·아이템은 record.js 가 자기 페이지를 갖고 있다 — 자리만 비켜 준다
   if (rest === 'records' || rest.startsWith('item/')) {
@@ -131,7 +146,7 @@ function route() {
     return;
   }
   // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지, 밖이면 홈
-  const id = PAGES.includes(rest) ? rest : (CUR.col ? 'collection' : 'home');
+  const id = PAGES.includes(rest) ? rest : (CUR.cols.length ? 'collection' : 'home');
   document.documentElement.dataset.page = id;
   document.body.classList.toggle('past-hero', id !== 'home');
   navMark(id === 'home' ? '' : colHref(id));
@@ -222,25 +237,64 @@ async function loadCollection() {
 /* 컬렉션 목록 — 발행본이 여럿 쌓인 사이트의 첫 화면.
    한 화면에 다 펼치지 않고 **하나를 골라 들어가게** 한다. 열 팀이 쌓이면 전체 보기는
    개체가 수천이 되어 관계망이 뭉개지고, 무엇을 보고 있는지도 흐려진다. */
-function drawCollectionList() {
+/* ── 컬렉션 고르기 ──
+   여러 팀이 한 사이트에 발행하면 전부 합친 그래프는 개체가 수천이라 관계망이 뭉개지고
+   무엇을 보는지도 흐려진다. 그래서 **고르고 나서 들어간다.**
+   고른 조합은 주소에 실리므로(#/c/a,b) 「우리 팀 것 보세요」로 링크를 건넬 수 있다. */
+function pickerHtml(inPage) {
   const cls = c => {
     const cnt = new Map();
     ALL.nodes.forEach(n => { if (c.members.has(n.id)) cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1); });
     return [...cnt.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
       .map(([k, v]) => `${CLS[k]?.ko || k} ${v}`).join(' · ');
   };
-  $('#colName').textContent = CUR.col ? (COLS.find(c => c.id === CUR.col)?.title ?? '') : `${COLS.length}건`;
+  const on = new Set(CUR.cols);
+  return `
+    <div class="col-grid">
+      ${COLS.map(c => `<button class="col-card${on.has(c.id) ? ' on' : ''}" onclick="togglePick('${esc(short(c.id))}')">
+        <b>${esc(c.title)}</b><span>${esc(cls(c))}</span>
+        <i>개체 ${c.n}${on.has(c.id) ? ' · 고름' : ''}</i></button>`).join('')}
+    </div>
+    <div class="pick-bar">
+      <button class="btn primary" id="pickGo" onclick="goPicked()" ${PICK.size ? '' : 'disabled'}>
+        ${PICK.size ? `고른 ${PICK.size}건으로 보기 →` : '컬렉션을 고르세요'}</button>
+      <button class="btn sm" onclick="pickAll()">전부 고르기</button>
+      ${PICK.size ? `<button class="btn sm" onclick="pickNone()">지우기</button>` : ''}
+      ${inPage && CUR.cols.length ? `<span class="status">지금 보는 것 — ${CUR.cols.map(c =>
+        esc(COLS.find(x => x.id === c)?.title ?? '')).join(' · ')}</span>` : ''}
+    </div>`;
+}
+
+/* 고르는 중인 것은 화면 상태고, CUR.cols 는 실제로 적재된 것이다. 둘을 나눠 두면
+   여러 개를 눌러 놓고 마지막에 한 번만 그래프를 다시 만든다 — 누를 때마다 다시 만들면
+   개체 수천 건에서 화면이 멈춘다. */
+const PICK = new Set();
+window.togglePick = id => { PICK.has(id) ? PICK.delete(id) : PICK.add(id); repaintPicker(); };
+window.pickAll = () => { COLS.forEach(c => PICK.add(short(c.id))); repaintPicker(); };
+window.pickNone = () => { PICK.clear(); repaintPicker(); };
+window.goPicked = () => { if (PICK.size) location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}`; };
+function repaintPicker() {
+  const host = $('#pickBody') || $('#colBody');
+  if (host) host.innerHTML = pickerHtml(host.id === 'colBody');
+}
+
+/** 첫 화면 — 안내와 고르기. 아직 아무것도 안 고른 상태에서 뜬다. */
+function drawPicker() {
+  PICK.clear();
+  CUR.cols.forEach(c => PICK.add(short(c)));
+  $('#pickBody').innerHTML = pickerHtml(false);
+}
+
+/** 컬렉션 페이지 — 지금 보는 조합을 바꾸는 자리. */
+function drawCollectionList() {
+  PICK.clear();
+  CUR.cols.forEach(c => PICK.add(short(c)));
+  $('#colName').textContent = CUR.cols.length ? `${CUR.cols.length}건 고름` : `${COLS.length}건`;
   $('#colBody').innerHTML = `
     <p class="note">이 사이트에는 발행본이 <b>${COLS.length}건</b> 실려 있습니다.
-      하나를 골라 들어가면 지도·연표·관계망·기록이 모두 그 컬렉션으로 좁혀집니다.
-      ${CUR.col ? `지금은 <b>「${esc(COLS.find(c => c.id === CUR.col)?.title ?? '')}」</b> 안에 있습니다.` : '지금은 전체를 보고 있습니다.'}</p>
-    <div class="col-grid">
-      ${COLS.map(c => `<a class="col-card${c.id === CUR.col ? ' on' : ''}" href="#/c/${encodeURIComponent(short(c.id))}">
-        <b>${esc(c.title)}</b><span>${esc(cls(c))}</span><i>개체 ${c.n}</i></a>`).join('')}
-    </div>
-    <div class="p3btns" style="margin-top:1rem">
-      <button class="btn sm${CUR.col ? '' : ' primary'}" onclick="location.hash=''">전체 보기 ${ALL.nodes.length}건</button>
-    </div>
+      고른 것만 지도·연표·관계망·기록에 들어갑니다. 여럿을 고르면 <b>합쳐서</b> 봅니다 —
+      두 구술자를 나란히 놓고 볼 때 씁니다.</p>
+    ${pickerHtml(true)}
     <p class="note">컬렉션은 관리 시스템이 발행할 때 <code>rico:RecordSet</code> 개체로 그래프에 함께 실립니다.
       기록은 <code>rico:isOrWasIncludedIn</code> 으로 컬렉션에 <b>들어 있고</b>, 인물·사건·장소는
       <code>rico:isOrWasSubjectOf</code> 로 컬렉션의 <b>주제</b>가 됩니다 —
@@ -292,7 +346,11 @@ async function boot() {
     // (ETag 로 검증만 하므로 안 바뀌었으면 304 — 실제 전송은 없다)
     store.load(await (await fetch('data/graph.ttl', { cache: 'no-cache' })).text(),
       { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
-    const nT = store.size ?? [...store.match()].length;
+    /* 트리플 수는 SPARQL 로 센다. store.size 는 판에 따라 없거나 0 을 돌려주고(실측: 관리
+       시스템이 발행한 그래프에서 0), `?? ` 는 0 을 갈아끼우지 못해 화면에 「트리플 0개」가 떴다.
+       COUNT 는 어느 판에서나 같은 답을 준다. */
+    const nT = Number(q(`SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }`)[0]?.get('n')?.value ?? 0);
+    TRIPLES = nT;                      // 화면 여러 곳이 읽으므로 바로 담아 둔다
 
     await loadCollection();
     buildModel();
@@ -311,7 +369,6 @@ async function boot() {
     $('#ixRec').textContent = `${G.nodes.length}건`;
     $('#ixGraph').textContent = `관계 ${G.edges.length}`;
     $('#ixCollection').textContent = COL.name;
-    TRIPLES = nT;
     drawCollection();
 
     initHero(G);
@@ -329,7 +386,7 @@ async function boot() {
     route();
     /* 콘솔에서 들여다볼 수 있게 열어 둔다. 팀이 Claude Code 로 이 사이트를 고칠 때
        `KIT.G.nodes` · `KIT.COLS` 를 직접 찍어 보는 편이 훨씬 빠르다. */
-    window.KIT = { G, ALL, COLS, CUR, short, applyCollection };
+    window.KIT = { G, ALL, COLS, CUR, short, applyCollection, q, rows };
   } catch (e) {
     $('#loadStatus').textContent = '적재 실패: ' + e.message;
     console.error(e);
@@ -395,7 +452,10 @@ function buildModel() {
 const COL_PRED = new Set(['isOrWasIncludedIn', 'isOrWasSubjectOf']);
 export const ALL = { nodes: [], edges: [] };
 export const COLS = [];              // [{ id, title, members:Set, n }]
-export const CUR = { col: '' };      // '' = 전체
+/* 고른 컬렉션들. **빈 배열은 「아직 안 골랐다」는 뜻이지 「전체」가 아니다.**
+   여러 팀이 한 사이트에 발행하면 전부 합친 그래프는 개체가 수천이라 아무것도 안 보인다.
+   그래서 첫 화면에서 고르게 하고, 고르기 전에는 화면을 열지 않는다. */
+export const CUR = { cols: [] };
 
 function recount() {
   G.nodes.forEach(n => n.deg = 0);
@@ -416,19 +476,34 @@ function buildCollections() {
   // 컬렉션 개체와 소속 트리플은 화면 밖으로. 걷어낸 뒤를 전체(ALL)로 삼는다.
   ALL.nodes = G.nodes.filter(n => !isCol.has(n.id));
   ALL.edges = G.edges.filter(e => !(COL_PRED.has(e.p) && isCol.has(e.o)) && !isCol.has(e.s));
-  applyCollection(CUR.col, false);
+  applyCollection(CUR.cols, false);
 }
 
-/** 지금 볼 컬렉션을 고른다. G 를 갈아끼우므로 이걸 읽는 모든 화면이 따라온다. */
-export function applyCollection(id, redraw = true) {
-  const c = COLS.find(x => x.id === id || short(x.id) === id);
-  CUR.col = c ? c.id : '';
-  G.nodes = c ? ALL.nodes.filter(n => c.members.has(n.id)) : ALL.nodes.slice();
+/** 지금 볼 컬렉션들을 정한다. G 를 갈아끼우므로 이걸 읽는 모든 화면이 따라온다.
+    여럿을 고르면 합집합이다 — 두 구술자를 나란히 보고 싶을 때 쓴다. */
+export function applyCollection(ids, redraw = true) {
+  const want = (Array.isArray(ids) ? ids : [ids]).filter(Boolean).map(String);
+  const picked = COLS.filter(c => want.includes(c.id) || want.includes(short(c.id)));
+  CUR.cols = picked.map(c => c.id);
+
+  if (!COLS.length) {                       // 컬렉션이 없는 그래프 — 예전처럼 전부 보인다
+    G.nodes = ALL.nodes.slice();
+  } else if (!picked.length) {               // 아직 안 골랐다 — 비워 둔다
+    G.nodes = [];
+  } else {
+    const keep = new Set();
+    picked.forEach(c => c.members.forEach(m => keep.add(m)));
+    G.nodes = ALL.nodes.filter(n => keep.has(n.id));
+  }
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
-  G.edges = (c ? ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o)) : ALL.edges.slice());
+  G.edges = ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o));
   recount();
   if (redraw) { drawMap(); drawTimeline(); initGraph(G); drawLang(); rebuildRecord(); }
 }
+
+/** 고른 것이 있는가. 컬렉션이 아예 없는 그래프는 「고를 것이 없으니 열려 있다」로 본다. */
+export const hasPick = () => !COLS.length || CUR.cols.length > 0;
+
 
 /* ══════════ 지도 ══════════ */
 const MAP = { map: null, markers: new Map(), filter: new Set(), tour: null, tourIdx: 0 };

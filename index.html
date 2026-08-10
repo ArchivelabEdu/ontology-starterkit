@@ -291,8 +291,14 @@ main>section{display:none}
 :root[data-page="place"] #place,:root[data-page="event"] #event,
 :root[data-page="graph-sec"] #graph-sec,:root[data-page="query"] #query,
 :root[data-page="lang"] #lang,:root[data-page="collection"] #collection,
-:root[data-page="about"] #about{display:block}
+:root[data-page="about"] #about,
+:root[data-page="pick"] #pick{display:block}
 :root:not([data-page="home"]) #heroZone{display:none}
+/* 아직 안 골랐으면 히어로도 색인도 아닌 「고르는 자리」가 첫 화면이다 */
+:root[data-page="pick"] #homeIndex{display:none}
+.pick-bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:1rem 0 .4rem}
+button.col-card{text-align:left;font:inherit;cursor:pointer}
+.col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 #homeIndex{display:none}
 :root[data-page="home"] #homeIndex{display:grid;
   grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:.7rem;margin:1.6rem 0 1rem}
@@ -623,6 +629,21 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 
 <main>
   <p class="status" id="loadStatus">그래프 적재 중…</p>
+
+  <!-- ═══════ 컬렉션 고르기 — 첫 화면 ═══════ -->
+  <section id="pick">
+    <div class="sec-head">
+      <div class="kicker">Collections</div>
+      <h2>무엇을 볼지 먼저 고릅니다</h2>
+      <p>이 사이트에는 여러 팀이 발행한 구술기록이 함께 실립니다.
+        전부 한꺼번에 펼치면 개체가 수천이 되어 관계망이 뭉개지고 무엇을 보고 있는지도 흐려집니다.
+        <b>고른 컬렉션만</b> 지도·연표·관계망·기록에 들어갑니다.
+        여럿을 고르면 <b>합쳐서</b> 봅니다 — 두 구술자를 나란히 놓고 볼 때 씁니다.</p>
+    </div>
+    <div id="pickBody"></div>
+    <p class="note">고른 조합은 주소에 실립니다(<code>#/c/…</code>) — 그대로 복사해 건네면 상대도 같은 화면을 봅니다.
+      나중에 <b>컬렉션</b> 메뉴에서 언제든 바꿀 수 있습니다.</p>
+  </section>
 
   <!-- ═══════ 홈 색인 ═══════ -->
   <nav id="homeIndex" aria-label="섹션 바로가기">
