@@ -167,43 +167,43 @@ ric:pos-party-leader a rico:Position ;
 
 ric:place-jinan a rico:Place ;
     rico:name "전라북도 진안" ;
-    rico:generalDescription "1950년 출생지" ;
+    rico:generalDescription "구술자가 1950년에 태어난 곳." ;
     geo:lat "35.7917" ; geo:long "127.425" ;
     rdfs:comment "출생" .
 
 ric:place-jeonju a rico:Place ;
     rico:name "전주" ;
-    rico:generalDescription "전주 신흥고등학교" ;
+    rico:generalDescription "구술자가 다닌 전주 신흥고등학교가 있는 도시." ;
     geo:lat "35.8242" ; geo:long "127.148" ;
     rdfs:comment "학창" .
 
 ric:place-korea-univ a rico:Place ;
     rico:name "고려대학교" ;
-    rico:generalDescription "법학과·총학생회장(1973)" ;
+    rico:generalDescription "구술자가 법학과를 다니며 1973년 총학생회장을 지낸 대학." ;
     geo:lat "37.5894" ; geo:long "127.0324" ;
     rdfs:comment "학창" .
 
 ric:place-ssangyong a rico:Place ;
     rico:name "쌍용그룹 본사" ;
-    rico:generalDescription "1978년 공채 입사" ;
+    rico:generalDescription "구술자가 1978년 공채로 입사한 곳." ;
     geo:lat "37.5665" ; geo:long "126.978" ;
     rdfs:comment "직장" .
 
 ric:place-newyork a rico:Place ;
     rico:name "뉴욕" ;
-    rico:generalDescription "쌍용 뉴욕지점 4년" ;
+    rico:generalDescription "구술자가 쌍용 뉴욕지점에서 4년 근무한 도시." ;
     geo:lat "40.7128" ; geo:long "-74.006" ;
     rdfs:comment "해외" .
 
 ric:place-losangeles a rico:Place ;
     rico:name "로스앤젤레스" ;
-    rico:generalDescription "쌍용 LA지점 5년" ;
+    rico:generalDescription "구술자가 쌍용 LA지점에서 5년 근무한 도시." ;
     geo:lat "34.0522" ; geo:long "-118.2437" ;
     rdfs:comment "해외" .
 
 ric:place-pepperdine a rico:Place ;
     rico:name "페퍼다인대학교" ;
-    rico:generalDescription "1990년 경영학 석사" ;
+    rico:generalDescription "구술자가 1990년 경영학 석사를 마친 대학." ;
     geo:lat "34.0416" ; geo:long "-118.7101" ;
     rdfs:comment "학업" .
 
@@ -227,7 +227,7 @@ ric:place-jangsu a rico:Place ;
 
 ric:place-shinheung a rico:Place ;
     rico:name "전주 신흥고등학교" ;
-    rico:generalDescription "1969년 졸업" ;
+    rico:generalDescription "구술자가 1969년에 졸업한 고등학교." ;
     geo:lat "35.8114" ; geo:long "127.148" ;
     rdfs:comment "학창" .
 
@@ -4830,7 +4830,7 @@ ric:place-ilsan a rico:Place ;
 
 ric:place-imsil a rico:Place ;
   rico:name "임실" ;
-  rico:generalDescription "제17·18대 선거구" ;
+  rico:generalDescription "구술자의 제17·18대 선거구." ;
   rdfs:comment "지역구" ;
   geo:lat "35.6178" ; geo:long "127.2790" ;
   rico:identifier "place-imsil" ;
@@ -4910,7 +4910,7 @@ ric:place-jeongyeongnyeon-building a rico:Place ;
 
 ric:place-jongno a rico:Place ;
   rico:name "종로(종로구)" ;
-  rico:generalDescription "제19·20대 선거구" ;
+  rico:generalDescription "구술자의 제19·20대 선거구." ;
   rdfs:comment "지역구" ;
   geo:lat "37.5730" ; geo:long "126.9794" ;
   rico:identifier "place-jongno" ;
