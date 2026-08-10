@@ -191,14 +191,18 @@ addEventListener('scroll', () => {
   if (hz) document.body.classList.toggle('past-hero', hz.getBoundingClientRect().bottom < 80);
 }, { passive: true });
 
-/* ══════════ 컬렉션 ══════════
-   컬렉션은 개체의 속성이 아니라 **발행 단위의 이름**이다 — 한 사이트에 여러 팀이 차례로
-   발행할 때 지금 보고 있는 것이 누구의 결과물인지 가리키는 라벨.
-   관리 시스템이 발행할 때 data/collection.json 을 함께 내보낸다.
+/* ══════════ 이번 발행본의 이름 ══════════
+   collection.json 은 **이번에 받은 발행본 한 건의 이름표**다. 컬렉션 자체는 이제 그래프 안에
+   개체로 들어와 있고(위 buildCollections), 이 파일은 「방금 누가 무엇을 언제 내보냈는가」만 말한다.
+
+   예전에는 컬렉션이 이 파일 한 줄이 전부였다 — 그때는 개체가 누구 것인지 알 길이 없어
+   한 팀만 걷어낼 수 없었다. 지금은 소속이 개체마다 찍혀 나오므로 이 파일은 보조 표시로 남았다.
 
    **파일이 없는 것은 오류가 아니다.** 컬렉션 개념이 들어오기 전에 발행된 데이터라는 뜻이므로
-   기본 컬렉션으로 읽고 그 사실을 화면에 적는다. 이 규칙 덕분에 옛 발행본도 그대로 뜬다. */
-export const DEFAULT_COLLECTION = '정세균 구술';
+   기본 컬렉션으로 읽고 그 사실을 화면에 적는다. 이 규칙 덕분에 옛 발행본도 그대로 뜬다.
+   기본값은 관리 시스템 쪽 DEFAULT_COLLECTION 과 같은 '미분류' 로 맞춘다 — 특정 구술자 이름을
+   기본값에 두면 이름을 안 적은 발행이 남의 컬렉션에 섞여 들어간다. */
+export const DEFAULT_COLLECTION = '미분류';
 export const COL = { name: DEFAULT_COLLECTION, publishedAt: '', publishedByName: '', declared: false };
 
 async function loadCollection() {
@@ -243,9 +247,13 @@ function drawCollectionList() {
       <code>isOrWasIncludedIn</code> 의 domain 이 <code>Record</code> 라 인물을 그리로 이으면 도메인 위반이기 때문입니다.</p>`;
 }
 
-/* 컬렉션 페이지 — 이 사이트에 실린 발행본 한 건이 무엇을 담고 있는지.
-   수는 전부 적재된 그래프에서 직접 센다(손으로 적으면 데이터를 갈아끼울 때 어긋난다). */
-function drawCollection(nT) {   // nT: 부팅 때만 넘어온다
+/* 컬렉션 페이지 — 이 사이트에 실린 발행본이 무엇을 담고 있는지.
+   수는 전부 적재된 그래프에서 직접 센다(손으로 적으면 데이터를 갈아끼울 때 어긋난다).
+
+   트리플 수는 적재할 때만 알 수 있어 모듈에 담아 둔다. 예전에는 인자로 받았는데,
+   페이지 라우팅이 들어오면서 라우터가 인자 없이 부르게 되어 화면에 undefined 가 찍혔다. */
+let TRIPLES = 0;
+function drawCollection() {
   // 컬렉션이 여럿이면 목록을 낸다 — 여기서 하나를 골라 들어간다.
   if (COLS.length) { drawCollectionList(); return; }
   $('#colName').textContent = COL.name;
@@ -265,7 +273,7 @@ function drawCollection(nT) {   // nT: 부팅 때만 넘어온다
       : `<p>이 발행본에는 컬렉션 표시 파일(<code>data/collection.json</code>)이 <b>없습니다</b>.
            오류가 아니라 컬렉션 개념이 들어오기 전에 발행된 데이터라는 뜻이라, 기본 컬렉션
            <b>「${esc(DEFAULT_COLLECTION)}」</b>으로 읽었습니다.</p>`}
-      <p>개체 <b>${G.nodes.length}</b> · 관계 <b>${G.edges.length}</b> · 트리플 <b>${nT}</b></p>
+      <p>개체 <b>${G.nodes.length}</b> · 관계 <b>${G.edges.length}</b> · 트리플 <b>${TRIPLES}</b></p>
     </div>
     <div class="panel" style="padding:.4rem 1.2rem 1rem;margin-top:1rem"><table>
       <tr><th>유형</th><th>RiC-O 클래스</th><th style="text-align:right">개체 수</th></tr>
@@ -289,7 +297,7 @@ async function boot() {
     await loadCollection();
     buildModel();
     $('#loadStatus').textContent =
-      `그래프 적재 완료 — 트리플 ${nT}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
+      `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
     $('#hsNode').textContent = G.nodes.length;
     $('#hsEdge').textContent = G.edges.length;
     $('#hsTriple').textContent = nT;
@@ -303,7 +311,8 @@ async function boot() {
     $('#ixRec').textContent = `${G.nodes.length}건`;
     $('#ixGraph').textContent = `관계 ${G.edges.length}`;
     $('#ixCollection').textContent = COL.name;
-    drawCollection(nT);
+    TRIPLES = nT;
+    drawCollection();
 
     initHero(G);
     // 히어로 안(1: 입자 몰핑 / 2: 전면 이미지)은 저장된 선택을 따른다
