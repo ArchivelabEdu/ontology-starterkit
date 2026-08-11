@@ -13,7 +13,7 @@
   --bg:#faf7f0; --panel:#fffdf8; --fg:#1e1b18; --muted:#7a736a; --line:#e6ded0;
   --accent:#8f3a24; --accent-2:#b8703f; --accent-soft:#f3e7de;
   --person:#9b3535; --org:#b08840; --place:#2f6b5c; --event:#5b4b9e;
-  --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a; --activity:#8a6d2f;
+  --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a;--concept:#3f6f9c; --activity:#8a6d2f;
   --ok:#2f6b46; --bad:#a5322b;
   --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --serif:"Nanum Myeongjo","Apple SD Gothic Neo",serif;
@@ -24,7 +24,7 @@
   --bg:#14130f; --panel:#1c1a16; --fg:#eee9df; --muted:#9b948a; --line:#2f2b24;
   --accent:#dd8a5f; --accent-2:#c9743f; --accent-soft:#2a211a;
   --person:#dd7a7a; --org:#dcb264; --place:#6fc0aa; --event:#a294e0;
-  --position:#dfa05c; --record:#c49bd0; --rule:#84b0c4; --activity:#c9ab63;
+  --position:#dfa05c; --record:#c49bd0; --rule:#84b0c4;--concept:#7fadd8; --activity:#c9ab63;
   --ok:#7cc39a; --bad:#e08a80;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
 }
@@ -291,11 +291,36 @@ main>section{display:none}
 :root[data-page="place"] #place,:root[data-page="event"] #event,
 :root[data-page="graph-sec"] #graph-sec,:root[data-page="query"] #query,
 :root[data-page="lang"] #lang,:root[data-page="collection"] #collection,
-:root[data-page="about"] #about,
+:root[data-page="about"] #about,:root[data-page="subject"] #subject,
 :root[data-page="pick"] #pick{display:block}
 :root:not([data-page="home"]) #heroZone{display:none}
 /* 아직 안 골랐으면 히어로도 색인도 아닌 「고르는 자리」가 첫 화면이다 */
 :root[data-page="pick"] #homeIndex{display:none}
+/* ── 주제(시소러스) ── */
+.scheme{border:1px solid var(--line);border-radius:12px;background:var(--panel);
+  padding:.9rem 1rem 1rem;margin-bottom:.9rem}
+.shead{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
+.shead b{font-family:var(--serif);font-size:1.05rem}
+.shead span{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.ctree{display:flex;flex-direction:column;gap:2px}
+button.cnode{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;font:inherit;
+  cursor:pointer;background:none;border:1px solid transparent;border-radius:8px;
+  padding:.32rem .55rem;margin-left:calc(var(--d) * 1.15rem);color:var(--fg)}
+button.cnode:hover{border-color:var(--line);background:var(--bg)}
+button.cnode.on{border-color:var(--concept);background:var(--accent-soft)}
+button.cnode b{font-weight:650;font-size:.92rem}
+button.cnode em{font-style:normal;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+button.cnode i{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.76rem;
+  color:var(--concept);font-weight:700}
+.spane{border:1px solid var(--concept);border-radius:12px;background:var(--panel);padding:1rem 1.1rem}
+.spane h3{margin:0 0 .3rem;font-family:var(--serif);font-size:1.15rem}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.4rem;margin-top:.7rem}
+a.sitem{display:flex;align-items:center;gap:.45rem;text-decoration:none;color:var(--fg);
+  border:1px solid var(--line);border-radius:8px;padding:.42rem .6rem;font-size:.86rem}
+a.sitem:hover{border-color:var(--accent)}
+a.sitem .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+a.sitem b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a.sitem em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
 .pick-bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:1rem 0 .4rem}
 button.col-card{text-align:left;font:inherit;cursor:pointer}
 .col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -306,8 +331,9 @@ button.col-card{text-align:left;font:inherit;cursor:pointer}
   background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem}
 #homeIndex a:hover{border-color:var(--accent)}
 .col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:.9rem 0}
-.col-card{display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem}
+.col-card{position:relative;display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 2.2rem .85rem 1rem;text-align:left}
+.col-card.on::after{content:'✓';position:absolute;top:.7rem;right:.9rem;color:var(--accent);font-weight:700;font-size:.95rem}
 .col-card:hover{border-color:var(--accent)}
 .col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .col-card b{font-family:var(--serif);font-size:1.02rem}
@@ -578,7 +604,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   </a>
   <nav id="nav">
     <a data-page="/records" href="#/records">기록</a><a data-page="place" href="#place">장소</a><a data-page="event" href="#event">연표</a><a data-page="graph-sec" href="#graph-sec">관계망</a>
-    <a data-page="query" href="#query">질의</a><a data-page="lang" href="#lang">언어</a><a href="#collection">컬렉션</a><a data-page="about" href="#about">해설</a>
+    <a data-page="subject" href="#subject">주제</a><a data-page="query" href="#query">질의</a><a data-page="lang" href="#lang">언어</a><a data-page="collection" href="#collection">컬렉션</a><a data-page="about" href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
@@ -651,9 +677,9 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <a data-page="place" href="#place"><b>장소</b><span>구술이 지나간 자리를 지도 위에서 따라갑니다</span><i id="ixPlace">–</i></a>
     <a data-page="event" href="#event"><b>연표</b><span>사건을 시간 위에 놓고 봅니다</span><i id="ixEvent">–</i></a>
     <a data-page="graph-sec" href="#graph-sec"><b>관계망</b><span>인물·직위·단체·사건이 이어진 그물</span><i id="ixGraph">–</i></a>
-    <a data-page="query" href="#query"><b>질의</b><span>SPARQL 과 자연어로 지식그래프에 묻습니다</span><i>Oxigraph WASM</i></a>
+    <a data-page="subject" href="#subject"><b>주제</b><span>시소러스 개념으로 묶어 보기</span><i id="ixSubject">–</i></a><a data-page="query" href="#query"><b>질의</b><span>SPARQL 과 자연어로 지식그래프에 묻습니다</span><i>Oxigraph WASM</i></a>
     <a data-page="lang" href="#lang"><b>언어</b><span>원문의 어휘를 네 방식으로 봅니다</span><i>원문 8단락</i></a>
-    <a href="#collection"><b>컬렉션</b><span>지금 이 사이트에 실린 발행본이 무엇인지</span><i id="ixCollection">–</i></a>
+    <a data-page="collection" href="#collection"><b>컬렉션</b><span>지금 이 사이트에 실린 발행본이 무엇인지</span><i id="ixCollection">–</i></a>
     <a data-page="about" href="#about"><b>해설</b><span>이 사이트가 무엇을 어떻게 보여주는지</span><i>①~④ 프로세스</i></a>
   </nav>
 
@@ -770,6 +796,8 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
         <button class="btn sm" onclick="loadExample(2)">역대 의장 재임순</button>
         <button class="btn sm" onclick="loadExample(3)">관계 종류별 개수</button>
         <button class="btn sm" onclick="loadExample(4)">2단계로 닿는 것</button>
+        <button class="btn sm" onclick="loadExample(5)">시소러스 없이 — 노동 관련</button>
+        <button class="btn sm" onclick="loadExample(6)">시소러스로 — 노동 관련</button>
       </div>
       <div id="qResult"></div>
     </div>
@@ -789,6 +817,17 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   </section>
 
   <!-- ═══════ 언어 ═══════ -->
+  <section id="subject">
+    <div class="sec-head">
+      <div class="kicker">Subjects</div>
+      <h2>주제 — 시소러스</h2>
+      <p>인물·사건·장소는 <b>실재하는 것</b>이고, 주제는 <b>그것들이 무엇에 관한 것인가</b>입니다.
+        아래 개념을 누르면 그 개념과 <b>그 아래 개념들</b>에 달린 기록·사건·활동이 함께 모입니다 —
+        상위 개념일수록 결과가 늘어나는 것이 시소러스가 하는 일입니다.</p>
+    </div>
+    <div id="subjBody"></div>
+  </section>
+
   <section id="lang">
     <div class="sec-head">
       <button class="fs-btn" onclick="fullscreen('lang')">⤢ 전체화면</button>

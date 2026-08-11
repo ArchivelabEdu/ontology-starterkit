@@ -158,6 +158,12 @@ const EXAMPLES = [
   `SELECT ?이름 ?직위 ?시작 WHERE {\n  ?p rico:occupiesOrOccupied ?pos ; rico:name ?이름 .\n  ?pos rico:name ?직위 ; rico:beginningDate ?시작 .\n} ORDER BY ?시작`,
   `SELECT ?관계 (COUNT(*) AS ?개수) WHERE {\n  ?s ?rel ?o . FILTER(isIRI(?o))\n  BIND(STRAFTER(STR(?rel),"#") AS ?관계)\n} GROUP BY ?관계 ORDER BY DESC(?개수)`,
   `SELECT DISTINCT ?둘째단계 WHERE {\n  ?p rico:name "정세균" .\n  ?p ?r1 ?mid . ?mid ?r2 ?x .\n  ?x rico:name ?둘째단계 .\n  FILTER(?x != ?p)\n} LIMIT 40`,
+  /* ── 시소러스 전/후 ── 같은 질문을 두 번 던진다.
+     ⑤ 시소러스가 없으면 찾을 것을 사람이 미리 다 알아야 한다. 빠뜨린 것은 영영 안 걸린다.
+     ⑥ 있으면 상위 개념 하나로 아래를 전부 끌어온다. broader 는 추론이 없으므로
+        `*`(속성 경로)로 **직접 타고 내려가야** 한다 — 이 별표 하나가 시소러스의 값어치다. */
+  `# 시소러스가 없을 때 — 찾을 것을 미리 다 알아야 한다\nSELECT ?자료 WHERE {\n  VALUES ?s {\n    ric:org-nosajeong ric:event-hanbo\n    ric:event-cleaner ric:act-labor-reform\n  }\n  ?x rico:hasOrHadSubject ?s .\n  OPTIONAL { ?x rico:title ?자료 } OPTIONAL { ?x rico:name ?자료 }\n}`,
+  `# 시소러스가 있을 때 — 상위 개념 하나로 아래를 전부 끌어온다\nSELECT ?자료 ?주제 WHERE {\n  ?c skos:broader* ric:concept-nodong ; skos:prefLabel ?주제 .\n  ?x rico:hasOrHadSubject ?c .\n  OPTIONAL { ?x rico:title ?자료 } OPTIONAL { ?x rico:name ?자료 }\n}`,
 ];
 window.loadExample = i => { $('#qEditor').value = EXAMPLES[i]; };
 window.runEditor = () => {

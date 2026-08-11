@@ -8,7 +8,9 @@
 import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
-const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule'];
+// 개념·개념체계도 개체다. 빼 두면 「전체」 수가 그래프와 어긋난다(실측 791 vs 810).
+const ORDER = ['Record', 'RecordSet', 'Person', 'CorporateBody', 'Position', 'Event', 'Activity', 'Place', 'Rule',
+  'Concept', 'ConceptScheme'];
 const PAGE = 24;                       // 유형마다 먼저 보여 주는 개수
 const R = { q: '', cls: new Set(), more: new Set(), built: false };
 

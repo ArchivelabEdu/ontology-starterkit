@@ -287,10 +287,21 @@ function path(ctx, n, r) {
   else if (s === 'triangle') { ctx.moveTo(n.x, n.y - r); ctx.lineTo(n.x + r * .92, n.y + r * .72); ctx.lineTo(n.x - r * .92, n.y + r * .72); ctx.closePath(); }
   else if (s === 'pin') { ctx.arc(n.x, n.y - r * .2, r * .85, Math.PI, 0); ctx.lineTo(n.x, n.y + r); ctx.closePath(); }
   else if (s === 'doc') ctx.rect(n.x - r * .7, n.y - r * .9, r * 1.4, r * 1.8);
+  // 개념은 실재하지 않는다. 채우지 않고 점선으로 둘러 「이건 관념이다」를 형태로 말한다.
+  else if (s === 'dcircle') ctx.arc(n.x, n.y, r * .92, 0, 7);
   else { for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2 - Math.PI / 2; const fn = i ? 'lineTo' : 'moveTo'; ctx[fn](n.x + Math.cos(a) * r, n.y + Math.sin(a) * r); } ctx.closePath(); }
 }
 
 function shape(ctx, n, r, col) {
+  // 개념은 속을 비우고 테두리를 끊는다 — 다른 여덟 클래스는 전부 채워진 도형이다.
+  if (CLS[n.cls]?.shape === 'dcircle') {
+    ctx.save();
+    ctx.setLineDash([3 * devicePixelRatio, 2.5 * devicePixelRatio]);
+    ctx.strokeStyle = col; ctx.lineWidth = 1.8 * devicePixelRatio;
+    path(ctx, n, r); ctx.stroke();
+    ctx.restore();
+    return;
+  }
   const im = r > 9 * devicePixelRatio ? thumb(n.img) : null;
   path(ctx, n, r);
   if (im) {
@@ -308,6 +319,8 @@ function shape(ctx, n, r, col) {
     ctx.fillStyle = col; ctx.fill();
   }
 }
+
+const SKOS_EDGE = new Set(['broader', 'narrower', 'related', 'inScheme', 'topConceptOf', 'exactMatch']);
 
 function loop() {
   const cv = $('#graph'); if (!cv) return;
@@ -332,6 +345,9 @@ function loop() {
     ctx.strokeStyle = hi ? acc : line;
     ctx.globalAlpha = hi ? .95 : (S.search ? .18 : .6);
     ctx.lineWidth = (hi ? 2 : 1) * devicePixelRatio;
+    /* SKOS 관계는 점선이다. skos:broader 는 rdfs:subClassOf 가 아니라 추론이 일어나지 않는
+       느슨한 계층이라, RiC-O 관계와 같은 실선으로 그리면 화면이 거짓말을 한다. */
+    ctx.setLineDash(SKOS_EDGE.has(e.p) ? [4 * devicePixelRatio, 3 * devicePixelRatio] : []);
     ctx.beginPath();
     const ax = e.a.x + (e.a.ox || 0), ay = e.a.y + (e.a.oy || 0);
     const bx = e.b.x + (e.b.ox || 0), by = e.b.y + (e.b.oy || 0);

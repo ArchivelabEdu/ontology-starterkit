@@ -8,6 +8,8 @@ import { initHero2 } from './hero2.js';
 import { initRecord, rebuildRecord } from './record.js';
 
 export const RICO = 'https://www.ica.org/standards/RiC/ontology#'
+/* 시소러스는 RiC-O 밖에서 온다 — 개념의 이름도 계층도 전부 SKOS 술어에 있다. */
+export const SKOS = 'http://www.w3.org/2004/02/skos/core#'
 /* 전체 IRI 에서 우리 네임스페이스를 떼어 읽기 좋은 지역명으로. record.js 도 같은 일을 하지만
    거기 것은 모듈 안에 갇혀 있어 여기서 다시 둔다(순환 import 를 만들지 않기 위해). */
 const RIC = 'http://archives.nanet.go.kr/id/'
@@ -18,6 +20,7 @@ PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl:  <http://www.w3.org/2002/07/owl#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX skos: <${SKOS}>
 `;
 export const $ = s => document.querySelector(s);
 export const esc = s => String(s ?? '').replace(/[&<>"]/g,
@@ -37,6 +40,10 @@ export const CLS = {
   Record:        { v: '--record',   shape: 'doc',      ko: '기록',   key: 'record' },
   RecordSet:     { v: '--record',   shape: 'doc',      ko: '기록집합', key: 'record' },
   Rule:          { v: '--rule',     shape: 'hex',      ko: '규칙',   key: 'rule' },
+  /* 개념은 실재하지 않는다 — 그래서 테두리를 점선으로 둔다. 다른 여덟은 전부 실선이다.
+     색을 하나 더 쓰지만 이건 장식이 아니라 「이건 관념이다」라는 정보다. */
+  Concept:       { v: '--concept',  shape: 'dcircle',  ko: '개념',   key: 'concept' },
+  ConceptScheme: { v: '--concept',  shape: 'dcircle',  ko: '개념체계', key: 'concept' },
 };
 export const REL_KO = {
   occupiesOrOccupied: '재임 직위', isOrWasOccupiedBy: '재임자',
@@ -86,7 +93,7 @@ window.toggleTheme = () => {
    개체가 792개가 되면서 한 장이 너무 길어졌다. 이제 해시가 페이지를 고른다.
    기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
    여기서는 손대지 않고 자리만 비켜 준다. */
-const PAGES = ['place', 'event', 'graph-sec', 'query', 'lang', 'collection', 'about', 'pick'];
+const PAGES = ['place', 'event', 'graph-sec', 'subject', 'query', 'lang', 'collection', 'about', 'pick'];
 /* ── 주소 한 곳에서 읽기 ──
    주소가 두 겹이다. 앞은 어느 컬렉션 안인가, 뒤는 어느 화면인가.
      전체:      #place            #/records         #/item/<id>
@@ -160,6 +167,7 @@ function route() {
     if (id === 'event') renderTimeline();
     if (id === 'graph-sec') redrawGraph();
     if (id === 'lang') drawLang();
+    if (id === 'subject') drawSubjects();
     if (id === 'collection') drawCollection();
   }, 60);
 }
@@ -248,21 +256,32 @@ function pickerHtml(inPage) {
     return [...cnt.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
       .map(([k, v]) => `${CLS[k]?.ko || k} ${v}`).join(' · ');
   };
-  const on = new Set(CUR.cols);
+  /* 고른 것의 개체 수는 **합이 아니라 합집합**이다. 두 구술자가 같은 인물을 말하면
+     그 인물은 양쪽 컬렉션에 들어 있어, 더하면 실제보다 부풀어 보인다. */
+  const picked = COLS.filter(c => PICK.has(short(c.id)));
+  const self = new Set(COLS.map(c => c.id));   // members 에는 컬렉션 개체 자신도 들어 있다
+  const uni = new Set();
+  picked.forEach(c => c.members.forEach(m => { if (!self.has(m)) uni.add(m); }));
   return `
+    <div class="picker" data-inpage="${inPage ? 1 : 0}">
     <div class="col-grid">
-      ${COLS.map(c => `<button class="col-card${on.has(c.id) ? ' on' : ''}" onclick="togglePick('${esc(short(c.id))}')">
+      ${COLS.map(c => `<button class="col-card${PICK.has(short(c.id)) ? ' on' : ''}"
+        aria-pressed="${PICK.has(short(c.id))}" onclick="togglePick('${esc(short(c.id))}')">
         <b>${esc(c.title)}</b><span>${esc(cls(c))}</span>
-        <i>개체 ${c.n}${on.has(c.id) ? ' · 고름' : ''}</i></button>`).join('')}
+        <i>개체 ${c.n}</i></button>`).join('')}
     </div>
     <div class="pick-bar">
-      <button class="btn primary" id="pickGo" onclick="goPicked()" ${PICK.size ? '' : 'disabled'}>
-        ${PICK.size ? `고른 ${PICK.size}건으로 보기 →` : '컬렉션을 고르세요'}</button>
-      <button class="btn sm" onclick="pickAll()">전부 고르기</button>
-      ${PICK.size ? `<button class="btn sm" onclick="pickNone()">지우기</button>` : ''}
-      ${inPage && CUR.cols.length ? `<span class="status">지금 보는 것 — ${CUR.cols.map(c =>
-        esc(COLS.find(x => x.id === c)?.title ?? '')).join(' · ')}</span>` : ''}
-    </div>`;
+      <button class="btn primary" onclick="goPicked()" ${PICK.size ? '' : 'disabled'}>선택</button>
+      <button class="btn sm" onclick="pickAll()">전체</button>
+      <button class="btn sm" onclick="pickNone()" ${PICK.size ? '' : 'disabled'}>해제</button>
+      <span class="status">${[
+        inPage && CUR.cols.length
+          ? `지금 보는 것 ${CUR.cols.map(c => esc(COLS.find(x => x.id === c)?.title ?? '')).join(', ')}`
+          : '',
+        PICK.size ? `${PICK.size}건 · 개체 ${uni.size}`
+          : inPage ? '카드를 눌러 바꾸세요' : '카드를 눌러 컬렉션을 고르세요',
+      ].filter(Boolean).join(' · ')}</span>
+    </div></div>`;
 }
 
 /* 고르는 중인 것은 화면 상태고, CUR.cols 는 실제로 적재된 것이다. 둘을 나눠 두면
@@ -273,9 +292,13 @@ window.togglePick = id => { PICK.has(id) ? PICK.delete(id) : PICK.add(id); repai
 window.pickAll = () => { COLS.forEach(c => PICK.add(short(c.id))); repaintPicker(); };
 window.pickNone = () => { PICK.clear(); repaintPicker(); };
 window.goPicked = () => { if (PICK.size) location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}`; };
+/* 같은 고르개가 두 자리에 있다 — 첫 화면(#pickBody)과 컬렉션 페이지(#colBody).
+   예전에는 `$('#pickBody') || $('#colBody')` 로 한 곳만 골랐는데, #pickBody 는 숨어 있어도
+   늘 DOM 에 남아 있어 **컬렉션 페이지에서는 안 보이는 쪽만 다시 그렸다** —
+   화면에서는 「해제가 안 먹는다」로 나타났다. 있는 것을 전부 제자리에서 갈아끼운다. */
 function repaintPicker() {
-  const host = $('#pickBody') || $('#colBody');
-  if (host) host.innerHTML = pickerHtml(host.id === 'colBody');
+  document.querySelectorAll('.picker')
+    .forEach(el => { el.outerHTML = pickerHtml(el.dataset.inpage === '1'); });
 }
 
 /** 첫 화면 — 안내와 고르기. 아직 아무것도 안 고른 상태에서 뜬다. */
@@ -289,7 +312,7 @@ function drawPicker() {
 function drawCollectionList() {
   PICK.clear();
   CUR.cols.forEach(c => PICK.add(short(c)));
-  $('#colName').textContent = CUR.cols.length ? `${CUR.cols.length}건 고름` : `${COLS.length}건`;
+  $('#colName').textContent = CUR.cols.length ? `${CUR.cols.length}건 선택` : `${COLS.length}건`;
   $('#colBody').innerHTML = `
     <p class="note">이 사이트에는 발행본이 <b>${COLS.length}건</b> 실려 있습니다.
       고른 것만 지도·연표·관계망·기록에 들어갑니다. 여럿을 고르면 <b>합쳐서</b> 봅니다 —
@@ -354,11 +377,7 @@ async function boot() {
 
     await loadCollection();
     buildModel();
-    $('#loadStatus').textContent =
-      `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
-    $('#hsNode').textContent = G.nodes.length;
-    $('#hsEdge').textContent = G.edges.length;
-    $('#hsTriple').textContent = nT;
+    writeStatus();
     // 구술이 다루는 범위는 '사건'의 연도다. 인물 생년(위키데이터에서 받아 온)까지
     // 세면 1913 같은 값이 끼어 수록 범위가 아닌 게 된다.
     const yrs = G.nodes.filter(n => n.cls === 'Event' || n.cls === 'Activity')
@@ -383,6 +402,9 @@ async function boot() {
     // Place 클래스는 84개지만 지도에 뜨는 것은 좌표가 있는 44곳이다 — 84라고 적으면 거짓말이 된다.
     $('#ixPlace').textContent = `${$('#nPlace').textContent}곳`;
     $('#ixEvent').textContent = `${$('#nEvent').textContent}건`;
+    // 개념 수는 그래프에서 직접 센다 — 시소러스가 안 실린 발행본이면 0으로 정직하게 뜬다.
+    const nc = G.nodes.filter(n => n.cls === 'Concept').length;
+    $('#ixSubject').textContent = nc ? `${nc}개념` : '없음';
     route();
     /* 콘솔에서 들여다볼 수 있게 열어 둔다. 팀이 Claude Code 로 이 사이트를 고칠 때
        `KIT.G.nodes` · `KIT.COLS` 를 직접 찍어 보는 편이 훨씬 빠르다. */
@@ -396,12 +418,12 @@ async function boot() {
 /* 그래프를 화면용 모델로 */
 function buildModel() {
   const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img ?imgsrc WHERE {
-    ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n}
+    ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n} OPTIONAL{?s skos:prefLabel ?n}
     OPTIONAL{?s rico:beginningDate ?d}
     OPTIONAL{?s rico:generalDescription ?g} OPTIONAL{?s rico:history ?g}
     OPTIONAL{?s rico:scopeAndContent ?g}
     OPTIONAL{?s geo:lat ?lat} OPTIONAL{?s geo:long ?lon}
-    OPTIONAL{?s rdfs:comment ?k}
+    OPTIONAL{?s rdfs:comment ?k} OPTIONAL{?s skos:scopeNote ?k}
     OPTIONAL{?s foaf:depiction ?img} OPTIONAL{?s rdfs:label ?imgsrc} }`);
   // owl:sameAs 와 UUID 는 한 개체에 여럿 붙으므로 따로 모은다
   const same = new Map(), uu = new Map();
@@ -430,7 +452,7 @@ function buildModel() {
   }));
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
   const er = rows(`SELECT ?s ?p ?o WHERE {
-    ?s ?p ?o . FILTER(isIRI(?o) && STRSTARTS(STR(?p), "${RICO}")) }`);
+    ?s ?p ?o . FILTER(isIRI(?o) && (STRSTARTS(STR(?p), "${RICO}") || STRSTARTS(STR(?p), "${SKOS}"))) }`);
   G.edges = er.filter(e => G.byId.has(e.s) && G.byId.has(e.o))
     .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] }));
   buildCollections();
@@ -498,12 +520,140 @@ export function applyCollection(ids, redraw = true) {
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
   G.edges = ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o));
   recount();
+  writeStatus();
   if (redraw) { drawMap(); drawTimeline(); initGraph(G); drawLang(); rebuildRecord(); }
+}
+
+/* 상태줄·히어로 수치는 **지금 고른 것**을 센다. 예전에는 적재 직후 한 번만 썼는데,
+   고르기 전에는 개체가 0이라 컬렉션을 골라 들어가도 「개체 0 · 관계 0」이 그대로 남았다. */
+function writeStatus() {
+  const el = $('#loadStatus');
+  if (el) el.textContent =
+    `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`;
+  const set = (id, v) => { const n = $(id); if (n) n.textContent = v; };
+  set('#hsNode', G.nodes.length); set('#hsEdge', G.edges.length); set('#hsTriple', TRIPLES);
 }
 
 /** 고른 것이 있는가. 컬렉션이 아예 없는 그래프는 「고를 것이 없으니 열려 있다」로 본다. */
 export const hasPick = () => !COLS.length || CUR.cols.length > 0;
 
+
+/* ══════════ 주제 — 시소러스 ══════════
+   개념은 실재하는 것을 **대체하지 않는다.** 한보사태는 여전히 사건이고, 그것과 별개로
+   「노동정책」이라는 주제로도 걸린다. 이 화면이 보여 주려는 것은 그 한 겹이다.
+
+   핵심은 상위 개념을 누를 때다. skos:broader 는 추론이 일어나지 않으므로(rdfs:subClassOf 가
+   아니다) 계층을 **질의가 직접 타고 내려가야** 결과가 늘어난다. 아래 kidsOf/closure 가 그 일이다. */
+const SKOS_REL = new Set(['broader', 'related', 'inScheme', 'topConceptOf', 'exactMatch']);
+
+/** 개념 → 그 바로 아래 개념들. broader 의 역방향이다(narrower 는 그래프에 없다). */
+function kidsOf() {
+  const m = new Map();
+  G.edges.filter(e => e.p === 'broader').forEach(e => {
+    if (!m.has(e.o)) m.set(e.o, []);
+    m.get(e.o).push(e.s);
+  });
+  return m;
+}
+/** 자기 자신 + 아래로 전부. SPARQL 의 skos:broader* 를 화면 쪽에서 한 것이다. */
+function closure(id, kids) {
+  const out = new Set([id]);
+  const stack = [id];
+  while (stack.length) for (const k of kids.get(stack.pop()) || []) if (!out.has(k)) { out.add(k); stack.push(k); }
+  return out;
+}
+/** 이 개념들을 **쓰는** 것. 주제(hasOrHadSubject)만이 아니다 —
+    기록집합 유형(hasRecordSetType)처럼 개념을 값으로 받는 속성이 더 있다.
+    술어를 하나로 고정하면 그 개념들이 화면에서 0으로 뜬다(실측: ric-rst 4개가 그랬다).
+    SKOS 구조 관계(broader·inScheme…)는 개념끼리의 뼈대라 여기서 뺀다. */
+function subjectsOf(ids) {
+  return [...new Set(G.edges.filter(e => ids.has(e.o) && !SKOS_REL.has(e.p) && !ids.has(e.s)).map(e => e.s))]
+    .map(id => G.byId.get(id)).filter(Boolean)
+    .sort((a, b) => (a.cls === b.cls ? a.label.localeCompare(b.label) : a.cls.localeCompare(b.cls)));
+}
+
+let SUBJ_PICK = null;
+
+function drawSubjects() {
+  // 개념이 많은 체계를 먼저. 인용만 하는 외부 어휘(4개)가 우리 시소러스(13개)보다
+  // 위에 오면 이 화면이 무엇을 보여 주려는 것인지 흐려진다.
+  const schemes = G.nodes.filter(n => n.cls === 'ConceptScheme');
+  const concepts = G.nodes.filter(n => n.cls === 'Concept');
+  const host = $('#subjBody');
+  if (!host) return;
+  if (!concepts.length) {
+    host.innerHTML = `<p class="note">이 발행본에는 개념이 실려 있지 않습니다 —
+      관리 시스템에서 시소러스를 함께 발행하면 여기 나타납니다.</p>`;
+    return;
+  }
+  const kids = kidsOf();
+  const inScheme = new Map();
+  G.edges.filter(e => e.p === 'inScheme').forEach(e => inScheme.set(e.s, e.o));
+  const alt = new Map();
+  rows(`SELECT ?s ?l WHERE { ?s skos:altLabel ?l }`).forEach(r => {
+    if (!alt.has(r.s)) alt.set(r.s, []);
+    alt.get(r.s).push(r.l);
+  });
+
+  const tree = (id, depth) => {
+    const n = G.byId.get(id);
+    if (!n) return '';
+    const cnt = subjectsOf(closure(id, kids)).length;
+    const on = SUBJ_PICK === id;
+    const uf = (alt.get(id) || []).join(' · ');
+    return `<button class="cnode${on ? ' on' : ''}" style="--d:${depth}"
+        onclick="pickSubject('${esc(id)}')" aria-pressed="${on}">
+        <b>${esc(n.label)}</b>${uf ? `<em>UF ${esc(uf)}</em>` : ''}
+        <i>${cnt}</i></button>` +
+      (kids.get(id) || []).sort((a, b) => G.byId.get(a).label.localeCompare(G.byId.get(b).label))
+        .map(k => tree(k, depth + 1)).join('');
+  };
+
+  const sizeOf = s => concepts.filter(c => inScheme.get(c.id) === s.id).length;
+  host.innerHTML = [...schemes].sort((a, b) => sizeOf(b) - sizeOf(a)).map(s => {
+    const tops = concepts.filter(c => inScheme.get(c.id) === s.id && !G.edges.some(e => e.p === 'broader' && e.s === c.id));
+    const mine = concepts.filter(c => inScheme.get(c.id) === s.id);
+    return `<div class="scheme">
+      <div class="shead"><b>${esc(s.label)}</b><span>개념 ${mine.length}</span></div>
+      ${s.kind ? `<p class="note">${esc(s.kind)}</p>` : ''}
+      <div class="ctree">${tops.map(c => tree(c.id, 0)).join('')}</div>
+    </div>`;
+  }).join('') + `<div id="subjPane"></div>`;
+  paintSubjectPane();
+}
+
+window.pickSubject = id => { SUBJ_PICK = SUBJ_PICK === id ? null : id; drawSubjects(); };
+
+function paintSubjectPane() {
+  const pane = $('#subjPane');
+  if (!pane) return;
+  if (!SUBJ_PICK) {
+    pane.innerHTML = `<p class="note">개념을 누르면 그 주제의 자료가 모입니다.
+      오른쪽 숫자는 <b>그 개념과 아래 개념 전부</b>에 달린 자료 수입니다 — 상위로 갈수록 커집니다.</p>`;
+    return;
+  }
+  const kids = kidsOf();
+  const cl = closure(SUBJ_PICK, kids);
+  const n = G.byId.get(SUBJ_PICK);
+  const items = subjectsOf(cl);
+  const direct = subjectsOf(new Set([SUBJ_PICK]));
+  const rt = G.edges.filter(e => e.p === 'related' && (e.s === SUBJ_PICK || e.o === SUBJ_PICK))
+    .map(e => G.byId.get(e.s === SUBJ_PICK ? e.o : e.s)).filter(Boolean);
+  const xm = rows(`SELECT ?u WHERE { <${SUBJ_PICK}> skos:exactMatch ?u }`).map(r => r.u);
+  pane.innerHTML = `
+    <div class="spane">
+      <h3>${esc(n.label)}</h3>
+      ${n.kind ? `<p class="note">${esc(n.kind)}</p>` : ''}
+      <p class="note">이 개념만으로 <b>${direct.length}건</b> ·
+        아래 개념 ${cl.size - 1}개까지 타고 내려가면 <b>${items.length}건</b>.
+        ${rt.length ? `관련어(RT) ${rt.map(r => esc(r.label)).join(' · ')}. ` : ''}
+        ${xm.length ? `타 어휘 일치 <code>${esc(xm[0])}</code>.` : ''}</p>
+      <div class="slist">${items.map(i => `<a class="sitem" href="#/item/${encodeURIComponent(short(i.id))}">
+        <span class="dot" style="background:var(${CLS[i.cls]?.v || '--muted'})"></span>
+        <b>${esc(i.label)}</b><em>${esc(CLS[i.cls]?.ko || i.cls)}</em></a>`).join('')
+      || '<p class="note">달린 자료가 없습니다.</p>'}</div>
+    </div>`;
+}
 
 /* ══════════ 지도 ══════════ */
 const MAP = { map: null, markers: new Map(), filter: new Set(), tour: null, tourIdx: 0 };
