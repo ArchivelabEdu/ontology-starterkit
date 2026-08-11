@@ -1,14 +1,84 @@
 id,name,lat,lng,type,desc
-place/jinan,전라북도 진안,35.7917,127.425,출생,1950년 출생지
-place/jeonju,전주,35.8242,127.148,학창,전주 신흥고등학교
-place/korea-univ,고려대학교,37.5894,127.0324,학창,법학과·총학생회장(1973)
-place/ssangyong,쌍용그룹 본사,37.5665,126.978,직장,1978년 공채 입사
-place/newyork,뉴욕,40.7128,-74.006,해외,쌍용 뉴욕지점 4년
-place/losangeles,로스앤젤레스,34.0522,-118.2437,해외,쌍용 LA지점 5년
-place/pepperdine,페퍼다인대학교,34.0416,-118.7101,학업,1990년 경영학 석사
-place/assembly,국회의사당,37.532,126.914,의정,서울 여의도. 제15~20대 의정 활동과 제20대 전반기 국회의장 재임의 무대
-place/muju,무주,36.007,127.661,지역구,무진장(무주·진안·장수)
-place/jangsu,장수,35.6473,127.521,지역구,무진장(무주·진안·장수)
-place/shinheung,전주 신흥고등학교,35.8114,127.148,학창,1969년 졸업
-place/nanet,국회도서관,37.5312,126.9137,기관,구술총서 발행처
-place/nafr,국회미래연구원,37.5285,126.9195,기관,2018년 설립
+place-jinan,전라북도 진안,35.7917,127.425,출생,구술자가 1950년에 태어난 곳.
+place-jeonju,전주,35.8242,127.148,학창,구술자가 다닌 전주 신흥고등학교가 있는 도시.
+place-korea-univ,고려대학교,37.5894,127.0324,학창,구술자가 법학과를 다니며 1973년 총학생회장을 지낸 대학.
+place-ssangyong,쌍용그룹 본사,37.5665,126.978,직장,구술자가 1978년 공채로 입사한 곳.
+place-newyork,뉴욕,40.7128,-74.006,해외,구술자가 쌍용 뉴욕지점에서 4년 근무한 도시.
+place-pepperdine,페퍼다인대학교,34.0416,-118.7101,학업,구술자가 1990년 경영학 석사를 마친 대학.
+place-assembly,국회의사당,37.532,126.914,의정,서울 여의도. 제15~20대 의정 활동과 제20대 전반기 국회의장 재임의 무대
+place-muju,무주,36.007,127.661,지역구,무진장(무주·진안·장수)
+place-jangsu,장수,35.6473,127.521,지역구,무진장(무주·진안·장수)
+place-shinheung,전주 신흥고등학교,35.8114,127.148,학창,구술자가 1969년에 졸업한 고등학교.
+place-nanet,국회도서관,37.5312,126.9137,기관,구술총서 발행처
+place-nafr,국회미래연구원,37.5285,126.9195,기관,2018년 설립
+place-baekdusan,백두산 천지,,,,
+place-bundang,분당,,,,
+place-bupyeong,부평,,,,
+place-busan,부산,35.1796,129.0756,지역,발췌개헌이 통과된 피난 국회가 있던 곳
+place-cheongwadae,청와대,37.5866,126.9748,기관,
+place-china,중국,,,,대북 진출 경쟁국으로 언급.
+place-chungcheongbuk-do,충청북도,,,,국가 균형 발전 대상으로 언급된 도.
+place-daechi-dong,대치동,,,,한보가 있던 곳으로 회고된 지역.
+place-daegu-airport,대구공항,,,,
+place-daegu-seomun-market,대구 서문시장,35.8714,128.6014,지역,
+place-daejeon,대전,36.3504,127.3845,지역,
+place-denmark,덴마크,,,,
+place-donggyo-dong,동교동,37.5563,126.9236,정당,
+place-donghaksa,동학사,36.3419,127.2100,기타,
+place-france,프랑스,,,,
+place-gangseo,강서,,,,
+place-gangwon-do,강원도,37.8228,128.1555,지역,넓은 선거구의 예시이자 국가 균형 발전 대상으로 언급된 도.
+place-gangwon-wind-farm,강원풍력발전단지,,,,
+place-germany,독일,,,,
+place-geumsan,충남 금산,36.1089,127.4880,지역,무진장 접경 지역.
+place-gimcheon,경북 김천,36.1398,128.1136,지역,무진장 접경 지역.
+place-gumi,구미,,,,
+place-gwacheon,과천,,,,
+place-gwangju,광주,35.1595,126.8526,지역,
+place-gwangju-jeonnam,광주·전남,,,,
+place-gyeongsangbuk-do,경상북도,36.5760,128.5056,지역,구술자 장인의 출신 도.
+place-honam,호남,35.3000,126.9000,지역,구술자의 출신 지역.
+place-ilsan,일산,,,,김대중 당선자의 자택이 있던 곳.
+place-imsil,임실,35.6178,127.2790,지역구,구술자의 제17·18대 선거구.
+place-italy,이탈리아,,,,
+place-jangchungdan,장충단,37.5590,127.0057,기타,
+place-japan,일본,,,,대북 진출 경쟁국으로 언급.
+place-jeju-do,제주도,,,,국가 균형 발전 대상으로 언급된 도.
+place-jeollabuk-do,전라북도,35.7175,127.1530,지역,구술자가 연청 지회장을 맡았던 도이자 균형 발전 대상 도.
+place-jeongyeongnyeon-building,전경련 빌딩,,,,
+place-jongno,종로(종로구),37.5730,126.9794,지역구,구술자의 제19·20대 선거구.
+place-jung-gu,중구,37.5636,126.9976,지역,
+place-kaesong-industrial-complex,개성공단,,,,
+place-korean-peninsula,한반도,,,,
+place-long-beach,롱비치 항,33.7550,-118.2160,해외,
+place-los-angeles,로스앤젤레스,34.0522,-118.2437,해외,구술자가 쌍용 LA지점에서 5년 근무한 도시.
+place-mujinjang,무진장(무주·진안·장수),35.7917,127.4250,지역구,구술자의 선거구. 5도 접경 지역이며 매우 넓음.
+place-muju-anseong,무주 안성,36.0069,127.6608,지역구,
+place-new-zealand,뉴질랜드,,,,
+place-north-korea,북한,,,,대북 경제 진출 주장의 대상.
+place-norway,노르웨이,,,,
+place-palace-hotel,팔레스호텔,,,,구술자가 한보그룹 임원인 대학 선배를 만난 장소.
+place-pohang,포항,,,,영일군의 현재 지명.
+place-russia,러시아,,,,대북 진출 경쟁국으로 언급.
+place-samil-building,삼일빌딩,37.5704,126.9910,직장,
+place-sanggye-dong,상계동,,,,
+place-seongnam,성남,,,,
+place-seoul,서울,37.5665,126.9780,지역,선거운동과 중재 후 복귀 지점으로 언급.
+place-south-korea,대한민국,,,,
+place-ssangyong-building,쌍용빌딩,,,,
+place-sudogwon,수도권,,,,집중을 경계해야 한다고 언급된 지역.
+place-sunchang,순창,,,,
+place-suncheon,전남 순천,,,,
+place-sweden,스웨덴,,,,
+place-thirty-eighth-parallel,삼팔선,,,,
+place-uk,영국,51.5074,-0.1278,해외,
+place-ulsan,울산,35.5384,129.3114,지역,현대자동차 파업이 일어난 도시.
+place-usa,미국,38.9072,-77.0369,해외,구술자가 MBA를 하고 주재원으로 근무한 나라. 균형 발전 논의의 비교 사례.
+place-wanju,완주,,,,
+place-washington,워싱턴,38.9072,-77.0369,해외,
+place-yeongdong,충북 영동,36.1750,127.7764,지역,무진장 접경 지역.
+place-yeongil,영일군,,,,구술자 장인의 출신지이자 세 차례 출마한 지역.
+place-yeongnak-church,영락교회,37.5641,126.9946,기타,
+place-yeongnam,영남,35.8000,128.6000,지역,호남과 대비되는 지역.
+place-yeouido,여의도,37.5219,126.9245,의정,
+place-yeouido-hotel,여의도호텔,,,,

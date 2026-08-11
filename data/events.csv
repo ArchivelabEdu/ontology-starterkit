@@ -1,24 +1,242 @@
 id,name,date,type,desc
-event/yushin,10월유신 선포,1972-10-17,정치,박정희 대통령 유신 선포. 재학 중 반대 시위 참여
-event/donga,동아일보 광고탄압,1974-12,언론,자유언론실천선언 이후 광고 탄압
-event/president-election-1997,제15대 대통령선거,1997-12-18,정치,"김대중 당선, 최초의 평화적 정권교체"
-event/hanbo,한보사태,1997-01,경제,재벌 문어발식 확장의 상징. 외환위기의 한 원인
-event/imf,IMF 외환위기,1997-11-21,경제,국제통화기금 구제금융 신청
-event/nosajeong,노사정위원회 1기 대타협,1998-02-06,노동,경제위기 극복을 위한 사회협약
-event/impeach-roh,노무현 대통령 탄핵소추,2004-03-12,정치,"국회 가결, 헌재 기각"
-event/uri-party,열린우리당 창당,2003-11-11,정당,새천년민주당 분당
-event/impeach-park,박근혜 대통령 탄핵소추,2016-12-09,정치,"국회 가결, 헌재 인용"
-event/speaker-inaug,제20대 전반기 국회의장 취임,2016-06-09,의정,'국민에게 힘이 되는 국회' 일성
-event/nafr,국회미래연구원 설립,2018-05-28,의정,여야 설득 끝에 설립
-event/cleaner,국회 청소노동자 정규직 전환,2017-01-01,노동,고용의 질 개선
-event/privilege,국회의원 특권 내려놓기,2016-07,의정,특권 내려놓기 추진위원회
-event/speaker-retire,국회의장 퇴임,2018-05-29,의정,제20대 전반기 임기 종료
-event/student-pres,고려대 총학생회장 당선,1973,학창,재학 중 학생운동 참여
-event/graduate,고려대학교 법학과 졸업,1975,학창,졸업 후 육군 입대
-event/ssangyong-join,쌍용그룹 공채 입사,1978,직장,이후 뉴욕·LA 지점 근무
-event/pepperdine,페퍼다인대학교 경영학 석사,1990,학업,미국 유학
-event/enter-politics,정계 입문,1995,정치,권노갑 권유로 민주당 입당
-event/elected-15,제15대 국회의원 당선,1996-04-11,정치,전북 진안·무주·장수
-event/oct26,10·26 사태,1979-10-26,정치,박정희 대통령 서거
-event/may18,5·18민주화운동,1980-05-18,정치,광주
-event/interview,국회의장단 구술채록,2018-08,기록,"국회기록보존소, 면담자 손동유"
+event-yushin,10월유신 선포,1972-10-17,정치,박정희 대통령 유신 선포. 재학 중 반대 시위 참여
+event-donga,동아일보 광고탄압,1974-12,언론,자유언론실천선언 이후 광고 탄압
+event-president-election-1997,제15대 대통령선거,1997-12-18,정치,"김대중 당선, 최초의 평화적 정권교체"
+event-hanbo,한보사태,1997-01,경제,재벌 문어발식 확장의 상징. 외환위기의 한 원인
+event-imf,IMF 외환위기,1997-11-21,경제,국제통화기금 구제금융 신청
+event-nosajeong,노사정위원회 1기 대타협,1998-02-06,노동,경제위기 극복을 위한 사회협약
+event-impeach-roh,노무현 대통령 탄핵소추,2004-03-12,정치,"국회 가결, 헌재 기각"
+event-uri-party,열린우리당 창당,2003-11-11,정당,새천년민주당 분당
+event-impeach-park,박근혜 대통령 탄핵소추,2016-12-09,정치,"국회 가결, 헌재 인용"
+event-speaker-inaug,제20대 전반기 국회의장 취임,2016-06-09,의정,'국민에게 힘이 되는 국회' 일성
+event-nafr,국회미래연구원 설립,2018-05-28,의정,여야 설득 끝에 설립
+event-cleaner,국회 청소노동자 정규직 전환,2017-01-01,노동,고용의 질 개선
+event-privilege,국회의원 특권 내려놓기,2016-07,의정,특권 내려놓기 추진위원회
+event-speaker-retire,국회의장 퇴임,2018-05-29,의정,제20대 전반기 임기 종료
+event-student-pres,고려대 총학생회장 당선,1973,학창,재학 중 학생운동 참여
+event-graduate,고려대학교 법학과 졸업,1975,학창,졸업 후 육군 입대
+event-ssangyong-join,쌍용그룹 공채 입사,1978,직장,이후 뉴욕·LA 지점 근무
+event-pepperdine,페퍼다인대학교 경영학 석사,1990,학업,미국 유학
+event-enter-politics,정계 입문,1995,정치,권노갑 권유로 민주당 입당
+event-elected-15,제15대 국회의원 당선,1996-04-11,정치,전북 진안·무주·장수
+event-oct26,10·26 사태,1979-10-26,정치,박정희 대통령 서거
+event-may18,5·18민주화운동,1980-05-18,정치,광주
+event-interview,국회의장단 구술채록,2018-08,기록,"국회기록보존소, 면담자 손동유"
+event-15th-general-election,제15대 국회의원선거,1996,,구술자가 처음 출마해 무진장 선거구에서 당선된 선거.
+event-17th-general-election,제17대 국회의원선거,2004,,
+event-18th-general-election,제18대 국회의원선거,2008,,
+event-1997-presidential-election,1997년 대통령선거,1997,,김대중이 당선되어 정권 교체가 이루어진 선거.
+event-19th-general-election,제19대 국회의원선거,2012,,
+event-20-assembly-formation-negotiation,제20대 국회 원 구성 협상,2016-06-01,,여야 3당이 국회의장단·상임위 배분 문제로 원 구성 협상 난항
+event-20-assembly-opening-address,제20대 국회 개원사,2016-06-13,,국민통합과 개헌 필요성 강조
+event-20-committee-chair-election,제20대 국회 상임·특별위원장 선출,2016-06-13,,
+event-2007-presidential-election,2007년 대통령선거,2007,,
+event-2010-local-election,2010년 지방선거,2010,,
+event-2011-bundang-by-election,2011년 분당 재보궐선거,2011,,
+event-2012-minju-primary,제18대 대선 당내 경선,2012-06-26,,
+event-2012-presidential-election,2012년 대통령선거,2012,,
+event-2017-chugyeong-delay,2017년 추경 예산 처리 지연,,,
+event-2017-presidential-election,2017년 조기 대통령선거,,,"문재인 후보 당선, 국회의사당 중앙홀에서 대통령 취임선서 행사"
+event-2018-inter-korean-summit-3,2018년 9월 남북정상회담,,,
+event-20th-general-election,제20대 국회의원선거,,,
+event-appf-assembly-2017,아·태의회포럼(APPF) 총회,2017-01-11,,인도네시아 개최
+event-april-19-revolution,4·19혁명,,,
+event-arrest-motion-vote-2018,홍문종·염동열 체포동의안 부결,,,
+event-assembly-advancement-act-proposal,‘국회 선진화법’ 개정 제안,2017-09-01,,
+event-audit-situation-room-plaque,국회 국정감사 종합상황실 현판식,2017-10-10,,
+event-award-best-legislator-1998,한국유권자운동연합 의정 활동 최우수의원 수상,1998,,
+event-baekbong-award-1,제1회 백봉신사상 수상,1999,,
+event-baekbong-award-10,제10회 백봉신사상 수상,2008,,
+event-baekbong-award-11,제11회 백봉신사상 수상,2009,,
+event-baekbong-award-13,제13회 백봉신사상 수상,2011,,
+event-baekbong-award-14,제14회 백봉신사상 수상,2012,,
+event-baekbong-award-18,제18회 백봉신사상 수상,2016,,
+event-baekbong-award-19,제19회 백봉신사상 수상,2017,,
+event-baekbong-award-2,제2회 백봉신사상 수상,2000,,
+event-baekbong-award-20,제20회 백봉신사상 수상,2018,,
+event-baekbong-award-21,제21회 백봉신사상 수상,2019,,
+event-baekbong-award-3,제3회 백봉신사상 수상,2001,,
+event-baekbong-award-6,제6회 백봉신사상 수상,2004,,
+event-baekbong-award-7,제7회 백봉신사상 수상,2005,,
+event-baekbong-award-8,제8회 백봉신사상 수상,2006,,
+event-baekbong-award-9,제9회 백봉신사상 수상,2007,,
+event-balanced-development-forum,국가균형발전과 산업집적전략 토론회,2003-09-04,,
+event-balchwe-constitutional-amendment,발췌개헌,1952-07-04,,부산 피난 국회에서 통과된 정부 수립 이후 첫 헌법 개정
+event-biodiesel-agreement,바이오디젤 보급 자발적 협약식,2006-03-02,,
+event-by-election-2018,2018년 6월 보궐선거,2018-06,,
+event-by-elections-2008-2009,2008~2009년 재보궐선거,,,
+event-candidate-unification-2002,노무현·정몽준 후보 단일화,,,
+event-candlelight,촛불집회,,,
+event-candlelight-rally-3rd,제3차 촛불집회,2016-11-12,,"박근혜 대통령 퇴진 요구, 주최 측 추산 100만 인파"
+event-candlelight-revolution,촛불혁명,,,
+event-cc-impeachment-ruling,헌법재판소 박근혜 대통령 탄핵 심판 인용,,,
+event-children-assembly-12,제12회 대한민국 어린이 국회,2016-09-09,,
+event-choe-sun-sil-urgent-question,‘최순실 게이트’ 긴급현안질문,2016-11-11,,
+event-choi-special-counsel-extension,최순실 특검 연장 거부,,,
+event-choi-sun-sil-sataee,최순실 사태,,,대통령 권력 집중 때문에 일어났다고 구술자가 본 사태
+event-chung-hunger-strike-2009,미디어법 저지 단식 농성,2009-07-20,,
+event-chwiim-yeonseol,제20대 전반기 국회의장 취임 연설,,,
+event-cleaning-worker-conversion,국회 청소 노동자 정규직 전환,,,
+event-clinton-assembly-speech,빌 클린턴 미국 대통령 국회 연설,,,
+event-comment-manipulation-bill-submission,댓글 조작 사건 특검법·국정조사요구서 제출,2018-04-23,,자유한국당·바른미래당·민주평화당 등 야 3당 원내수석부대표가 제출
+event-constitution-day-69,제69주년 제헌절 기념식,2017-07-17,,‘상향식 개헌’ 강조
+event-constitutional-amendment-council-launch,‘나라 살리는 헌법개정 국민주권회의’ 출범,2016-09-23,,김원기·임채정·김형오·정의화 전 국회의장 등이 주도
+event-constitutional-amendment-vote-failed,헌법개정안 투표 불성립,2018-05-24,,의결정족수 192명 미달
+event-constitutional-reform-committee-first-meeting,헌법개정·정치개혁특별위원회 첫 회의,2018-01-15,,활동 6개월 연장 합의 후 개헌 논의 시작
+event-djp-coalition,DJP연합,,,김대중 진영과 김종필 진영의 연합. 이후 결렬됨.
+event-doctorate-kyung-hee,경희대학교 경영학 박사 취득,2004,,
+event-dokdo-honorary-residency-card,국회의장 독도명예주민증 수령,2017-02-20,,
+event-dokdo-visit-delegation-2016,국회 독도방문단 독도 방문,2016-08-15,,새누리당 나경원 의원을 단장으로 여야 의원 10명 참여
+event-dong-a-ilbo-ad-suppression,동아일보 언론 광고탄압 사건,1974,,
+event-druking-special-prosecutor-act-passed,추가경정예산안·드루킹 특검법 의결,2018-05-21,,
+event-drukking-special-counsel,드루킹 특검,,,
+event-electoral-district-redraw-2004,2004년 선거구 획정,2004-02,,
+event-erdogan-courtesy-call,에르도안 터키 대통령 예방,2018-05-02,,
+event-family-reunion-resolution,남북 이산가족 상봉 촉구 결의안 채택,2017-06-22,,
+event-floor-leaders-meeting-2017-11-13,여야 원내대표 정례 회동,2017-11-13,,정세균 국회의장이 주재한 회동
+event-floor-leaders-regular-meeting-2018-02,원내교섭단체 3당 원내대표 정례회동,2018-02-19,,공전되던 임시국회 정상화 합의
+event-four-party-floor-leaders-meeting-2017,여야 4당 원내대표 회동,2017-03-20,,임시국회 일정과 국회선진화법·대통령직인수위법·검찰개혁 방안 논의
+event-free-press-practice-declaration,자유언론실천선언,1974-10-24,,
+event-futures-institute-act-committee-vote,‘국회미래연구원법안’ 법제사법위원회 의결,2017-11-23,,
+event-gaehyeon-teukwi-hubo-chocheong,개헌특위 대선 후보 초청 의견 청취,,,
+event-gaeseong-closure,개성공단 폐쇄,,,
+event-gangwon-wind-farm-completion,강원풍력발전단지 준공식,2006-10-26,,
+event-general-election-14,제14대 총선,1992,,
+event-general-election-16,제16대 국회의원선거,2000-04-13,,
+event-gim-dae-jung-memorial-7,김대중 대통령 서거 7주기 추모식,2016-08-18,,
+event-gim-dae-jung-memorial-8,김대중 전 대통령 서거 8주기 추도식,2017-08-18,,국립현충원 개최
+event-graduation-sinheung-high-school,전주 신흥고등학교 졸업,1969,,
+event-gukga-wollo-gaehyeon,국가원로 개헌 대토론회,,,
+event-gukhoe-doseogwan-siltal,국회도서관 열람실 시찰,,,
+event-gukjeong-gamsa-1996,1996년 국정감사,1996,,구술자가 재경위에서 참여한 국정감사. 이후 의원 간 상호 평가가 실시됨.
+event-gukjeongjosa-first-hearing,국정농단 국정조사 특위 첫 청문회,2016-12-06,,
+event-gukjeongnondan-anggeon-cheori,국정농단 관련 특검 및 국정조사 안건 처리,,,
+event-hanbo-hearing,한보청문회,,,정태수 회장이 증인으로 나와 불법 정치자금 제공을 인정한 청문회.
+event-honorary-doctorate-jeonbuk,전북대학교 명예 정치학 박사 수여,2014,,
+event-honorary-doctorate-pusan,부산대학교 명예 공공정책학 박사 수여,2017,,
+event-humidifier-disinfectant-investigation,가습기 살균제 사고 국정조사계획서 승인,2016-07-06,,
+event-hyeon-gyeong-dae-exhibition,현경대 전 국회의원 기증기록물 전시회,,,
+event-hyundai-motor-strike-1998,울산 현대자동차 파업,1998,,정리해고에 반발한 파업. 중재 결과 경영상 이유의 정리해고 입법에 합의.
+event-i-myeong-bak-indictment,이명박 전 대통령 구속기소,2018-04-09,,
+event-imf-crisis,1997년 외환위기,1997,,IMF의 구제금융을 받게 된 위기. 신자유주의적 입법이 요구됨.
+event-impeachment-ruling-acceptance-agreement,탄핵심판 결과 승복 합의,2017-02-13,,
+event-india-visit-2018,국회의장 인도 의회 방문,2018-03-08,,
+event-ipu-assembly-137,제137차 IPU(국제의회연맹) 총회,2017-10-11,,"러시아 상트페테르부르크 개최, 러시아·폴란드·슬로바키아 공식 방문 병행"
+event-iran-pakistan-myanmar-visit,국회의장 이란·파키스탄·미얀마 공식 방문,2017-08-02,,
+event-japan-official-visit-2017,국회의장 일본 공식 방문,2017-06-07,,아베 신조 총리와 면담
+event-jeonbuk-forum-transition,대통령직인수위원회 주최 전북지역 토론회,2003-02-11,,
+event-jeonbuk-governor-primary,전라북도 지사 경선,,,
+event-jeongmongjun-withdrawal,정몽준 후보 지지 철회,,,
+event-jeongyeongnyeon-breakfast,전경련빌딩 조찬 미팅,,,
+event-jeongyojo-legalization,전교조 합법화,,,민주노총의 노사정 참여 조건으로 약속된 사안.
+event-jongno-by-election-roh,종로 보궐선거(노무현 당선),,,
+event-june-10-uprising,6·10항쟁,,,
+event-kim-gi-sik-resignation,김기식 금융감독원장 사퇴,,,
+event-kim-jae-su-dismissal,김재수 장관 해임건의안 통과,,,
+event-ko-yon-jeonggijeon,고려대–연세대 정기전,1973-10-05,,
+event-korea-us-tech-forum-2,제2회 한미기술협력포럼,2006-06-26,,
+event-korus-fta-industry-meeting,한미 FTA를 통한 산업구조 선진화전략 민관회의,2006-07-05,,
+event-korus-fta-negotiation,한미 FTA 협상,2006,,
+event-local-election-2018,2018년 6월 지방선거,2018-06,,개헌안 표결과 동시에 치르지 못한 지방선거
+event-mba-pepperdine,미국 페퍼다인대학교 경영학 석사 취득,1990,,
+event-mdp-founding-2000,새천년민주당 창당,2000,,DJP연대 결렬 이후 과반 제1당을 만들기 위한 창당.
+event-media-act-passage,미디어법 강행 처리,2009,,
+event-meorichae,머리채 사건,,,
+event-mike-pence-meeting,마이크 펜스 미국 부통령 접견,2017-04-17,,
+event-mikta-speakers-meeting-2,제2차 믹타(MIKTA) 국회의장회의,2016-10-06,,"호주 호바트 개최, 공동성명서 채택"
+event-mikta-speakers-meeting-3,제3차 믹타(MIKTA) 국회의장회의,2017-09-28,,"이스탄불 개최, 기조연설"
+event-military-service-1975,군 입대(1975),1975,,
+event-minjokilbo-cho-yong-su,민족일보 조용수 사건,,,
+event-minju-convention-2008,민주당 전당대회(2008. 7. 6.),2008-07-06,,
+event-minuiwon-election,민의원선거,,,
+event-mujinjang-jigudang-changdang,새정치국민회의 진안군·무주군·장수군 지구당 창당대회,1995,,
+event-nafi-opening,국회미래연구원 개원,,,
+event-nanningu,난닝구 사건,,,
+event-nars-north-south-forum-2017,남북관계 관련 국회입법조사처 토론회,2017-02-02,,
+event-national-assembly-343,제343회 국회(임시회) 개회,2016-06-07,,
+event-national-assembly-344,제344회 국회(임시회) 개회,2016-07-19,,
+event-national-assembly-345,제345회 국회(임시회) 개최,2016-08-16,,
+event-national-assembly-346,제346회 국회(정기회) 개회,2016-09-01,,
+event-national-assembly-347,제347회 국회(임시회) 개회,2016-12-12,,
+event-national-assembly-348,제348회 국회(임시회) 개회,2017-01-09,,
+event-national-assembly-349,제349회 국회(임시회) 개회,2017-02-01,,
+event-national-assembly-350,제350회 국회(임시회) 개회,2017-03-03,,
+event-national-assembly-351,제351회 국회(임시회) 개회,2017-05-29,,
+event-national-assembly-352,제352회 국회(임시회) 개회,2017-07-04,,
+event-national-assembly-353,제353회 국회(임시회) 개회,2017-08-18,,
+event-national-assembly-354,제354회 국회(정기회) 개회,2017-09-01,,
+event-national-assembly-355,제355회 국회(임시회) 개회,2017-12-11,,12월 23일까지 임시 국회를 열었으나 공전
+event-national-assembly-356,제356회 국회(임시회) 개회,2018-01-30,,
+event-national-assembly-357,제357회 국회(임시회) 개회,2018-03-05,,
+event-national-assembly-358,제358회 국회(임시회) 개회,2018-03-12,,
+event-national-assembly-359,제359회 국회(임시회) 개회,2018-04-02,,
+event-national-assembly-360,제360회 국회(임시회) 개회,2018-05-02,,
+event-national-assembly-marathon-2016,국민희망 국회 마라톤대회,2016-11-05,,
+event-national-audit-2016,2016년 국회 국정감사,2016-09-26,,새누리당이 정세균 국회의장 사퇴를 요구하며 불참해 파행
+event-national-audit-2017,2017년 국회 국정감사,2017-10-12,,
+event-national-medal-mugunghwa-2018,국민훈장 무궁화장 수훈,2018,,
+event-national-primary-2002,국민 참여 경선,,,
+event-national-security-act-agreement,「국가보안법」 개정 합의 무산,2004-12,,
+event-new-capital-pledge-announcement,신행정 수도 공약 발표,,,
+event-new-capital-press-conference,신행정 수도 건설 관련 특별 기자회견,2002-12-08,,
+event-new-year-ceremony-2017,국회 2017년도 시무식,2017-01-02,,
+event-new-year-press-conference-2018,국회의장 신년 기자회견,2018-01-15,,개헌을 제20대 국회 최대 과제로 강조
+event-north-korea-6th-nuclear-test-condemnation,북한 제6차 핵실험 규탄 결의안 채택,2017-09-04,,자유한국당 불참
+event-north-korea-missile-launch-2017-09,북한 탄도미사일 발사,2017-09-15,,
+event-october-yushin,10월유신,1972-10-17,,
+event-panmunjom-declaration,판문점 선언,2018-04-27,,
+event-park-impeachment-vote,박근혜 대통령 탄핵소추안 가결,,,"출석 299명, 찬성 234명, 반대 56명, 기권 2명, 무효 7명"
+event-past-history-act-passage,과거사법 처리,2005,,
+event-peru-visit-2017,국회의장 페루 방문,2017-12-13,,루이스 갈라레따 페루 국회의장과 면담
+event-plenary-cancellation-protest-2009,본회의 개회 취소 항의,2009-02-27,,
+event-presidential-amendment-announcement,대통령 개헌안 발표,2018-03-20,,
+event-presidential-election-1971,1971년 대통령선거,1971,,
+event-presidential-election-2002,2002년 대통령선거,2002,,
+event-presidential-impeachment,대통령 탄핵 사태,,,구술자의 제20대 전반기 국회의장 임기 중에 있었던 일로 언급됨
+event-private-school-act-passage,「사립학교법」 강행 처리,2005-12-09,,
+event-privilege-reform-committee-report,국회의원 특권 내려놓기 추진위원회 개혁안 보고,2016-10-17,,
+event-proud-citizen-award-2017,‘2017 자랑스러운 국민상’ 시상식,2017-12-26,,
+event-proud-korea-university-alumnus-2019,자랑스러운 고대인상 수상,2019,,
+event-pyeongchang-resolution,평창 동계올림픽 성공 개최 결의안 채택,2018-02-07,,
+event-pyeongchang-winter-olympics,평창 동계올림픽,2018-02-09,,
+event-pyeongchang-winter-paralympics,평창 동계패럴림픽,2018-03-09,,
+event-resolutions-2016-11-03,중국어선 불법조업 근절 등 결의안 처리,2016-11-03,,
+event-response-north-korea-5th-nuclear-test,북한 제5차 핵실험 대응 논의,2016-09-09,,
+event-roh-death,노무현 대통령 서거,2009-05,,
+event-roh-first-policy-speech,노무현 대통령 취임 후 첫 시정연설,,,
+event-roh-impeachment-trial,헌재 탄핵 심판,,,
+event-roh-impeachment-vote,노무현 대통령 탄핵소추안 가결,2004,,
+event-roh-prosecution-summons,노무현 대통령 검찰 소환,,,
+event-roh-term-shortening-proposal,노무현 대통령 임기 단축 제안 대화,2006-10,,
+event-saejeongchi-gungminhoeui-founding,새정치국민회의 창당,1995,,
+event-saenuri-protest-2016,새누리당 의원들의 국회의장 집무실 항의,,,
+event-samseon-gaeheon,삼선개헌,1969,,
+event-sanjabu-hearing-2006,산자부 장관 청문회,2006,,교통 위반 딱지 78장이 문제가 된 청문회.
+event-sasaoip-constitutional-amendment,사사오입개헌,1954-11-27,,자유당이 정족수 미달의 헌법개정안을 불법 통과시킨 제2차 헌법 개정
+event-seomun-market-fire,대구 서문시장 화재,,,
+event-seoul-metro-strike,서울시 메트로 파업,,,구술자가 중재해 타협을 이룬 파업.
+event-sewol,세월호 참사,,,
+event-sewol-salvage-completed,세월호 인양 완료,2017-04-11,,
+event-social-disaster-act-passed,‘사회적 참사법’ 등 처리,2017-11-24,,
+event-speaker-100-days-press-meeting,국회의장 취임 100일 기자간담회,2016-09-22,,
+event-speaker-april-salary,국회의장 국회 정상화 무산 책임 표명,2018-05-14,,4월 세비 관련
+event-speaker-election-20,제20대 전반기 국회의장 선출,,,"투표 287명, 찬성 273명"
+event-speaker-floor-leaders-first-meeting,국회의장·3당 원내대표 첫 회동,2016-06-17,,
+event-speaker-impeachment-statement,국회의장 탄핵 관련 담화문 발표,2017-03-10,,
+event-speaker-referendum-timing-remark,국회의장 개헌 국민투표 시기 발언,2018-03-27,,
+event-speaker-retirement-2018,제20대 전반기 국회의장단 퇴임 인사,2018-05-29,,
+event-special-prosecutor-act-2016,최순실 국정농단 특검법·국정조사계획서 의결,2016-11-17,,
+event-student-protest-1973,1973년 학생 시위,1973,,구술자가 총학생회장으로 주동했다고 말한 시위. 성북서에 며칠 유치되었으나 기소되지는 않았다고 구술
+event-talk-concert-2017,‘국민의 국회의 봄’ 토크콘서트,2017-04-08,,
+event-teukgwon-bogoseo-jeondalsik,특권 내려놓기 추진위원회 활동결과보고서 전달식,,,
+event-teukgwon-wiwonhoe-wichoksik,국회의원 특권 내려놓기 추진위원회 위촉식,,,
+event-thaad-urgent-question,사드 배치 관련 긴급현안질문,2016-07-19,,
+event-three-party-floor-leaders-meeting-2017,개헌 관련 확대 3당 원내대표 회동,2017-11-23,,
+event-tonghap-minju-founding,통합민주당 창당,2007,,
+event-tripartite-grand-compromise,노사정 대타협,,,제1기 노사정위원회에서 이룬 대타협.
+event-trump-assembly-speech,도널드 J. 트럼프 미국 대통령 국회 연설,,,"역대 미국 대통령 중 7번째, 24년 만의 국회 본회의장 연설"
+event-uri-executive-dinner,열린우리당 집행부 초청 만찬,2005-01-26,,
+event-yeollinuri-convention-2006,열린우리당 전당대회(2006. 2. 18. 예정),2006-02-18,,
+event-yeollinuri-convention-2007,열린우리당 전당대회(2007. 2.),2007-02,,
+event-yeollinuri-split,민주당·열린우리당 분당,,,
+event-youth-employment-bills-proposal,청년일자리 관련 법안 대표발의,2016-11-14,,
