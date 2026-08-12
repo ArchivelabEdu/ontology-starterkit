@@ -132,7 +132,13 @@ function route() {
   const { col, rest } = parseHash();
   const want = col ? col.split(',').filter(Boolean) : [];
   const now = CUR.cols.map(c => short(c));
-  if (want.join(',') !== now.join(',')) applyCollection(want);
+  /* 아이템 주소에는 컬렉션 접두가 없다(위 주석: 한 기록의 상세는 어디서 왔든 같은 화면이다).
+     그런데 그 「없음」을 「아무것도 안 골랐다」로 읽으면, 컬렉션 안에서 개체 링크를 누르는
+     순간 골라 둔 것이 통째로 풀린다 — 지도·연표·관계망·주제·컬렉션 화면의 링크가 다 이
+     모양이라 거기서 개체로 들어가면 그래프가 비고 「그런 개체가 없습니다」가 떴다.
+     접두 없는 아이템 주소에서는 컬렉션을 건드리지 않는다. */
+  const bareItem = !col && rest.startsWith('item/');
+  if (!bareItem && want.join(',') !== now.join(',')) applyCollection(want);
   navHrefs();
 
   /* 아직 안 골랐으면 어느 화면으로 가든 고르는 자리로 돌린다.

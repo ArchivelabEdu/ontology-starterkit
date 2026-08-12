@@ -46,6 +46,12 @@ export function rebuildRecord() {
   R.cls = new Set(used);
   facets(used);
   draw();
+  /* 목록만 고치고 끝내면, 열려 있던 아이템 화면이 옛 G 로 그려진 채 남는다.
+     부팅 때 그 차이가 그대로 드러났다 — initRecord 가 route 를 부르는 시점에는
+     주소의 컬렉션이 아직 적재되기 전이라 G.byId 가 비어 있어서,
+     #/c/<col>/item/<id> 로 바로 들어오면 「그런 개체가 없습니다」가 떴다.
+     G 를 갈아끼운 쪽에서 다시 그려 준다. */
+  route();
 }
 function facets(used) {
   $('#recFacets').innerHTML = `<button class="chip on c-all" onclick="recFacet('*')">전체</button>` +
