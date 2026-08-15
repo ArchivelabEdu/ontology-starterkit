@@ -3164,7 +3164,7 @@ ric:person-kang-jae-sup rico:name "강재섭";
     rico:beginningDate "1948";
     rico:identifier "person-kang-jae-sup", "urn:uuid:b806d279-421d-5cbe-b047-0579e7643e76";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kang-jae-sup.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Jae-seop.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Jae-seop.jpg · 2008 촬영 · Rizalninoynapoleon, CC BY 3.0";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q488894", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%9E%AC%EC%84%AD".
 ric:person-kang-un-tae rico:name "강운태";
     rico:beginningDate "1948";

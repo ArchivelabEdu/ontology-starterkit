@@ -282,9 +282,11 @@ function personHighlight(n, out, inn) {
   };
   const yrTag = (v, id) => { const y = yr4(v);
     return `<b class="p-yr${y ? '' : ' unk'}">${y || (id ? centuryOf(id) : '19XX')}</b>`; };
-  /* 인물의 date 는 생년(rico:beginningDate)이지 사진이 찍힌 해가 아니다 —
-     강재섭 사진에 1948 이 붙어 있었다. 인물은 자기 날짜를 쓰지 않고 세기로만 적는다. */
-  const photoYear = o => (o.cls === 'Person' ? '' : o.date);
+  /* 사진의 때는 세 곳에 물어 순서대로 쓴다.
+     ① 이미지 출처 표기의 연도 — 「Wikimedia Commons · … · 2008 촬영」처럼 사진 자체의 근거다.
+     ② 개체의 날짜 — 사건·활동은 그 날이 곧 사진의 때다.
+     ③ 인물의 date 는 생년(rico:beginningDate)이라 쓰지 않는다(강재섭 사진에 1948 이 붙어 있었다). */
+  const photoYear = o => yr4(o.imgSrc) || (o.cls === 'Person' ? '' : o.date);
   const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
       title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
       <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(photoYear(o), o.id)}</a>`).join('');
