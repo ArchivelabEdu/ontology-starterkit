@@ -180,7 +180,6 @@ function route() {
     document.documentElement.dataset.page = bare ? 'home' : 'empty';
     document.body.classList.toggle('past-hero', !bare);
     navMark(bare ? '' : colHref(rest));
-    drawCrumbs(bare ? 'home' : (rest || 'home'));
     return;
   }
 
