@@ -402,6 +402,16 @@ function countUp(el, target, dur = 900, delay = 0) {
 /** 컬렉션을 고른 직후 본문에 크게 내는 적재 확인 — 상단의 작은 상태줄과 같은 수치를
  *  「본문에서, 세어 올라가며, 무엇으로 이루어졌는지 막대로」 보여준다.
  *  구성비는 지금 로드된 개체(G.nodes)를 직접 센다 — 손으로 적으면 컬렉션을 바꿀 때마다 어긋난다. */
+/* 적재하고 나서 갈 곳 가운데 첫째는 **구술자 자신**이다 — 이 사이트가 한 사람의 기억에서
+   시작하기 때문이다. 이름을 박아 두지 않고 그래프에서 꺼낸다(기록의 hasCreator 목적어).
+   메뉴에 넣지 않는 것은 구술자가 개체 하나일 뿐이어서다 — 화면 층위가 아니다. */
+function narratorCta() {
+  const e = G.edges.find(x => x.p === 'hasCreator');
+  const n = e && G.byId.get(e.o);
+  if (!n) return '';
+  return `<a class="lb-go-a" href="${colHref('item/' + encodeURIComponent(short(n.id)))}">
+    <b>${esc(n.label)} →</b><span>구술자의 자리 — 생애·관계·인용</span></a>`;
+}
 function loadedBanner() {
   const cnt = new Map();
   G.nodes.forEach(n => cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1));
@@ -429,6 +439,7 @@ function loadedBanner() {
       <div class="lb-go">
         <span class="lb-go-k">다음 단계 — 지금 눌러 보세요</span>
         <div class="lb-go-grid">
+        ${narratorCta()}
         ${[['records', '검색', '이름·연결로 개체 찾기'], ['place', '장소', '지도 위 구술의 자리'],
            ['event', '연표', '사건의 시간축'], ['graph-sec', '관계망', '전체 그래프 한눈에'],
            ['subject', '주제', '시소러스와 전시'], ['query', '질의', 'SPARQL로 물어보기']]
