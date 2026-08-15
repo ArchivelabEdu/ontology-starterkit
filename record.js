@@ -586,7 +586,7 @@ function buildMasonry() {
 }
 /* 연도 글자색을 사진에 맞춘다 — 평소엔 흑백 위에 자주로 서지만, 호버로 원본 색이
    돌아오면 그 자리가 밝은지 어두운지에 따라 글자가 읽히지 않는다. 글자가 놓이는
-   왼쪽 아래 귀퉁이만 실제로 재서(캔버스 16×16) 밝으면 먹, 어두우면 흰 글자를 준다.
+   글자가 앉는 한복판만 실제로 재서(캔버스 16×16) 밝으면 먹, 어두우면 흰 글자를 준다.
    사진은 같은 출처(로컬)라 캔버스가 오염되지 않는다. */
 function tintYear(img) {
   const frame = img.closest('.p-frame');
@@ -596,8 +596,8 @@ function tintYear(img) {
     const g = c.getContext('2d', { willReadFrequently: true });
     const w = img.naturalWidth, h = img.naturalHeight;
     if (!w || !h) return;
-    // 왼쪽 아래 1/3 구역 — 글자가 앉는 자리
-    g.drawImage(img, 0, h * 0.66, w * 0.4, h * 0.34, 0, 0, 16, 16);
+    // 가운데 절반 — 글자가 앉는 자리(연도는 컷 한복판에 선다)
+    g.drawImage(img, w * 0.25, h * 0.25, w * 0.5, h * 0.5, 0, 0, 16, 16);
     const d = g.getImageData(0, 0, 16, 16).data;
     let lum = 0;
     for (let i = 0; i < d.length; i += 4) lum += (d[i] * 0.2126 + d[i + 1] * 0.7152 + d[i + 2] * 0.0722);
@@ -605,6 +605,8 @@ function tintYear(img) {
     const light = lum > 0.55;
     frame.dataset.tone = light ? 'light' : 'dark';
     frame.style.setProperty('--yr-hover', light ? '#17151a' : '#ffffff');
+    // 획 둘레에 두르는 반대색 — 밝은 사진 위 먹글자에는 흰 테, 어두운 사진 위 흰글자에는 먹 테
+    frame.style.setProperty('--yr-halo', light ? 'rgba(255,255,255,.85)' : 'rgba(0,0,0,.85)');
   } catch (e) { /* 캔버스가 막힌 환경 — 기본 흰 글자로 둔다 */ }
 }
 let msT = null;
