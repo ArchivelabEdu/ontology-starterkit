@@ -563,17 +563,30 @@ function buildMasonry() {
   const sumW = wts.reduce((a, b) => a + b, 0);
   const avail = W - GAP * (K - 1);
   const colWs = wts.map(w => avail * w / sumW);
-  const ars = frames.map(f => {
+  /* 옛것부터 왼쪽으로 — 갤러리가 왼쪽에서 오른쪽으로 시간을 따라 흐른다.
+     세기만 아는 컷(19XX·20XX)은 그 세기의 첫 해로 놓는다. 연도는 화면에 이미 적혀 있는 것을
+     그대로 읽는다 — 정렬 기준과 표기가 어긋나면 보는 사람이 먼저 안다. */
+  const yrKey = f => {
+    const t = f.querySelector('.p-yr')?.textContent || '';
+    return t.startsWith('20X') ? 2000 : t.startsWith('19X') ? 1900 : (+t || 9999);
+  };
+  frames.sort((a, b) => yrKey(a) - yrKey(b));
+  const ar = f => {
     const img = f.querySelector('img');
     return (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : .75;
-  });
+  };
   const cols = colWs.map(w => ({ w, h: 0, items: [] }));
   const total = c => c.h + GAP * Math.max(0, c.items.length - 1);   // 간격까지 넣은 기둥 총높이
-  /* 기둥마다 폭이 다르므로 높이는 **어느 기둥에 넣을지 정한 뒤에** 잰다.
-     넓은 기둥일수록 같은 사진이 높아져, 자연히 컷 수가 적게 들어간다. */
-  frames.forEach((f, i) => {
-    const c = cols.reduce((a, b) => (total(b) < total(a) ? b : a));
-    const it = { f, h: c.w / ars[i] };
+  /* 기둥은 왼쪽부터 차례로 채운다 — 균형만 보고 짧은 기둥에 던지면 시간 순서가 흩어진다.
+     기둥 하나가 목표 높이에 이르면 다음 기둥으로 넘어간다(목표는 평균 기둥 높이의 어림값).
+     기둥마다 폭이 다르므로 컷 높이는 넣을 기둥을 정한 뒤에 잰다. */
+  const avgW = avail / K;
+  const H = (frames.reduce((s, f) => s + avgW / ar(f), 0) + GAP * (frames.length - K)) / K;
+  let k = 0;
+  frames.forEach(f => {
+    while (k < K - 1 && total(cols[k]) >= H) k++;
+    const c = cols[k];
+    const it = { f, h: c.w / ar(f) };
     c.items.push(it); c.h += it.h;
   });
   const used = cols.filter(c => c.items.length);
