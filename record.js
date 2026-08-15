@@ -262,13 +262,23 @@ function personHighlight(n, out, inn) {
     if (!got) break;
   }
   /* 연도 — 사진마다 언제인지. 생애 컷은 frames.json 의 year, 연결 개체는 그 개체의 날짜다.
-     날짜가 없는 컷은 「19XX」로 자리를 채운다 — 갤러리의 리듬을 위해서다.
-     연도를 지어내는 것이 아니라 **모른다는 것을 눈에 보이게** 두는 표기다. */
-  const yrTag = v => { const y = String(v || '').match(/\d{4}/);
-    return `<b class="p-yr${y ? '' : ' unk'}">${y ? y[0] : '19XX'}</b>`; };
+     날짜가 없으면 세기만 적는다(19XX·20XX). 세기도 지어내지 않고 **이웃에게 묻는다** —
+     그 개체와 이어진 개체들의 날짜 가운데 **가장 늦은 것**이 어느 세기인지를 본다.
+     사진은 대개 그 개체가 마지막으로 등장한 무렵의 것이기 때문이다(김근태·국회의사당·
+     제20대 총선 → 20XX). 이웃도 말이 없으면 19XX — 구술총서의 옛 컷들이 그렇다. */
+  const yr4 = v => (String(v || '').match(/\d{4}/) || [])[0];
+  const centuryOf = id => {
+    const ys = G.edges.filter(e => e.s === id || e.o === id)
+      .map(e => G.byId.get(e.s === id ? e.o : e.s))
+      .map(x => +yr4(x?.date)).filter(y => y > 1800).sort((a, b) => a - b);
+    if (!ys.length) return '19XX';
+    return ys[ys.length - 1] >= 2000 ? '20XX' : '19XX';
+  };
+  const yrTag = (v, id) => { const y = yr4(v);
+    return `<b class="p-yr${y ? '' : ' unk'}">${y || (id ? centuryOf(id) : '19XX')}</b>`; };
   const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
       title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
-      <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(o.date)}</a>`).join('');
+      <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(o.date, o.id)}</a>`).join('');
   /* 갤러리는 무괘 — 라벨도 선도 없이 어록 다음에 흐른다. 출처는 각 컷의 호버와
      개체 페이지 뷰어가 진다(규율 유지). */
   /* 이미지가 하나 실릴 때마다 비율이 확정되므로 masonry 를 다시 잰다(디바운스). */

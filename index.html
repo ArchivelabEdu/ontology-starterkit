@@ -998,8 +998,9 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
    크기는 컷 폭을 따른다(cqw) — 모자이크라 컷마다 폭이 다르기 때문이다. */
 .p-yr{position:absolute;inset:0;z-index:1;pointer-events:none;
   display:grid;place-items:center;
-  font-family:var(--mono);font-weight:700;letter-spacing:.1em;
-  font-size:min(24cqw,3.6rem);line-height:1;
+  /* 사이트의 표제 글꼴(명조)로 — 고정폭 숫자는 계기판의 얼굴이라 사진 위에서 사무적으로 보였다 */
+  font-family:"Nanum Myeongjo",serif;font-weight:700;letter-spacing:.08em;
+  font-size:min(26cqw,4rem);line-height:1;font-variant-numeric:tabular-nums;
   color:#fff;transition:color .4s ease,text-shadow .4s ease;
   text-shadow:0 2px 14px rgba(0,0,0,.55)}
 /* 날짜를 모르는 컷 — 자리는 채우되 아는 연도보다 한 걸음 물러선다. */
