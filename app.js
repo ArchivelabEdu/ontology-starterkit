@@ -1699,13 +1699,19 @@ export async function loadCorpus() {
   const noText = CUR.cols.filter(c => !withText.has(short(c)))
     .map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
   const sc = $('#langScope');
-  if (sc) sc.textContent = !paras.length ? '원문 없음 —'
-    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`;
+  if (sc) sc.textContent = paras.length ? '적재된 원문' : '원문 없음 —';
+  /* 쪽 수는 리드 문장에 넣지 않는다 — 문장은 어느 구술을 적재하든 그대로 성립해야 한다.
+     분량은 아래 안내 줄에서, 컬렉션 이름과 함께 말한다. */
   const pt = $('#langPartial');
   if (pt) {
     pt.hidden = !(paras.length && noText.length);
+    const read = [...withText].map(k => {
+      const n = meta.filter(m => m.col === k).length;
+      const t = COLS.find(x => short(x.id) === k)?.title || k.replace(/^col-/, '');
+      return `<b>「${esc(t)}」</b> ${n}쪽`;
+    }).join(' · ');
     if (!pt.hidden) pt.innerHTML = `${noText.map(t => `<b>「${esc(t)}」</b>`).join(' · ')}는 원문 없이 개체만 적재되었습니다 —
-      시소러스처럼 개념만 있는 컬렉션은 이 화면이 읽을 말이 없습니다. 위 수치는 나머지 구술의 원문입니다.`;
+      시소러스처럼 개념만 있는 컬렉션은 이 화면이 읽을 말이 없습니다. 지금 읽는 것은 ${read}입니다.`;
   }
   const nc = $('#langNone');
   if (nc) nc.hidden = !!paras.length;
