@@ -262,8 +262,10 @@ function personHighlight(n, out, inn) {
     if (!got) break;
   }
   /* 연도 — 사진마다 언제인지. 생애 컷은 frames.json 의 year, 연결 개체는 그 개체의 날짜다.
-     없으면 아무것도 적지 않는다(지어내지 않는다). */
-  const yrTag = v => { const y = String(v || '').match(/\d{4}/); return y ? `<b class="p-yr">${y[0]}</b>` : ''; };
+     날짜가 없는 컷은 「19XX」로 자리를 채운다 — 갤러리의 리듬을 위해서다.
+     연도를 지어내는 것이 아니라 **모른다는 것을 눈에 보이게** 두는 표기다. */
+  const yrTag = v => { const y = String(v || '').match(/\d{4}/);
+    return `<b class="p-yr${y ? '' : ' unk'}">${y ? y[0] : '19XX'}</b>`; };
   const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
       title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
       <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(o.date)}</a>`).join('');

@@ -1000,11 +1000,10 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
   display:grid;place-items:center;
   font-family:var(--mono);font-weight:700;letter-spacing:.1em;
   font-size:min(24cqw,3.6rem);line-height:1;
-  color:var(--accent);transition:color .4s ease,text-shadow .4s ease;
-  text-shadow:0 2px 14px color-mix(in srgb,var(--panel) 65%,transparent)}
-/* 어두운 컷 위에서는 자주가 그대로 묻힌다 — 같은 색을 흰쪽으로 밝혀 쓴다(색은 유지). */
-.p-frame[data-tone="dark"] .p-yr{color:color-mix(in srgb,var(--accent) 42%,#fff);
-  text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  color:#fff;transition:color .4s ease,text-shadow .4s ease;
+  text-shadow:0 2px 14px rgba(0,0,0,.55)}
+/* 날짜를 모르는 컷 — 자리는 채우되 아는 연도보다 한 걸음 물러선다. */
+.p-yr.unk{opacity:.62}
 .p-frame:hover .p-yr{color:var(--yr-hover,#fff);text-shadow:0 2px 16px rgba(0,0,0,.5)}
 a.p-frame:hover img,button.p-frame:hover img{outline:1px solid var(--accent-2);outline-offset:-1px}
 button.p-frame{padding:0;border:0;background:none;cursor:pointer;font:inherit}
