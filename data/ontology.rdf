@@ -297,4 +297,136 @@
     <rdfs:label xml:lang="ko">관련 자원</rdfs:label>
     <rdfs:comment xml:lang="ko">[Ext] 일반적 관련 관계 (도메인 Thing → 레인지 Thing)</rdfs:comment>
   </rdf:Property>
+
+  <!-- ═══════════════ AP v2 · 다중 어휘 보강층 (2026-08-15) ═══════════════
+       구술총서가 말하는 관계를 RiC-O 부분집합만으로 다 담을 수 없어 표준 어휘를 더한다.
+       ① 직접 관계층: FOAF·RiC-O — 사람과 사람이 서로 아는 사이임을 직접 잇는다
+       ② 장소·이력층: Schema.org — 장소 안의 장소, 출생지, 출신 학교
+       ③ 전거층: OWL — 외부 전거(위키데이터 등)와 동일 개체 연결
+       ④ 출처층: DCTERMS — 간이 출처 표기와 선택자 준수 규격
+       ⑤ 생성이력층: PROV-O · Web Annotation · RDF 재화(reification) —
+          이 진술을 무엇이(도구)·언제·무엇을 근거로 만들었는가를 데이터로 남긴다.
+       규칙: 도구(Anthropic API·Claude Code 등)가 만든 모든 진술은 rdf:Statement 로 지목하고,
+       oa:Annotation(원문 인용 TextQuoteSelector + 쪽 FragmentSelector)과
+       prov:Activity(수행 도구 SoftwareAgent·시각)를 붙인다. 근거 없는 진술은 만들지 않는다. -->
+
+  <rdf:Property rdf:about="http://xmlns.com/foaf/0.1/knows">
+    <rdfs:label xml:lang="ko">친분</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 구술이 직접 말한 개인적 관계 (도메인 Person → 레인지 Person) · 용례: 정세균 ─친분→ 노무현 (구술총서 p.109)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://www.ica.org/standards/RiC/ontology#isAgentAssociatedWithAgent">
+    <rdfs:label xml:lang="ko">관계 행위자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 행위자와 행위자의 일반 연관 — 친분보다 넓다 (도메인 Agent → 레인지 Agent) · RiC-O 1.1 원본 속성</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://schema.org/containedInPlace">
+    <rdfs:label xml:lang="ko">상위 장소</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 이 장소를 품는 더 큰 장소 (도메인 Place → 레인지 Place) · 용례: 국회의사당 ─상위 장소→ 여의도</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://schema.org/containsPlace">
+    <rdfs:label xml:lang="ko">하위 장소</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 이 장소가 품는 장소 — containedInPlace 의 역방향 (도메인 Place → 레인지 Place)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://schema.org/birthPlace">
+    <rdfs:label xml:lang="ko">출생지</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 태어난 곳 (도메인 Person → 레인지 Place) · 용례: 정세균 ─출생지→ 진안</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="https://schema.org/alumniOf">
+    <rdfs:label xml:lang="ko">출신 학교</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 졸업·수학한 교육기관 (도메인 Person → 레인지 CorporateBody) · 용례: 정세균 ─출신 학교→ 신흥고등학교</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/2002/07/owl#sameAs">
+    <rdfs:label xml:lang="ko">동일 개체</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 외부 전거의 같은 개체 (도메인 Thing → 레인지 IRI) · 용례: 정세균 ─동일 개체→ 위키데이터</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://purl.org/dc/terms/source">
+    <rdfs:label xml:lang="ko">출처</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 이 개체·진술이 유래한 자원 — 구술 쪽수(예: 구술총서 p.114) 또는 전거명 (도메인 Thing → 레인지 Literal/IRI)</rdfs:comment>
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="http://www.w3.org/ns/prov#Activity">
+    <rdfs:label xml:lang="ko">생성 활동</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 진술을 만든 한 번의 작업 — 방법·도구·시각·원천을 묶는다 · 용례: AP v2 재추출(2026-08-15)</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="http://www.w3.org/ns/prov#SoftwareAgent">
+    <rdfs:label xml:lang="ko">소프트웨어 에이전트</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 추출을 수행한 도구 · 용례: Claude Code (claude-fable-5), Anthropic API</rdfs:comment>
+  </rdfs:Class>
+  <rdf:Property rdf:about="http://www.w3.org/ns/prov#wasGeneratedBy">
+    <rdfs:label xml:lang="ko">생성 활동에서 나옴</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 이것을 만든 활동 (도메인 Thing → 레인지 prov:Activity)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/prov#wasAssociatedWith">
+    <rdfs:label xml:lang="ko">수행 도구</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 활동을 수행한 행위자·도구 (도메인 prov:Activity → 레인지 prov:SoftwareAgent)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/prov#used">
+    <rdfs:label xml:lang="ko">사용한 원천</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 활동이 읽은 디지털 객체 (도메인 prov:Activity → 레인지 Instantiation)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/prov#startedAtTime">
+    <rdfs:label xml:lang="ko">시작 시각</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 활동 시작 시각 (도메인 prov:Activity → 레인지 xsd:dateTime)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/prov#actedOnBehalfOf">
+    <rdfs:label xml:lang="ko">대행</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 이 도구가 누구를 대신해 일했는가 (도메인 SoftwareAgent → 레인지 Agent) · 용례: Claude Code ─대행→ 아카이브랩</rdfs:comment>
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="http://www.w3.org/ns/oa#Annotation">
+    <rdfs:label xml:lang="ko">주석</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 진술(몸)과 그 근거 위치(과녁)를 잇는 W3C Web Annotation · 진술 하나에 주석 하나</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="http://www.w3.org/ns/oa#SpecificResource">
+    <rdfs:label xml:lang="ko">지정 자원</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 원천의 특정 부분 — 원천(hasSource)과 선택자(hasSelector)를 갖는다</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="http://www.w3.org/ns/oa#TextQuoteSelector">
+    <rdfs:label xml:lang="ko">원문 인용 선택자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 근거가 되는 원문 그대로의 인용(oa:exact) — 기계 대조 가능한 증거</rdfs:comment>
+  </rdfs:Class>
+  <rdfs:Class rdf:about="http://www.w3.org/ns/oa#FragmentSelector">
+    <rdfs:label xml:lang="ko">출처 위치 선택자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 원천의 어디인가 — PDF 는 rdf:value "page=114" + 준수 규격 RFC 8118</rdfs:comment>
+  </rdfs:Class>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#hasBody">
+    <rdfs:label xml:lang="ko">몸</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 주석이 말하는 것 — 여기서는 rdf:Statement (도메인 Annotation → 레인지 Statement)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#hasTarget">
+    <rdfs:label xml:lang="ko">과녁</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 주석이 가리키는 곳 — 원천의 특정 부분 (도메인 Annotation → 레인지 SpecificResource)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#hasSource">
+    <rdfs:label xml:lang="ko">원천</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 지정 자원이 속한 원천 (도메인 SpecificResource → 레인지 Instantiation)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#hasSelector">
+    <rdfs:label xml:lang="ko">선택자</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 원천의 어느 부분인가 (도메인 SpecificResource → 레인지 Selector)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#motivatedBy">
+    <rdfs:label xml:lang="ko">동기</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 주석의 목적 — 근거 제시는 oa:describing (도메인 Annotation → 레인지 Motivation)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/ns/oa#exact">
+    <rdfs:label xml:lang="ko">인용문</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 원문 그대로의 문자열 (도메인 TextQuoteSelector → 레인지 Literal)</rdfs:comment>
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement">
+    <rdfs:label xml:lang="ko">진술</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] 트리플 하나를 가리키는 표준 장치(재화) — 주어·술어·목적어 세 손잡이를 갖는다</rdfs:comment>
+  </rdfs:Class>
+  <rdf:Property rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject">
+    <rdfs:label xml:lang="ko">진술의 주어</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] (도메인 Statement → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate">
+    <rdfs:label xml:lang="ko">진술의 술어</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] (도메인 Statement → 레인지 Property)</rdfs:comment>
+  </rdf:Property>
+  <rdf:Property rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#object">
+    <rdfs:label xml:lang="ko">진술의 목적어</rdfs:label>
+    <rdfs:comment xml:lang="ko">[AP2] (도메인 Statement → 레인지 Thing)</rdfs:comment>
+  </rdf:Property>
 </rdf:RDF>

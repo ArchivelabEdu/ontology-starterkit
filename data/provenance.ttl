@@ -3368,12 +3368,12 @@ ric:activity-3452fb99d4d8 a prov:Activity;
     prov:wasAssociatedWith ric:agent-nak-seed;
     prov:generatedAtTime "2026-08-11T03:40:23.689Z"^^xsd:dateTime.
 ric:inst-jsk-excerpt prov:wasGeneratedBy ric:activity-3452fb99d4d8.
-ric:publication-97b1a976b542 a prov:Entity;
-    rdfs:label "정세균 구술";
-    prov:wasGeneratedBy ric:activity-publish-97b1a976b542;
+ric:publication-6d47fa0b24cb a prov:Entity;
+    rdfs:label "미분류";
+    prov:wasGeneratedBy ric:activity-publish-6d47fa0b24cb;
     prov:wasAttributedTo ric:agent-user-admin.
-ric:activity-publish-97b1a976b542 a prov:Activity;
-    prov:generatedAtTime "2026-08-11T10:06:55.152Z"^^xsd:dateTime;
+ric:activity-publish-6d47fa0b24cb a prov:Activity;
+    prov:generatedAtTime "2026-08-15T04:40:37.851Z"^^xsd:dateTime;
     prov:wasAssociatedWith ric:agent-user-admin.
 ric:agent-user-admin a prov:Agent;
     rdfs:label "슈퍼 관리자".
