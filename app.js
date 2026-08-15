@@ -1199,7 +1199,7 @@ function renderStory(key) {
           <h4>${esc(a.title)}</h4>
           <p>${esc(a.narr)}</p>
           ${a.quotes.map(q => `<blockquote class="act-quote">${esc(q.sent)}
-            <cite>${esc(narratorLabel())} 구술 원문 · ${q.i + 1}단락</cite></blockquote>`).join('')}
+            <cite>구술 원문 · ${esc(srcLabel(q.i))}</cite></blockquote>`).join('')}
           ${a.refs.length ? `<div class="chips-l">${a.refs.map(chip).join('')}</div>` : ''}
         </div>
         ${a.media && (i % 2) ? media(a.media) : ''}
@@ -1739,11 +1739,128 @@ export async function loadCorpus() {
     .filter(e => e.n >= 1).sort((x, y) => y.n - x.n).slice(0, 120);
 }
 
+/* ══════════ 의미 지도 — 어휘를 벡터 공간에 놓는다 ══════════
+   「어휘 관계망」이 **같은 문장에 함께 나왔는가**를 묻는다면, 여기서는 **같은 자리에 쓰이는가**를 묻는다.
+   가까운 말이 곧 비슷한 맥락에서 쓰인 말이다.
+
+   ① 어휘 고르기 — 원문에서 자주 나온 말 중 **그래프에 개체로 있는 이름**만 남긴다.
+      빈도만으로 고르면 「했지요·그걸·하여튼」 같은 말버릇이 절반을 차지해 지도가 흐려진다(실측).
+      이 사이트에는 이미 개체가 있으니, 그 이름과 겹치는 말은 「의미 있다」고 판정이 끝난 말이다.
+   ② 공기행렬 → PPMI — 한 문장 안 ±6 낱말 창에서 함께 나온 횟수를 세고,
+      우연보다 얼마나 더 붙어 다니는지(양의 상호정보량)로 바꾼다.
+   ③ 고유분해 — PPMI 행렬은 대칭이라 고유분해가 곧 SVD 다. 야코비 회전으로 직접 푼다
+      (새 라이브러리 없이 — 150×150 이 0.1 초 안에 끝난다). 앞의 세 축이 좌표가 된다.
+   Word2Vec(신경망)과 수학적으로 가까운 사촌이고, 12만 자 규모에서는 오히려 안정적이다. */
+const WMAP = { words: [], cl: [], on: null, pick: null, mode3d: false, rotY: 0.6, rotX: -0.25, raf: 0, drag: null };
+const WMAP_K = 5;                          // 군집 수 — 사안이 다섯 덩어리쯤에서 가장 읽힌다(실측)
+
+/** 대칭 행렬의 고유분해(야코비 회전). 값이 큰 순으로 정렬해 돌려준다. */
+function jacobiEigen(A, n, sweeps = 12) {
+  const V = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)));
+  for (let s = 0; s < sweeps; s++) {
+    let off = 0;
+    for (let p = 0; p < n - 1; p++) for (let q = p + 1; q < n; q++) off += A[p][q] * A[p][q];
+    if (off < 1e-9) break;
+    for (let p = 0; p < n - 1; p++) for (let q = p + 1; q < n; q++) {
+      if (Math.abs(A[p][q]) < 1e-12) continue;
+      const th = (A[q][q] - A[p][p]) / (2 * A[p][q]);
+      const tt = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1));
+      const c = 1 / Math.sqrt(tt * tt + 1), sn = tt * c;
+      for (let k = 0; k < n; k++) {
+        const akp = A[k][p], akq = A[k][q];
+        A[k][p] = c * akp - sn * akq; A[k][q] = sn * akp + c * akq;
+      }
+      for (let k = 0; k < n; k++) {
+        const apk = A[p][k], aqk = A[q][k];
+        A[p][k] = c * apk - sn * aqk; A[q][k] = sn * apk + c * aqk;
+        const vkp = V[k][p], vkq = V[k][q];
+        V[k][p] = c * vkp - sn * vkq; V[k][q] = sn * vkp + c * vkq;
+      }
+    }
+  }
+  const ord = Array.from({ length: n }, (_, i) => i).sort((a, b) => A[b][b] - A[a][a]);
+  return { val: ord.map(i => A[i][i]), vec: ord.map(i => V.map(r => r[i])) };
+}
+
+/** 적재된 원문에서 의미 지도를 만든다 — 어휘·좌표·군집·이웃. */
+function buildMap() {
+  WMAP.words = []; WMAP.cl = [];
+  if (!LANG.paras.length) return;
+  // 그래프 개체 이름에서 낱말을 모은다 — 이것이 「의미 있는 말」의 목록이다
+  const names = new Set();
+  (G.nodes.length ? G.nodes : ALL.nodes).forEach(n => {
+    (String(n.label || '').match(/[가-힣]{2,}/g) || []).forEach(w => names.add(w));
+  });
+  if (!names.size) return;
+  const tok = t => (t.match(/[가-힣]{2,}/g) || []).map(stem)
+    .filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
+  const sents = [];
+  LANG.paras.forEach(p => p.split(/[.!?]\s|\n/).forEach(s => { if (s.trim().length > 10) sents.push(s); }));
+  const freq = new Map();
+  sents.forEach(s => tok(s).forEach(w => { if (names.has(w)) freq.set(w, (freq.get(w) || 0) + 1); }));
+  const V = [...freq.entries()].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 150).map(([w]) => w);
+  if (V.length < 12) return;                       // 너무 적으면 지도가 성립하지 않는다
+  const ix = new Map(V.map((w, i) => [w, i])), n = V.length;
+  const C = Array.from({ length: n }, () => new Float64Array(n));
+  sents.forEach(s => {
+    const ws = tok(s).filter(w => ix.has(w));
+    ws.forEach((a, i) => ws.slice(Math.max(0, i - 6), i + 7).forEach(b => {
+      if (a !== b) C[ix.get(a)][ix.get(b)] += 1;
+    }));
+  });
+  let tot = 0; const rs = new Float64Array(n);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { tot += C[i][j]; rs[i] += C[i][j]; }
+  if (!tot) return;
+  const P = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => {
+    const v = Math.log((C[i][j] * tot) / (rs[i] * rs[j] || 1));
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  }));
+  const { val, vec } = jacobiEigen(P.map(r => [...r]), n);
+  const dim = Math.min(24, n);
+  const emb = Array.from({ length: n }, (_, i) => {
+    const v = [];
+    for (let d = 0; d < dim; d++) v.push(vec[d][i] * Math.sqrt(Math.max(0, val[d])));
+    const len = Math.hypot(...v) || 1;
+    return v.map(x => x / len);
+  });
+  // k-means(코사인) — 사안 덩어리
+  const K = Math.min(WMAP_K, Math.floor(n / 6) || 1);
+  let cent = Array.from({ length: K }, (_, k) => emb[Math.floor(k * n / K)].slice());
+  let lab = new Array(n).fill(0);
+  for (let it = 0; it < 40; it++) {
+    lab = emb.map(e => {
+      let best = 0, bs = -2;
+      cent.forEach((c, k) => { const s = e.reduce((a, x, d) => a + x * c[d], 0); if (s > bs) { bs = s; best = k; } });
+      return best;
+    });
+    cent = cent.map((_, k) => {
+      const m = emb.filter((_, i) => lab[i] === k);
+      if (!m.length) return cent[k];
+      const s = m[0].map((_, d) => m.reduce((a, e) => a + e[d], 0) / m.length);
+      const len = Math.hypot(...s) || 1;
+      return s.map(x => x / len);
+    });
+  }
+  const nb = emb.map((e, i) => emb.map((o, j) => [j, e.reduce((a, x, d) => a + x * o[d], 0)])
+    .filter(([j]) => j !== i).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([j]) => V[j]));
+  const ax = [0, 1, 2].map(d => vec[d].map((v, i) => v * Math.sqrt(Math.max(0, val[d]))));
+  const nz = a => { const mn = Math.min(...a), mx = Math.max(...a); return a.map(v => (v - mn) / (mx - mn || 1)); };
+  const [X, Y, Z] = ax.map(nz);
+  WMAP.words = V.map((w, i) => ({ w, n: freq.get(w), x: X[i], y: Y[i], z: Z[i], k: lab[i], nb: nb[i] }));
+  /* 군집 이름은 **데이터가 짓는다** — 그 덩어리에서 가장 많이 나온 두 말.
+     사람이 「대통령·선거」라고 붙이면 팀이 데이터를 갈아끼웠을 때 거짓말이 된다. */
+  WMAP.cl = Array.from({ length: K }, (_, k) => {
+    const ws = WMAP.words.filter(x => x.k === k).sort((a, b) => b.n - a.n);
+    return { k, n: ws.length, name: ws.slice(0, 2).map(x => x.w).join('·') || `군집 ${k + 1}` };
+  }).filter(c => c.n);
+}
+
 const LANG_MODES = [
   { k: 'network', t: '어휘 관계망', note: '같은 문장에 함께 나온 어휘를 선으로 이었습니다. 원 크기는 빈도, 색은 군집. 단어를 누르면 그 단어가 들어간 원문이 뜹니다.' },
   { k: 'flow', t: '시간대별 흐름', note: '단락 순서를 가로축으로, 어휘 비중을 쌓아 흐르는 띠로 그렸습니다. 관심사가 어떻게 이동하는지 보입니다.' },
   { k: 'print', t: '문서 지문', note: '단락 × 어휘 히트맵. 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 줍니다.' },
   { k: 'tfidf', t: '단락별 특징어', note: '빈도가 아니라 그 단락에만 유난히 몰린 말을 뽑습니다(tf-idf). 무엇에 대한 대목인지가 드러납니다.' },
+  { k: 'map', t: '의미 지도', note: '같은 자리에 쓰인 말끼리 모입니다 — 가까울수록 비슷한 맥락입니다. 사안을 눌러 걸러 보고, 말을 누르면 이웃과 원문이 함께 뜹니다.' },
 ];
 async function drawLang() {
   if (!LANG.words.length) await loadCorpus();
@@ -1753,7 +1870,7 @@ async function drawLang() {
   const stage = $('#lang-stage');
   stage.innerHTML = '';
   if (!LANG.words.length) { stage.innerHTML = '<p class="status" style="padding:1rem">코퍼스 없음</p>'; return; }
-  ({ network: langNetwork, flow: langFlow, print: langPrint, tfidf: langTfidf })[LANG.mode](stage);
+  ({ network: langNetwork, flow: langFlow, print: langPrint, tfidf: langTfidf, map: langMap })[LANG.mode](stage);
 }
 window.setLang = k => { LANG.mode = k; drawLang(); };
 
@@ -1763,6 +1880,156 @@ function svgEl(stage, w, h) {
   stage.appendChild(s); return s;
 }
 const PAL = ['--person', '--org', '--place', '--event', '--position', '--rule'];
+
+/* ── 의미 지도 화면 ── 2D 가 기본, 「돌려 보기」를 누르면 3D.
+   사안(군집) 칩으로 걸러 본다 — 이름은 그 덩어리에서 가장 많이 나온 두 말이라 데이터가 바뀌면 이름도 바뀐다. */
+function langMap(stage) {
+  if (!WMAP.words.length) buildMap();
+  if (!WMAP.words.length) {
+    stage.innerHTML = '<p class="status" style="padding:1rem">지도를 그릴 만한 어휘가 없습니다 — 원문과 그래프가 겹치는 말이 너무 적습니다.</p>';
+    return;
+  }
+  const bar = document.createElement('div');
+  bar.className = 'chips';
+  bar.style.cssText = 'padding:.7rem .2rem .3rem;align-items:center';
+  bar.innerHTML =
+    `<button class="chip${WMAP.on == null ? ' on' : ''}" onclick="mapFilterK(null)">전체 ${WMAP.words.length}</button>`
+    + WMAP.cl.map(c => `<button class="chip${WMAP.on === c.k ? ' on' : ''}" onclick="mapFilterK(${c.k})">
+        <i class="dot" style="background:${css(PAL[c.k % PAL.length])}"></i>${esc(c.name)} ${c.n}</button>`).join('')
+    + `<button class="btn sm" style="margin-left:auto" onclick="mapFlip()">${WMAP.mode3d ? '평면으로' : '돌려 보기 (3D)'}</button>`;
+  stage.appendChild(bar);
+  const host = document.createElement('div');
+  host.style.cssText = 'position:relative';
+  stage.appendChild(host);
+  cancelAnimationFrame(WMAP.raf);
+  (WMAP.mode3d ? mapDraw3d : mapDraw2d)(host);
+}
+window.mapFilterK = k => { WMAP.on = k; WMAP.pick = null; drawLang(); };
+window.mapFlip = () => { WMAP.mode3d = !WMAP.mode3d; WMAP.pick = null; drawLang(); };
+
+/** 지금 보이는 말들 — 사안 필터를 지나온 것. 고른 말과 그 이웃은 필터와 무관하게 남는다. */
+const mapVisible = () => {
+  if (WMAP.on == null) return WMAP.words;
+  const keep = WMAP.pick ? new Set([WMAP.pick, ...(WMAP.words.find(x => x.w === WMAP.pick)?.nb || [])]) : null;
+  return WMAP.words.filter(d => d.k === WMAP.on || (keep && keep.has(d.w)));
+};
+
+function mapDraw2d(host) {
+  const W = 1000, H = 470, PADX = 54, PADY = 34;
+  const s = svgEl(host, W, H);
+  const vis = mapVisible(), byW = new Map(WMAP.words.map(d => [d.w, d]));
+  const px = d => PADX + d.x * (W - PADX * 2), py = d => PADY + (1 - d.y) * (H - PADY * 2);
+  const near = WMAP.pick ? new Set([WMAP.pick, ...(byW.get(WMAP.pick)?.nb || [])]) : null;
+  if (near) {
+    const c = byW.get(WMAP.pick);
+    byW.get(WMAP.pick).nb.forEach(nw => {
+      const o = byW.get(nw); if (!o) return;
+      const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      l.setAttribute('x1', px(c)); l.setAttribute('y1', py(c));
+      l.setAttribute('x2', px(o)); l.setAttribute('y2', py(o));
+      l.setAttribute('stroke', css('--accent')); l.setAttribute('stroke-width', '1.2');
+      l.setAttribute('opacity', '.5'); s.appendChild(l);
+    });
+  }
+  vis.forEach(d => {
+    const on = !near || near.has(d.w);
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'lw'); g.dataset.w = d.w;
+    g.style.cursor = 'pointer'; g.setAttribute('opacity', on ? 1 : .18);
+    const r = 3.4 + Math.sqrt(d.n) / 2.6;
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', px(d)); c.setAttribute('cy', py(d)); c.setAttribute('r', r);
+    c.setAttribute('fill', css(PAL[d.k % PAL.length])); c.setAttribute('fill-opacity', '.85');
+    const tx = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tx.setAttribute('x', px(d)); tx.setAttribute('y', py(d) - r - 3.5);
+    tx.setAttribute('text-anchor', 'middle'); tx.setAttribute('font-size', '9.5');
+    tx.setAttribute('fill', css('--fg')); tx.setAttribute('stroke', css('--panel'));
+    tx.setAttribute('stroke-width', '3'); tx.setAttribute('paint-order', 'stroke');
+    tx.textContent = d.w;
+    g.append(c, tx); s.appendChild(g);
+  });
+  s.querySelectorAll('.lw').forEach(g => g.onclick = () => {
+    WMAP.pick = WMAP.pick === g.dataset.w ? null : g.dataset.w;
+    drawLang();
+    if (WMAP.pick) showWordSource(WMAP.pick);
+  });
+  if (WMAP.pick) {
+    const d = byW.get(WMAP.pick);
+    const p = document.createElement('p');
+    p.className = 'status'; p.style.cssText = 'padding:.5rem .2rem 0';
+    p.textContent = `${d.w} (${d.n}회) — 가장 가까운 말: ${d.nb.join(' · ')}`;
+    host.appendChild(p);
+  }
+}
+
+function mapDraw3d(host) {
+  const cv = document.createElement('canvas');
+  cv.width = 2000; cv.height = 940;
+  cv.style.cssText = 'width:100%;height:auto;display:block;cursor:grab;touch-action:none';
+  host.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  const byW = new Map(WMAP.words.map(d => [d.w, d]));
+  const proj = d => {
+    const x = (d.x - .5) * 2, y = (d.y - .5) * 2, z = (d.z - .5) * 2;
+    const cy = Math.cos(WMAP.rotY), sy = Math.sin(WMAP.rotY);
+    const cx = Math.cos(WMAP.rotX), sx = Math.sin(WMAP.rotX);
+    let X = x * cy - z * sy, Z = x * sy + z * cy;
+    const Y = y * cx - Z * sx; Z = y * sx + Z * cx;
+    const f = 3.2 / (3.2 + Z);
+    return { sx: cv.width / 2 + X * f * cv.width * .33, sy: cv.height / 2 - Y * f * cv.height * .33, f, z: Z };
+  };
+  const paint = () => {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const near = WMAP.pick ? new Set([WMAP.pick, ...(byW.get(WMAP.pick)?.nb || [])]) : null;
+    const pts = mapVisible().map(d => ({ d, ...proj(d) })).sort((a, b) => b.z - a.z);
+    if (near && byW.has(WMAP.pick)) {
+      const c = proj(byW.get(WMAP.pick));
+      ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2.2; ctx.globalAlpha = .5;
+      byW.get(WMAP.pick).nb.forEach(nw => {
+        const o = byW.get(nw); if (!o) return; const q = proj(o);
+        ctx.beginPath(); ctx.moveTo(c.sx, c.sy); ctx.lineTo(q.sx, q.sy); ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+    }
+    ctx.textAlign = 'center';
+    for (const p of pts) {
+      const on = !near || near.has(p.d.w);
+      ctx.globalAlpha = on ? Math.min(1, .45 + p.f * .5) : .12;
+      ctx.fillStyle = css(PAL[p.d.k % PAL.length]);
+      const r = (3 + Math.sqrt(p.d.n) / 2.4) * p.f * 2;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, r, 0, 7); ctx.fill();
+      if (on && (p.d.n >= 8 || near)) {
+        ctx.font = `${Math.round(19 * p.f)}px "Pretendard",-apple-system,sans-serif`;
+        ctx.lineWidth = 5; ctx.strokeStyle = css('--panel');
+        ctx.strokeText(p.d.w, p.sx, p.sy - r - 6);
+        ctx.fillStyle = css('--fg'); ctx.fillText(p.d.w, p.sx, p.sy - r - 6);
+      }
+    }
+    ctx.globalAlpha = 1;
+  };
+  /* 배경 탭에서는 rAF 가 멈춘다 — 돌아오면 이어서 돈다. 손이 닿아 있는 동안에는 자동 회전을 멈춘다. */
+  const spin = () => {
+    if (!document.body.contains(cv) || LANG.mode !== 'map' || !WMAP.mode3d) return;
+    if (!WMAP.drag && !matchMedia('(prefers-reduced-motion: reduce)').matches) WMAP.rotY += .0022;
+    paint(); WMAP.raf = requestAnimationFrame(spin);
+  };
+  cv.addEventListener('pointerdown', e => { WMAP.drag = { x: e.clientX, y: e.clientY }; cv.style.cursor = 'grabbing'; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointerup', () => { WMAP.drag = null; cv.style.cursor = 'grab'; });
+  cv.addEventListener('pointermove', e => {
+    if (!WMAP.drag) return;
+    WMAP.rotY += (e.clientX - WMAP.drag.x) * .006;
+    WMAP.rotX = Math.max(-1.2, Math.min(1.2, WMAP.rotX + (e.clientY - WMAP.drag.y) * .004));
+    WMAP.drag = { x: e.clientX, y: e.clientY };
+  });
+  cv.addEventListener('click', e => {
+    const r = cv.getBoundingClientRect();
+    const mx = (e.clientX - r.left) * cv.width / r.width, my = (e.clientY - r.top) * cv.height / r.height;
+    let best = null, bd = 1e9;
+    mapVisible().forEach(d => { const p = proj(d); const dd = (p.sx - mx) ** 2 + (p.sy - my) ** 2; if (dd < bd) { bd = dd; best = d.w; } });
+    if (bd < 46 * 46) { WMAP.pick = WMAP.pick === best ? null : best; showWordSource(WMAP.pick || best); }
+  });
+  spin();
+}
 
 function langNetwork(stage) {
   const W = 1000, H = 460, s = svgEl(stage, W, H);
@@ -1965,8 +2232,18 @@ function paintTodayVoice() {
   const x = excerptAt(q.pi, q.from, q.to);
   if (!x) { el.hidden = true; return; }
   el.innerHTML = `<blockquote>${esc(x.sent)}
-    <cite>오늘의 목소리 — ${esc(narratorLabel())} 구술 ${x.i + 1}단락 · 원문에서 그대로</cite></blockquote>`;
+    <cite>오늘의 목소리 — ${esc(narratorLabel())} 구술 ${esc(srcLabel(x.i))} · 원문에서 그대로</cite></blockquote>`;
   el.hidden = false;
+}
+
+/** 이 대목이 어디서 왔는가 — 컬렉션이 여럿이면 구술 이름까지 밝힌다.
+ *  예전에는 「3단락」이라고만 해서, 두 구술자를 나란히 적재하면 누구의 말인지 알 수 없었다.
+ *  쪽 번호가 함께 오는 원문(발행본)에서는 「정세균 구술 p.114」가 된다. */
+export function srcLabel(i) {
+  const m = LANG.meta[i] || {};
+  const many = CUR.cols.length > 1;
+  const col = many && m.col ? (COLS.find(c => short(c.id) === m.col)?.title || m.col) : '';
+  return (col ? col + ' ' : '') + (m.page ? `p.${m.page}` : `${i + 1}단락`);
 }
 
 function showWordSource(w, pi) {

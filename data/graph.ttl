@@ -5654,6 +5654,254 @@ ric:place-assembly <https://schema.org/containedInPlace> ric:place-yeouido.
 ric:place-yeouido <https://schema.org/containedInPlace> ric:place-seoul.
 ric:org-korea-university rico:isAssociatedWithPlace ric:place-korea-univ.
 ric:org-chinnohmuhyun-pa rico:isAssociatedWithPlace ric:place-yeouido-hotel.
+ric:org-national-assembly-20 <http://archives.nanet.go.kr/voca#speaker> ric:agent-jsk;
+    <http://archives.nanet.go.kr/voca#constitutedBy> ric:event-20th-general-election.
+ric:pos-speaker-20-1 <http://archives.nanet.go.kr/voca#ofTerm> ric:org-national-assembly-20;
+    <http://archives.nanet.go.kr/voca#termHalf> "전반기".
+ric:agent-jsk <http://archives.nanet.go.kr/voca#representsConstituency> ric:place-jongno.
+ric:place-jongno <http://archives.nanet.go.kr/voca#activeInTerm> ric:org-national-assembly-20.
+ric:auth-0-ec9db4ec rico:name "이승만".
+ric:pos-0 rico:name "제헌국회 전반기 의장".
+ric:auth-1-ec8ba0ec rico:name "신익희".
+ric:pos-1 rico:name "제헌국회 전반기 부의장".
+ric:auth-2-eab980eb rico:name "김동원".
+ric:pos-2 rico:name "제헌국회 전반기 부의장".
+ric:pos-3 rico:name "제헌국회 후반기 의장".
+ric:auth-3-eab980ec rico:name "김약수".
+ric:pos-4 rico:name "제헌국회 후반기 부의장".
+ric:auth-4-ec9ca4ec rico:name "윤치영".
+ric:pos-5 rico:name "제헌국회 후반기 부의장".
+ric:pos-6 rico:name "제2대 국회 전반기 의장".
+ric:auth-5-ec9ea5ed rico:name "장택상".
+ric:pos-7 rico:name "제2대 국회 전반기 부의장".
+ric:auth-6-eca1b0eb rico:name "조봉암".
+ric:pos-8 rico:name "제2대 국회 전반기 부의장".
+ric:auth-7-eab980eb rico:name "김동성".
+ric:pos-9 rico:name "제2대 국회 전반기 부의장".
+ric:pos-10 rico:name "제2대 국회 후반기 의장".
+ric:pos-11 rico:name "제2대 국회 후반기 부의장".
+ric:pos-12 rico:name "제2대 국회 후반기 부의장".
+ric:auth-8-ec9db4ea rico:name "이기붕".
+ric:pos-13 rico:name "제3대 국회 전반기 의장".
+ric:auth-9-ecb59cec rico:name "최순주".
+ric:pos-14 rico:name "제3대 국회 전반기 부의장".
+ric:auth-10-eca1b0ea rico:name "조경규".
+ric:pos-15 rico:name "제3대 국회 전반기 부의장".
+ric:auth-11-eab3bdec rico:name "곽상훈".
+ric:pos-16 rico:name "제3대 국회 전반기 부의장".
+ric:pos-17 rico:name "제3대 국회 후반기 의장".
+ric:pos-18 rico:name "제3대 국회 후반기 부의장".
+ric:auth-12-ed99a9ec rico:name "황성수".
+ric:pos-19 rico:name "제3대 국회 후반기 부의장".
+ric:auth-13-ec9db4ec rico:name "이재학".
+ric:pos-20 rico:name "제3대 국회 후반기 부의장".
+ric:pos-21 rico:name "제4대 국회 전반기 의장".
+ric:pos-22 rico:name "제4대 국회 전반기 부의장".
+ric:pos-23 rico:name "제4대 국회 전반기 의장".
+ric:auth-14-ed959ced rico:name "한희석".
+ric:pos-24 rico:name "제4대 국회 전반기 부의장".
+ric:auth-15-ec9e84ec rico:name "임철호".
+ric:pos-25 rico:name "제4대 국회 전반기 부의장".
+ric:pos-26 rico:name "제4대 국회 후반기 의장".
+ric:auth-16-eab980eb rico:name "김도연".
+ric:pos-27 rico:name "제4대 국회 후반기 부의장".
+ric:auth-17-ec9db4ec rico:name "이재형".
+ric:pos-28 rico:name "제4대 국회 후반기 부의장".
+ric:auth-18-ebafbcec rico:name "민의원".
+ric:pos-29 rico:name "제5대 국회 후반기 의장".
+ric:pos-30 rico:name "제5대 국회 후반기 의장".
+ric:auth-19-ec9db4ec rico:name "이영준".
+ric:pos-31 rico:name "제5대 국회 후반기 부의장".
+ric:auth-20-ec849ceb rico:name "서민호".
+ric:pos-32 rico:name "제5대 국회 후반기 부의장".
+ric:auth-21-ecb0b8ec rico:name "참의원".
+ric:pos-33 rico:name "제5대 국회 후반기 의장".
+ric:auth-22-ebb0b1eb rico:name "백낙준".
+ric:pos-34 rico:name "제5대 국회 후반기 의장".
+ric:auth-23-ec868cec rico:name "소선규".
+ric:pos-35 rico:name "제5대 국회 후반기 부의장".
+ric:auth-24-ec9db4ed rico:name "이효상".
+ric:pos-36 rico:name "제6대 국회 전반기 의장".
+ric:auth-25-ec9ea5ea rico:name "장경순".
+ric:pos-37 rico:name "제6대 국회 전반기 부의장".
+ric:auth-26-eb8298ec rico:name "나용균".
+ric:pos-38 rico:name "제6대 국회 전반기 부의장".
+ric:pos-39 rico:name "제6대 국회 후반기 의장".
+ric:pos-40 rico:name "제6대 국회 후반기 부의장".
+ric:auth-27-ec9db4ec rico:name "이상철".
+ric:pos-41 rico:name "제6대 국회 후반기 부의장".
+ric:pos-42 rico:name "제7대 국회 전반기 의장".
+ric:pos-43 rico:name "제7대 국회 전반기 부의장".
+ric:auth-28-ec9ca4ec rico:name "윤제술".
+ric:pos-44 rico:name "제7대 국회 전반기 부의장".
+ric:pos-45 rico:name "제7대 국회 후반기 의장".
+ric:pos-46 rico:name "제7대 국회 후반기 부의장".
+ric:auth-29-eca095ec rico:name "정성태".
+ric:pos-47 rico:name "제7대 국회 후반기 부의장".
+ric:auth-30-ebb0b1eb rico:name "백두진".
+ric:pos-48 rico:name "제8대 국회 후반기 의장".
+ric:pos-49 rico:name "제8대 국회 후반기 부의장".
+ric:auth-31-eca095ed rico:name "정해영".
+ric:pos-50 rico:name "제8대 국회 후반기 부의장".
+ric:auth-32-eca095ec rico:name "정일권".
+ric:pos-51 rico:name "제9대 국회 전반기 의장".
+ric:auth-33-eab980ec rico:name "김진만".
+ric:pos-52 rico:name "제9대 국회 전반기 부의장".
+ric:auth-34-ec9db4ec rico:name "이철승".
+ric:pos-53 rico:name "제9대 국회 전반기 부의장".
+ric:pos-54 rico:name "제9대 국회 후반기 의장".
+ric:auth-35-eab5aced rico:name "구태회".
+ric:pos-55 rico:name "제9대 국회 후반기 부의장".
+ric:auth-36-ec9db4eb rico:name "이민우".
+ric:pos-56 rico:name "제9대 국회 후반기 부의장".
+ric:pos-57 rico:name "제10대 국회 후반기 의장".
+ric:auth-37-ebafbcea rico:name "민관식".
+ric:pos-58 rico:name "제10대 국회 후반기 부의장".
+ric:auth-38-eab3a0ed rico:name "고흥문".
+ric:pos-59 rico:name "제10대 국회 후반기 부의장".
+ric:auth-39-eca095eb rico:name "정래혁".
+ric:pos-60 rico:name "제11대 국회 전반기 의장".
+ric:auth-40-ecb184eb rico:name "채문식".
+ric:pos-61 rico:name "제11대 국회 전반기 부의장".
+ric:auth-41-eab980ec rico:name "김은하".
+ric:pos-62 rico:name "제11대 국회 전반기 부의장".
+ric:pos-63 rico:name "제11대 국회 후반기 의장".
+ric:auth-42-ec9ca4ea rico:name "윤길중".
+ric:pos-64 rico:name "제11대 국회 후반기 부의장".
+ric:auth-43-eab3a0ec rico:name "고재청".
+ric:pos-65 rico:name "제11대 국회 후반기 부의장".
+ric:pos-66 rico:name "제12대 국회 전반기 의장".
+ric:auth-44-ecb59cec rico:name "최영철".
+ric:pos-67 rico:name "제12대 국회 전반기 부의장".
+ric:auth-45-eab980eb rico:name "김녹영".
+ric:pos-68 rico:name "제12대 국회 전반기 부의장".
+ric:auth-46-eca1b0ec rico:name "조연하".
+ric:pos-69 rico:name "제12대 국회 전반기 부의장".
+ric:pos-70 rico:name "제12대 국회 후반기 의장".
+ric:auth-47-ec9ea5ec rico:name "장성만".
+ric:pos-71 rico:name "제12대 국회 후반기 부의장".
+ric:auth-48-eab980ec rico:name "김재순".
+ric:pos-72 rico:name "제13대 국회 전반기 의장".
+ric:auth-49-eb85b8ec rico:name "노승환".
+ric:pos-73 rico:name "제13대 국회 전반기 부의장".
+ric:auth-50-eab980ec rico:name "김재광".
+ric:pos-74 rico:name "제13대 국회 전반기 부의장".
+ric:auth-51-ebb095ec rico:name "박준규".
+ric:pos-75 rico:name "제13대 국회 후반기 의장".
+ric:pos-76 rico:name "제13대 국회 후반기 부의장".
+ric:auth-52-eca1b0ec rico:name "조윤형".
+ric:pos-77 rico:name "제13대 국회 후반기 부의장".
+ric:pos-78 rico:name "제14대 국회 전반기 의장".
+ric:auth-53-ed99a9eb rico:name "황낙주".
+ric:pos-79 rico:name "제14대 국회 전반기 부의장".
+ric:auth-54-ec9db4eb rico:name "이만섭".
+ric:pos-80 rico:name "제14대 국회 전반기 의장".
+ric:auth-55-ed9788ea rico:name "허경만".
+ric:pos-81 rico:name "제14대 국회 전반기 부의장".
+ric:pos-82 rico:name "제14대 국회 후반기 의장".
+ric:auth-56-ec9db4ec rico:name "이춘구".
+ric:pos-83 rico:name "제14대 국회 후반기 부의장".
+ric:auth-57-ec9db4ed rico:name "이한동".
+ric:pos-84 rico:name "제14대 국회 후반기 부의장".
+ric:auth-58-ed998dec rico:name "홍영기".
+ric:pos-85 rico:name "제14대 국회 후반기 부의장".
+ric:auth-59-eab980ec rico:name "김수한".
+ric:pos-86 rico:name "제15대 국회 전반기 의장".
+ric:auth-60-ec98a4ec rico:name "오세응".
+ric:pos-87 rico:name "제15대 국회 전반기 부의장".
+ric:auth-61-eab980ec rico:name "김영배".
+ric:pos-88 rico:name "제15대 국회 전반기 부의장".
+ric:pos-89 rico:name "제15대 국회 후반기 의장".
+ric:auth-62-ec8ba0ec rico:name "신상우".
+ric:pos-90 rico:name "제15대 국회 후반기 부의장".
+ric:auth-63-eab980eb rico:name "김봉호".
+ric:pos-91 rico:name "제15대 국회 후반기 부의장".
+ric:pos-92 rico:name "제16대 국회 전반기 의장".
+ric:auth-64-ed998dec rico:name "홍사덕".
+ric:pos-93 rico:name "제16대 국회 전반기 부의장".
+ric:auth-65-eab980ec rico:name "김종하".
+ric:pos-94 rico:name "제16대 국회 전반기 부의장".
+ric:auth-66-eab980ec rico:name "김종호".
+ric:pos-95 rico:name "제16대 국회 전반기 부의장".
+ric:auth-67-ebb095ea rico:name "박관용".
+ric:pos-96 rico:name "제16대 국회 후반기 의장".
+ric:auth-68-eab980ed rico:name "김태식".
+ric:pos-97 rico:name "제16대 국회 후반기 부의장".
+ric:auth-69-eca1b0eb rico:name "조부영".
+ric:pos-98 rico:name "제16대 국회 후반기 부의장".
+ric:auth-70-eab980ec rico:name "김원기".
+ric:pos-99 rico:name "제17대 국회 전반기 의장".
+ric:auth-71-eab980eb rico:name "김덕규".
+ric:pos-100 rico:name "제17대 국회 전반기 부의장".
+ric:auth-72-ebb095ed rico:name "박희태".
+ric:pos-101 rico:name "제17대 국회 전반기 부의장".
+ric:auth-73-ec9e84ec rico:name "임채정".
+ric:pos-102 rico:name "제17대 국회 후반기 의장".
+ric:auth-74-ec9db4ec rico:name "이용희".
+ric:pos-103 rico:name "제17대 국회 후반기 부의장".
+ric:auth-75-ec9db4ec rico:name "이상득".
+ric:pos-104 rico:name "제17대 국회 후반기 부의장".
+ric:auth-76-eab980ed rico:name "김형오".
+ric:pos-105 rico:name "제18대 국회 전반기 의장".
+ric:auth-77-ec9db4ec rico:name "이윤성".
+ric:pos-106 rico:name "제18대 국회 전반기 부의장".
+ric:auth-78-ebacb8ed rico:name "문희상".
+ric:pos-107 rico:name "제18대 국회 전반기 부의장".
+ric:pos-108 rico:name "제18대 국회 후반기 의장".
+ric:auth-79-eca095ec rico:name "정의화".
+ric:pos-109 rico:name "제18대 국회 후반기 부의장".
+ric:auth-80-ed998dec rico:name "홍재형".
+ric:pos-110 rico:name "제18대 국회 후반기 부의장".
+ric:auth-81-eab095ec rico:name "강창희".
+ric:pos-111 rico:name "제19대 국회 전반기 의장".
+ric:auth-82-ec9db4eb rico:name "이병석".
+ric:pos-112 rico:name "제19대 국회 전반기 부의장".
+ric:auth-83-ebb095eb rico:name "박병석".
+ric:pos-113 rico:name "제19대 국회 전반기 부의장".
+ric:pos-114 rico:name "제19대 국회 후반기 의장".
+ric:auth-84-eca095ea rico:name "정갑윤".
+ric:pos-115 rico:name "제19대 국회 후반기 부의장".
+ric:auth-85-ec9db4ec rico:name "이석현".
+ric:pos-116 rico:name "제19대 국회 후반기 부의장".
+ric:auth-86-eca095ec rico:name "정세균".
+ric:pos-117 rico:name "제20대 국회 전반기 의장".
+ric:auth-87-ec8bacec rico:name "심재철".
+ric:pos-118 rico:name "제20대 국회 전반기 부의장".
+ric:auth-88-ebb095ec rico:name "박주선".
+ric:pos-119 rico:name "제20대 국회 전반기 부의장".
+ric:pos-120 rico:name "제20대 국회 후반기 의장".
+ric:auth-89-ec9db4ec rico:name "이주영".
+ric:pos-121 rico:name "제20대 국회 후반기 부의장".
+ric:auth-90-eca3bcec rico:name "주승용".
+ric:pos-122 rico:name "제20대 국회 후반기 부의장".
+ric:pos-123 rico:name "제21대 국회 전반기 의장".
+ric:auth-91-eab980ec rico:name "김상희".
+ric:pos-124 rico:name "제21대 국회 전반기 부의장".
+ric:scheme-oral <http://www.w3.org/2004/02/skos/core#prefLabel> "국회 구술 주제 시소러스".
+ric:concept-uihoe <http://www.w3.org/2004/02/skos/core#prefLabel> "의회정치".
+ric:concept-jeongdang <http://www.w3.org/2004/02/skos/core#prefLabel> "정당정치".
+ric:concept-ipbeop <http://www.w3.org/2004/02/skos/core#prefLabel> "입법과정".
+ric:concept-uihoe-gaehyeok <http://www.w3.org/2004/02/skos/core#prefLabel> "의회 개혁".
+ric:concept-uijang <http://www.w3.org/2004/02/skos/core#prefLabel> "국회의장".
+ric:concept-nodong <http://www.w3.org/2004/02/skos/core#prefLabel> "노동정책".
+ric:concept-nosa <http://www.w3.org/2004/02/skos/core#prefLabel> "노사관계".
+ric:concept-daehwa <http://www.w3.org/2004/02/skos/core#prefLabel> "사회적 대화".
+ric:concept-goyong <http://www.w3.org/2004/02/skos/core#prefLabel> "고용안정".
+ric:concept-heonjeong <http://www.w3.org/2004/02/skos/core#prefLabel> "헌정질서".
+ric:concept-gaeheon <http://www.w3.org/2004/02/skos/core#prefLabel> "개헌".
+ric:concept-tanhaek <http://www.w3.org/2004/02/skos/core#prefLabel> "탄핵".
+ric:concept-gwonwiju <http://www.w3.org/2004/02/skos/core#prefLabel> "권위주의 체제".
+ric:scheme-rst <http://www.w3.org/2004/02/skos/core#prefLabel> "RiC-O 기록집합 유형".
+ric:concept-rst-fonds <http://www.w3.org/2004/02/skos/core#prefLabel> "폰드".
+ric:concept-rst-series <http://www.w3.org/2004/02/skos/core#prefLabel> "시리즈".
+ric:concept-rst-file <http://www.w3.org/2004/02/skos/core#prefLabel> "철".
+ric:concept-rst-collection <http://www.w3.org/2004/02/skos/core#prefLabel> "컬렉션".
+ric:dup-jsk-hanja rico:name "정세균(丁世均)".
+ric:dup-kwk-spaced rico:name "김 원기".
+ric:dup-nanet-old rico:name "국회 도서관".
+ric:rec-gone-sample rico:title "오등록 폐기 레코드(시연용)".
+ric:inst-jsk-full rico:title "대한민국 국회를 말하다 08 정세균 (원본 PDF)".
+ric:inst-jsk-excerpt rico:title "정세균 구술총서 발췌".
 <http://archives.nanet.go.kr/id/col-정세균-구술> a rico:RecordSet;
     rico:title "정세균 구술".
 <http://archives.nanet.go.kr/id/col-국회-구술-시소러스> a rico:RecordSet;
