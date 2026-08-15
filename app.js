@@ -137,30 +137,12 @@ function navHrefs() {
 const navMark = href => document.querySelectorAll('#nav a')
   .forEach(a => a.classList.toggle('on', a.getAttribute('href') === href));
 
-/* ── 브레드크럼 — 홈 › 컬렉션 › 화면. 홈·고르기 화면에서는 숨긴다 ── */
-const PAGE_KO = { place: '장소', event: '연표', 'graph-sec': '관계망', subject: '주제',
-  query: '질의', lang: '언어', collection: '컬렉션', about: '해설', records: '검색' };
 export function colLabel() {
   if (!CUR.cols.length) return '';
   // 컬렉션 개체는 G에서 걷어내므로(buildCollections) 제목은 COLS 목록에서 찾는다
   const names = CUR.cols.map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
   return names.join(' · ');
 }
-export const crumbHtml = parts => parts.map((c, i) =>
-  (i ? '<i>›</i>' : '') + (c.href ? `<a href="${c.href}">${esc(c.t)}</a>` : `<b>${esc(c.t)}</b>`)).join('');
-function drawCrumbs(pageId) {
-  const el = $('#crumbs'); if (!el) return;
-  if (pageId === 'home' || pageId === 'pick' || !CUR.cols.length) { el.hidden = true; return; }
-  const parts = [{ t: '홈', href: '#/' }];
-  if (pageId === 'collection') parts.push({ t: colLabel() });
-  else {
-    parts.push({ t: colLabel(), href: colHref('') });
-    parts.push({ t: PAGE_KO[pageId] || pageId });
-  }
-  el.innerHTML = crumbHtml(parts);
-  el.hidden = false;
-}
-
 function route() {
   const { col, rest } = parseHash();
   const want = col ? col.split(',').filter(Boolean) : [];
@@ -208,7 +190,6 @@ function route() {
     document.documentElement.dataset.page = 'records';
     document.body.classList.add('past-hero');
     navMark(colHref('records'));
-    drawCrumbs('records');
     return;
   }
   // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지. 맨 홈은 적재 중이어도 홈이다.
@@ -216,7 +197,6 @@ function route() {
   document.documentElement.dataset.page = id;
   document.body.classList.toggle('past-hero', id !== 'home');
   navMark(id === 'home' ? '' : colHref(id));
-  drawCrumbs(id);
   scrollTo({ top: 0 });
   /* 숨어 있는 동안 컨테이너 크기가 0이라 지도·캔버스·연표가 제대로 안 그려진다.
      보이게 된 뒤 다시 재라고 알려 준다 — 전체화면 전환 때와 같은 이유다.
@@ -763,9 +743,12 @@ function writeStatus() {
      「트리플 0개」가 거짓이었기 때문이다(적재는 화면 모델에만 걸려 있었다).
      이제 적재가 스토어까지 좁히므로(rescope) **0 은 문자 그대로 참**이다.
      그래서 계기판은 늘 같은 형식으로 서고, 값만 0 이 된다. */
+  /* 계기판은 **무엇을** 적재했는지부터 말한다 — 수치만 있으면 어느 컬렉션의 수치인지
+     화면을 옮길 때마다 다시 헤아려야 한다. 컬렉션 이름은 콜라벨(브레드크럼과 같은 규칙)로 든다. */
+  const colPart = CUR.cols.length ? `컬렉션 ${CUR.cols.length}건(${colLabel()}) · ` : '';
   const line = hasPick()
-    ? `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
-    : `적재 0 — 트리플 0개 · 개체 0 · 관계 0 · SPARQL 1.1 (Oxigraph WASM)`;
+    ? `그래프 적재 완료 — ${colPart}트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
+    : `적재 0 — 컬렉션 0건 · 트리플 0개 · 개체 0 · 관계 0 · SPARQL 1.1 (Oxigraph WASM)`;
   if (el) el.textContent = line;
   const setAll = (sel, v) => document.querySelectorAll(sel).forEach(n => { n.textContent = v; });
   /* 표지의 수치는 **지금 적재된 것**을 말한다. 전체 발행본 수치를 박아 두면 아무것도 안 골랐는데도
@@ -1655,7 +1638,7 @@ window.tlDetail = id => {
 };
 
 /* ══════════ 언어 ══════════ */
-export const LANG = { mode: 'network', words: [], byChapter: [], paras: [], meta: [] };
+export const LANG = { mode: 'network', words: [], byChapter: [], paras: [], meta: [], only: '' };
 /* 생애 장면 — assets/life/frames.json. 연도·설명·크레딧이 딸린 큐레이션 이미지 8컷.
    hero.js(첫 화면 몰핑 초상)가 읽는 것과 같은 파일을 여기서도 읽어 인물 하이라이트와
    전시가 함께 쓴다 — 이미지 출처 표기를 한 곳에서 관리하기 위해서다. */
@@ -1708,10 +1691,17 @@ export async function loadCorpus() {
   }
   LANG.meta = meta;
   LANG.paras = paras;
-  /* 지금 무엇을 읽고 있는지 화면에 밝힌다 — 쪽 수는 적재를 따라 바뀐다. */
+  /* 지금 무엇을 읽고 있는지 화면에 밝힌다 — 쪽 수는 적재를 따라 바뀐다.
+     적재한 컬렉션 가운데 **원문이 함께 발행되지 않은 것**은 이름을 대고 밝힌다.
+     시소러스처럼 개체만 있는 컬렉션을 적재하면 언어 화면은 조용히 한 구술만 읽는데,
+     그 사실을 말하지 않으면 「두 개를 적재했는데 왜 하나만 보이나」로 읽힌다(실측 지적). */
+  const withText = new Set(meta.map(m => m.col).filter(Boolean));
+  const noText = CUR.cols.filter(c => !withText.has(short(c)))
+    .map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
   const sc = $('#langScope');
-  if (sc) sc.textContent = !paras.length ? '원문 없음 —'
-    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`;
+  if (sc) sc.textContent = (!paras.length ? '원문 없음 —'
+    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`)
+    + (noText.length ? ` — ${noText.map(t => `「${t}」`).join('·')}는 원문 없이 개체만 적재되었습니다` : '');
   const nc = $('#langNone');
   if (nc) nc.hidden = !!paras.length;
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
@@ -1723,8 +1713,8 @@ export async function loadCorpus() {
   // 단락(≈회차) × 어휘
   LANG.byChapter = paras.map((p, i) => {
     const f = {}; tok(p).forEach(w => f[w] = (f[w] || 0) + 1);
-    const pg = LANG.meta[i]?.page;
-    return { i, label: pg ? `p.${pg}` : `${i + 1}단락`, freq: f, total: tok(p).length };
+    const m = LANG.meta[i] || {};
+    return { i, col: m.col || '', label: m.page ? `p.${m.page}` : `${i + 1}단락`, freq: f, total: tok(p).length };
   });
   // 동시출현 (같은 문장)
   const co = new Map();
@@ -1862,6 +1852,31 @@ const LANG_MODES = [
   { k: 'tfidf', t: '단락별 특징어', note: '빈도가 아니라 그 단락에만 유난히 몰린 말을 뽑습니다(tf-idf). 무엇에 대한 대목인지가 드러납니다.' },
   { k: 'map', t: '의미 지도', note: '같은 자리에 쓰인 말끼리 모입니다 — 가까울수록 비슷한 맥락입니다. 사안을 눌러 걸러 보고, 말을 누르면 이웃과 원문이 함께 뜹니다.' },
 ];
+/* ── 어느 구술의 원문을 볼 것인가 ──
+   「시간대별 흐름·문서 지문·단락별 특징어」는 한 문서를 처음부터 끝까지 읽는 도구다.
+   여러 구술을 이어 붙이면 가로축이 「A의 마지막 쪽 → B의 첫 쪽」으로 이어져,
+   두 사람의 관심사 이동이 한 사람의 것처럼 보인다 — 시간축이 거짓말을 한다.
+   그래서 이 세 모드에서는 한 번에 한 구술만 본다. 어휘 관계망·의미 지도는 순서를 쓰지 않으므로
+   그대로 합쳐 본다 — 오히려 두 구술자가 같은 말을 어떻게 달리 쓰는지가 드러난다. */
+const ORDERED = new Set(['flow', 'print', 'tfidf']);
+/** 지금 원문이 실려 있는 컬렉션들 — [{col, title, n}] */
+function corpusCols() {
+  const c = new Map();
+  LANG.byChapter.forEach(x => c.set(x.col, (c.get(x.col) || 0) + 1));
+  return [...c].filter(([k]) => k).map(([col, n]) => ({
+    col, n, title: COLS.find(x => short(x.id) === col)?.title || col.replace(/^col-/, ''),
+  }));
+}
+/** 순서에 기대는 모드가 볼 단락 — 고른 구술 하나. 고르지 않았으면 첫째. */
+function chapterView() {
+  const cs = corpusCols();
+  if (cs.length < 2 || !ORDERED.has(LANG.mode)) return LANG.byChapter;
+  const pick = cs.some(c => c.col === LANG.only) ? LANG.only : cs[0].col;
+  LANG.only = pick;
+  return LANG.byChapter.filter(x => x.col === pick);
+}
+window.langOnly = c => { LANG.only = c; drawLang(); };
+
 async function drawLang() {
   if (!LANG.words.length) await loadCorpus();
   $('#langSeg').innerHTML = LANG_MODES.map(m =>
@@ -1870,6 +1885,18 @@ async function drawLang() {
   const stage = $('#lang-stage');
   stage.innerHTML = '';
   if (!LANG.words.length) { stage.innerHTML = '<p class="status" style="padding:1rem">코퍼스 없음</p>'; return; }
+  const cs = corpusCols();
+  if (cs.length > 1 && ORDERED.has(LANG.mode)) {
+    const cur = cs.some(c => c.col === LANG.only) ? LANG.only : cs[0].col;
+    const bar = document.createElement('div');
+    bar.className = 'chips';
+    bar.style.cssText = 'padding:.2rem .2rem .6rem;align-items:baseline';
+    bar.innerHTML = '<span class="status" style="margin-right:.3rem">원문</span>'
+      + cs.map(c => `<button class="chip${c.col === cur ? ' on' : ''}" onclick="langOnly('${esc(c.col)}')">
+          ${esc(c.title)} <b>${c.n}쪽</b></button>`).join('')
+      + '<span class="status" style="margin-left:auto">이 세 화면은 한 구술을 처음부터 끝까지 읽습니다</span>';
+    stage.appendChild(bar);
+  }
   ({ network: langNetwork, flow: langFlow, print: langPrint, tfidf: langTfidf, map: langMap })[LANG.mode](stage);
 }
 window.setLang = k => { LANG.mode = k; drawLang(); };
@@ -2079,7 +2106,7 @@ function langNetwork(stage) {
 function langFlow(stage) {
   const W = 1000, H = 460, s = svgEl(stage, W, H);
   const top = LANG.words.slice(0, 12);
-  const ch = LANG.byChapter;
+  const ch = chapterView();
   const series = top.map(w => ch.map(c => (c.freq[w.w] || 0) / Math.max(c.total, 1)));
   const nx = i => 60 + (i / Math.max(ch.length - 1, 1)) * (W - 110);
   const stackTop = ch.map((_, ci) => series.reduce((a, s2) => a + s2[ci], 0));
@@ -2126,7 +2153,7 @@ function langFlow(stage) {
 /* 칸을 누르면 그 단락에서 그 말이 나온 문장을 그대로 보여 준다.
    예전에는 왼쪽 어휘 이름만 눌렸고 칸에는 툴팁뿐이었다 — 정작 궁금한 것은 '이 칸이 왜 진한가'다. */
 function langPrint(stage) {
-  const top = LANG.words.slice(0, 22), ch = LANG.byChapter;
+  const top = LANG.words.slice(0, 22), ch = chapterView();
   const W = 1000, H = 460, s = svgEl(stage, W, H);
   const cw = (W - 150) / ch.length, rh = Math.min(16, (H - 70) / top.length);
   const max = Math.max(...top.map(w => Math.max(...ch.map(c => c.freq[w.w] || 0))), 1);
@@ -2149,7 +2176,7 @@ function langPrint(stage) {
  *  핵심 키워드가 이걸 쓴다. 같은 말이 여러 단락에 걸치면 점수가 가장 높은 단락 것만 남긴다
  *  (중복 방지 — "국회"가 3단락에도 7단락에도 오르는 식으로 두 번 뽑히지 않게). */
 export function topTfidf(n = 12) {
-  const ch = LANG.byChapter, N = ch.length, df = {};
+  const ch = chapterView(), N = ch.length, df = {};
   ch.forEach(c => Object.keys(c.freq).forEach(w => df[w] = (df[w] || 0) + 1));
   const best = new Map();
   ch.forEach(c => Object.entries(c.freq).filter(([, k]) => k >= 2).forEach(([w, k]) => {
@@ -2170,13 +2197,15 @@ function langTfidf(stage) {
       .sort((a, b) => b.s - a.s).slice(0, 7),
   }));
   const maxS = Math.max(...cols.flatMap(x => x.sc.map(y => y.s)), 1e-9);
-  stage.innerHTML = `<div class="lang-tfidf">${cols.map(({ c, sc }) => `<div>
+  const box = document.createElement('div');
+  box.innerHTML = `<div class="lang-tfidf">${cols.map(({ c, sc }) => `<div>
     <h5>${esc(c.label)}</h5>
     ${sc.length ? sc.map(x => `<button class="lw" data-w="${esc(x.w)}" data-p="${c.i}"
       style="--v:${(x.s / maxS).toFixed(3)}">${esc(x.w)}<i>${x.n}</i></button>`).join('')
       : `<span class="status">두 번 이상 나온 말이 없습니다</span>`}
   </div>`).join('')}</div>`;
-  stage.querySelectorAll('.lw').forEach(g => g.onclick = () =>
+  stage.appendChild(box);
+  box.querySelectorAll('.lw').forEach(g => g.onclick = () =>
     showWordSource(g.dataset.w, g.dataset.p ? +g.dataset.p : null));
 }
 

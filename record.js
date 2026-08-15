@@ -5,7 +5,7 @@
 
    아이템 페이지의 핵심은 '연결된 개체'다. 무엇과 이어져 있는지가 아니라
    **어떤 관계로** 이어져 있는지를 보여야 한다. 그게 표와 그래프의 차이다. */
-import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref, colLabel, crumbHtml, LANG, LIFE, topTfidf, sentencesWith, repImgOf } from './app.js';
+import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref, colLabel, LANG, LIFE, topTfidf, sentencesWith, repImgOf } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
 // 개념·개념체계도 개체다. 빼 두면 「전체」 수가 그래프와 어긋난다(실측 791 vs 810).
@@ -473,13 +473,7 @@ function item(sid) {
   const media = mediaOf(n);
   MV = media; MV_I = 0;
 
-  const crumbs = `<nav class="item-crumbs" aria-label="현재 위치">${crumbHtml([
-    { t: '홈', href: '#/' },
-    ...(colLabel() ? [{ t: colLabel(), href: colHref('') }] : []),
-    { t: '검색', href: colHref('records') },
-    { t: n.label }])}</nav>`;
   el.innerHTML = `<div class="item-wrap">
-    ${crumbs}
 
     ${media.length ? `<figure class="m-view">
       <div class="m-stage"><img id="mvImg" src="${esc(media[0].src)}" alt="${esc(media[0].cap)}"></div>

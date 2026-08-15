@@ -45,19 +45,6 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
 a{color:var(--accent)}
 
 /* ───── 헤더 ───── */
-#crumbs{max-width:1120px;margin:0 auto;padding:.5rem 1.4rem 0;font-family:var(--mono);
-  font-size:.66rem;letter-spacing:.04em;color:var(--muted);display:flex;gap:.45rem;align-items:center}
-#crumbs a{color:var(--muted);text-decoration:none}
-#crumbs a:hover{color:var(--accent)}
-#crumbs i{font-style:normal;opacity:.45}
-#crumbs b{font-weight:600;color:var(--fg)}
-#crumbs[hidden]{display:none}
-.item-crumbs{font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;color:var(--muted);
-  display:flex;gap:.45rem;align-items:center;margin-bottom:1.1rem}
-.item-crumbs a{color:var(--muted);text-decoration:none}
-.item-crumbs a:hover{color:var(--accent)}
-.item-crumbs i{font-style:normal;opacity:.45}
-.item-crumbs b{font-weight:600;color:var(--fg)}
 /* 사이트 헤더만 붙인다 — 태그 선택자로 두면 화면 안의 다른 <header>(시소러스 체계 제목 등)까지
    꼭대기에 달라붙어 사이트 헤더와 겹친다(실측: 주제 화면에서 체계 제목이 메뉴 위에 포개짐). */
 body > header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
@@ -1092,7 +1079,6 @@ footer .fw a:hover{color:var(--accent);border-bottom-color:var(--accent)}
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
-<nav id="crumbs" hidden aria-label="현재 위치"></nav>
 
 <!-- ═══════ 히어로 ═══════ -->
 <div id="heroZone">
