@@ -1699,9 +1699,14 @@ export async function loadCorpus() {
   const noText = CUR.cols.filter(c => !withText.has(short(c)))
     .map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
   const sc = $('#langScope');
-  if (sc) sc.textContent = (!paras.length ? '원문 없음 —'
-    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`)
-    + (noText.length ? ` — ${noText.map(t => `「${t}」`).join('·')}는 원문 없이 개체만 적재되었습니다` : '');
+  if (sc) sc.textContent = !paras.length ? '원문 없음 —'
+    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`;
+  const pt = $('#langPartial');
+  if (pt) {
+    pt.hidden = !(paras.length && noText.length);
+    if (!pt.hidden) pt.innerHTML = `${noText.map(t => `<b>「${esc(t)}」</b>`).join(' · ')}는 원문 없이 개체만 적재되었습니다 —
+      시소러스처럼 개념만 있는 컬렉션은 이 화면이 읽을 말이 없습니다. 위 수치는 나머지 구술의 원문입니다.`;
+  }
   const nc = $('#langNone');
   if (nc) nc.hidden = !!paras.length;
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
