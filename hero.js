@@ -31,7 +31,13 @@ export async function initHero(G) {
   // 캡션·점이 채워지고 웹폰트가 뜨면 캔버스 높이가 몇 px 씩 바뀐다.
   // 백킹스토어가 옛 크기로 남으면 그림이 늘어나 뭉개지므로, 매 프레임 대신
   // 15프레임마다 실제 크기와 대조해 스스로 맞춘다.
-  new ResizeObserver(() => { resize(); layout(); }).observe(cv);
+  // 리사이즈 중에는 프레임마다 입자 재배치가 돌아 무겁다 — 끝나고 한 번만.
+  let rsT = null;
+  new ResizeObserver(() => {
+    resize();                      // 크기는 즉시 — 캔버스가 CSS로만 늘어나면 상이 밀려 보인다
+    clearTimeout(rsT);
+    rsT = setTimeout(layout, 150); // 입자 재배치만 끝나고 한 번
+  }).observe(cv);
   cv.addEventListener('pointermove', onMove);
   cv.addEventListener('pointerleave', () => {
     P.mouse.x = P.mouse.y = -9e9; P.mouse.tx = P.mouse.ty = 0; P.mouse.in = false;

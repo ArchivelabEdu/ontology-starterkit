@@ -1,50 +1,215 @@
 /* 관계망 — 6개 레이아웃
    네트워크(힘) · 아크 · 방사형 · 코드 · 하이브 · 보드
    캔버스 렌더. 클래스·관계 필터, 검색, 노드 클릭 시 이웃만 강조. */
-import { CLS, REL_KO, clsColor, css, esc, $ } from './app.js';
+import { CLS, REL_KO, clsColor, css, esc, $, SUBJ_STORY } from './app.js';
 
 const S = {
   G: null, layout: 'network', clsOn: new Set(), relOn: new Set(),
   nodes: [], edges: [], focus: null, search: '', raf: 0, hover: null,
+  /* 성좌 모드 — 첫 화면은 연결 상위 ~60의 성좌. 스키마 칩·이야기 탭이 이 캔버스를 조종한다.
+     lab=true 면 옛 실험실(레이아웃 6종·칩 전체)로 돌아간다. */
+  lab: false, story: null, relKey: null, glow: null, deg: null, settle0: 0,
 };
-const LAYOUTS = [
-  ['network', '◍ 네트워크'], ['arc', '⌒ 아크'], ['radial', '✺ 방사형'],
-  ['chord', '◠ 코드'], ['hive', '⋔ 하이브'], ['board', '▤ 보드'],
-];
+const RIC = 'http://archives.nanet.go.kr/id/';
+const long = s => String(s).startsWith('http') ? s : RIC + s;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* 이야기 관계망 — 전시(SUBJ_STORY)의 refs 를 그대로 재활용하고, 성장 경로 하나를 큐레이션.
+   그래프에 없는 id 는 조용히 빠진다(지어내지 않는 규칙 그대로). */
+const STORIES = () => {
+  const out = [];
+  for (const [k, s] of Object.entries(SUBJ_STORY || {})) {
+    const ids = [...new Set(s.acts.flatMap(a => a.refs || []))];
+    out.push({ key: k, title: s.title.split('\n')[0].replace(/[,\u2014\s]+$/, ''), ids: ['agent-jsk', ...ids] });
+  }
+  out.push({ key: 'growth', title: '진안에서 여의도까지', ids: ['agent-jsk', 'place-jinan',
+    'org-sinheung-high-school', 'place-jeonju', 'place-korea-univ', 'org-korea-university-student-council',
+    'org-ssangyong', 'org-ssangyong-usa', 'place-los-angeles', 'place-yeouido', 'org-assembly'] });
+  return out;
+};
 
 export function initGraph(G) {
   S.G = G;
-  S.clsOn = new Set(Object.keys(CLS));
-  S.relOn = new Set([...new Set(G.edges.map(e => e.p))]);
-  $('#nNode').textContent = G.nodes.length;
-  $('#nEdge').textContent = G.edges.length;
-
-  $('#layoutSeg').innerHTML = LAYOUTS.map(([k, t]) =>
-    `<button class="${k === S.layout ? 'on' : ''}" data-l="${k}" onclick="setLayout('${k}')">${t}</button>`).join('');
-
-  const clsUsed = [...new Set(G.nodes.map(n => n.cls))];
-  $('#clsChips').innerHTML = clsUsed.map(c =>
-    `<button class="chip on c-${CLS[c].key}" data-c="${c}" onclick="toggleCls('${c}')">
-      <i class="dot"></i>${CLS[c].ko}</button>`).join('');
-
-  const relUsed = [...new Set(G.edges.map(e => e.p))]
-    .sort((a, b) => G.edges.filter(e => e.p === b).length - G.edges.filter(e => e.p === a).length);
-  $('#relChips').innerHTML =
-    `<button class="chip on c-all" onclick="toggleRel('*')">모든 관계</button>` +
-    relUsed.map(p => `<button class="chip on" data-p="${p}" onclick="toggleRel('${p}')"
-      style="color:var(--muted)">${esc(REL_KO[p] || p)}</button>`).join('');
-
-  $('#gLegend').innerHTML = clsUsed.map(c =>
-    `<span><i style="background:${clsColor(c)};border-radius:${CLS[c].shape === 'circle' ? '50%' : '2px'}"></i>${CLS[c].ko}</span>`).join('')
-    + '<span style="margin-left:auto">노드 클릭 = 이웃만 · 빈 곳 클릭 = 해제</span>';
 
   const cv = $('#graph');
   cv.addEventListener('pointermove', onMove);
   cv.addEventListener('click', onClick);
   cv.addEventListener('pointerleave', () => { S.hover = null; $('#gTip').style.display = 'none'; });
-  addEventListener('resize', () => { sizeCanvas(); compute(); });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.gq-wrap')) $('#gSug')?.setAttribute('hidden', '');
+  });
+  const ins = $('#gInsight');
+  ins?.addEventListener('mouseenter', () => { S.scenePaused = true; clearTimeout(S.sceneT); ins.querySelector('.bar')?.remove(); });
+  ins?.addEventListener('mouseleave', () => { S.scenePaused = false; paintScene(); });
+  /* 리사이즈마다 전체 레이아웃을 다시 계산하면 창 크기를 끄는 동안 이벤트가 초당 수십 번
+     쏟아져 화면 전체가 버벅인다(개체 페이지가 덮여 있어도 창 리사이즈는 여기까지 온다).
+     끝나고 한 번만 계산한다. */
+  let rsT = null;
+  addEventListener('resize', () => {
+    sizeCanvas();                  // 캔버스 크기는 즉시 — 늦추면 그리기가 늘어나 붙어 한쪽으로 치우쳐 보인다
+    clearTimeout(rsT);
+    rsT = setTimeout(compute, 150);   // 전체 재배치만 드래그가 끝난 뒤 한 번
+  });
+  buildStarUI();
   sizeCanvas(); compute(); loop();
 }
+
+/* ── 성좌 UI — 탭 · 스키마 칩 · 관계 카드 · 무게중심 ── */
+function buildStarUI() {
+  const G = S.G;
+  S.deg = new Map(G.nodes.map(n => [n.id, 0]));
+  G.edges.forEach(e => { S.deg.set(e.s, (S.deg.get(e.s) || 0) + 1); S.deg.set(e.o, (S.deg.get(e.o) || 0) + 1); });
+
+  const tabs = $('#gTabsIn');
+  if (tabs) tabs.innerHTML =
+    `<button class="gtab on" data-k="" onclick="gStory('')">전체 성좌</button>` +
+    STORIES().map(s => `<button class="gtab" data-k="${s.key}" onclick="gStory('${s.key}')">${esc(s.title)}</button>`).join('');
+
+  const cnt = new Map();
+  G.nodes.forEach(n => cnt.set(n.cls, (cnt.get(n.cls) || 0) + 1));
+  const sch = $('#gSchema');
+  if (sch) sch.innerHTML = [...cnt.entries()].sort((a, b) => b[1] - a[1]).map(([c, n]) =>
+    `<button class="gchip" data-c="${c}" onmouseenter="gGlow('${c}')" onmouseleave="gGlow(null)"
+       onclick="gPin('${c}')"><i style="background:${clsColor(c)}"></i>${CLS[c]?.ko || c} <em>${n}</em></button>`).join('');
+
+  const byP = new Map();
+  G.edges.forEach(e => byP.set(e.p, (byP.get(e.p) || 0) + 1));
+  const rels = $('#gRels');
+  if (rels) rels.innerHTML = [...byP.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([p, n]) =>
+    `<button class="grel${S.relKey === p ? ' on' : ''}" onclick="gRel('${p}')">${esc(REL_KO[p] || p)}
+       <code>${esc(p)}</code><em>${n}</em></button>`).join('');
+
+  const rank = $('#gRank');
+  if (rank) {
+    const top = [...G.nodes].sort((a, b) => (S.deg.get(b.id) || 0) - (S.deg.get(a.id) || 0)).slice(0, 5);
+    rank.innerHTML = `<div class="grank-h">무게중심 — 연결 수</div>` + top.map((n, i) =>
+      `<button onclick="graphFocus('${esc(n.id)}')"><i>${i + 1}</i><b>${esc(n.label)}</b><em>${S.deg.get(n.id)}</em></button>`).join('');
+  }
+}
+
+/* ── 검색 — 이름으로 찾아 에고로 점프 ── */
+window.gSearch = v => {
+  const sug = $('#gSug'); if (!sug || !S.G || !S.deg) return;
+  const q = v.trim();
+  if (!q) { sug.hidden = true; return; }
+  const hits = S.G.nodes.filter(n => n.label && n.label.includes(q))
+    .sort((a, b) => (S.deg.get(b.id) || 0) - (S.deg.get(a.id) || 0)).slice(0, 8);
+  if (!hits.length) { sug.innerHTML = '<button disabled>일치 없음</button>'; sug.hidden = false; return; }
+  sug.innerHTML = hits.map(n => `<button onclick="gGo('${esc(n.id)}')">
+    <i style="background:${clsColor(n.cls)}"></i>${esc(n.label)}<em>${S.deg.get(n.id) || 0}</em></button>`).join('');
+  sug.hidden = false;
+};
+window.gGo = id => {
+  $('#gSug').hidden = true;
+  const n = S.G.byId?.get(id) || S.G.nodes.find(x => x.id === id);
+  const gq = $('#gq'); if (gq && n) gq.value = n.label;
+  graphFocus(id);
+  if (n) showPanel(n);
+};
+function showPanel(n) {
+  const p = $('#gPanel'); if (!p) return;
+  const sid = encodeURIComponent(String(n.id).replace(RIC, ''));
+  p.innerHTML = `<b>${esc(n.label)}</b><span>${CLS[n.cls]?.ko || n.cls}${n.date ? ' · ' + esc(n.date) : ''}
+    · 연결 ${S.deg.get(n.id) || 0}</span><a href="#/item/${sid}" onclick="event.stopPropagation()">개체 페이지 →</a>`;
+  p.removeAttribute('hidden');
+}
+
+/* ── 장면 — 뷰마다 인사이트 문장과 하이라이트를 넘겨 가며 읽는다.
+   전체 성좌의 장면은 데이터(무게중심)에서 자동으로 짓고, 이야기 3종은 전시 서사의
+   사실만 문장으로 옮겼다. 하이라이트 id 는 화면에 없으면 조용히 빠진다. */
+const STORY_INTRO = {
+  'concept-tanhaek': '헌정이 두 번 멈칫한 자리 — 국회가 대통령 탄핵소추를 의결한 두 순간을 잇는다.',
+  'concept-nodong': '일하는 사람의 편에서 — 상사원에서 노사정위원까지, 노동을 관통한 길.',
+  growth: '진안의 산골에서 여의도까지 — 한 사람이 걸어온 지리의 서사.',
+};
+const STORY_SCENES = {
+  'concept-tanhaek': [
+    { t: '12년을 사이에 둔 두 번의 탄핵소추 — 2004년은 기각으로, 2016년은 인용으로 끝났다.', ids: ['event-impeach-roh', 'event-impeach-park'] },
+    { t: '두 번째 의사봉은 구술자 자신이 들었다 — 제20대 전반기 국회의장 정세균.', ids: ['agent-jsk', 'event-impeach-park'] },
+    { t: '같은 계절, 본회의장 밖 광장에는 촛불이 있었다.', ids: ['event-candlelight', 'event-impeach-park'] }],
+  'concept-nodong': [
+    { t: '노동의 이야기는 명함에서 시작한다 — 쌍용에서의 열일곱 해.', ids: ['agent-jsk', 'org-ssangyong'] },
+    { t: '한보가 무너지고 외환위기가 왔다 — 위기가 대타협을 불렀다.', ids: ['event-hanbo', 'event-imf', 'event-nosajeong'] },
+    { t: '1998년 노사정위원회의 밤 — 그 자리에 있던 사람의 목소리다.', ids: ['agent-jsk', 'event-nosajeong', 'org-nosajeong'] }],
+  growth: [
+    { t: '진안의 소년은 왕복 8km를 걸어 학교에 다녔다.', ids: ['place-jinan', 'org-sinheung-high-school'] },
+    { t: '전주에서 눈이 트였고, 고려대 총학생회장으로 단련됐다.', ids: ['place-jeonju', 'place-korea-univ', 'org-korea-university-student-council'] },
+    { t: '쌍용의 주재원이 태평양을 건넜다 — 돌아와 닿은 곳이 여의도였다.', ids: ['org-ssangyong-usa', 'place-los-angeles', 'place-yeouido', 'org-assembly'] }],
+};
+function viewScenes() {
+  if (S.relKey || S.focus) return [];
+  if (S.story) {
+    const sc = (STORY_SCENES[S.story.key] || []).map(s => ({ t: s.t, ids: s.ids.map(long) }));
+    const intro = STORY_INTRO[S.story.key];
+    return intro ? [{ t: intro, ids: [] }, ...sc] : sc;
+  }
+  // 전체 성좌 — 무게중심에서 장면을 짓는다(팀이 데이터를 갈아끼워도 성립)
+  const top = [...S.G.nodes].sort((a, b) => (S.deg.get(b.id) || 0) - (S.deg.get(a.id) || 0));
+  if (top.length < 3) return [];
+  const [a, b] = top;
+  const ppl = top.filter(n => n.cls === 'Person').slice(1, 4);
+  const out = [
+    { t: `전체 ${S.G.nodes.length}개 개체 · ${S.G.edges.length}개 관계에서 연결이 많은 ${S.nodes.length}개를 별로 올렸다 — 별이 클수록 이야기의 무게가 크다.`, ids: [] },
+    { t: `이 성좌의 정점은 ${a.label} — 연결 ${S.deg.get(a.id)}개. 기록의 세계가 한 사람을 중심으로 돈다.`, ids: [a.id] },
+    { t: `${a.label} 곁의 또 하나의 기둥, ${b.label}(연결 ${S.deg.get(b.id)}개) — 이 그물은 두 무게중심으로 지탱된다.`, ids: [a.id, b.id] }];
+  if (ppl.length) out.push({
+    t: `정점 곁의 사람들 — ${ppl.map(p => p.label).join(' · ')}. 구술이 지나온 시간의 증인들이다.`,
+    ids: [a.id, ...ppl.map(p => p.id)] });
+  return out;
+}
+function renderInsight() {
+  const el = $('#gInsight'); if (!el) return;
+  S.scenes = viewScenes(); S.si = 0;
+  paintScene();
+}
+function paintScene() {
+  const el = $('#gInsight');
+  if (!el) return;
+  clearTimeout(S.sceneT);
+  if (!S.scenes || !S.scenes.length) { el.hidden = true; S.hiIds = null; return; }
+  const sc = S.scenes[S.si];
+  const shown = new Set(S.nodes.map(n => n.id));
+  S.hiIds = new Set(sc.ids.filter(id => shown.has(id)));
+  el.innerHTML = `<p>${esc(sc.t)}</p>
+    <div class="row"><span class="no">장면 ${S.si + 1} / ${S.scenes.length}</span>
+      <button onclick="gScene(-1)" aria-label="이전 장면">‹</button>
+      <button onclick="gScene(1)" aria-label="다음 장면">›</button></div><i class="bar"></i>`;
+  el.hidden = false;
+  /* 자동 플레이 — 문장 길이만큼 머문 뒤 다음 장면으로. 오버레이에 마우스가 올라와 있으면 쉰다. */
+  const ms = Math.max(5500, 3200 + sc.t.length * 60);
+  if (!S.scenePaused && S.scenes.length > 1) {
+    S.sceneT = setTimeout(() => { S.si = (S.si + 1) % S.scenes.length; paintScene(); }, ms);
+    if (!REDUCED) {
+      const bar = el.querySelector('.bar');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        bar.style.transition = `width ${ms}ms linear`; bar.style.width = '100%';
+      }));
+    }
+  }
+}
+window.gScene = d => {
+  if (!S.scenes?.length) return;
+  S.si = (S.si + d + S.scenes.length) % S.scenes.length;
+  paintScene();
+};
+
+window.gStory = k => {
+  S.story = k ? STORIES().find(s => s.key === k) : null;
+  S.relKey = null; S.focus = null; S.glow = null;
+  $('#gPanel')?.setAttribute('hidden', '');
+  document.querySelectorAll('#gTabs .gtab').forEach(b => b.classList.toggle('on', b.dataset.k === (k || '')));
+  document.querySelectorAll('#gRels .grel').forEach(b => b.classList.remove('on'));
+  compute();
+};
+window.gRel = p => {
+  S.relKey = S.relKey === p ? null : p;
+  S.story = null; S.focus = null;
+  $('#gPanel')?.setAttribute('hidden', '');
+  document.querySelectorAll('#gTabs .gtab').forEach(b => b.classList.toggle('on', !S.relKey && b.dataset.k === ''));
+  document.querySelectorAll('#gRels .grel').forEach(b => b.classList.toggle('on', b.textContent.includes(REL_KO[S.relKey] || '§')));
+  compute();
+};
+window.gGlow = c => { S.glow = c; };
+window.gPin = c => { S.glow = S.glow === c && S.glowPin ? null : c; S.glowPin = !!c; };
 
 function sizeCanvas() {
   const cv = $('#graph'); if (!cv) return;
@@ -53,74 +218,77 @@ function sizeCanvas() {
   cv.height = Math.max(1, (r.height || 620) * devicePixelRatio);
 }
 
-window.setLayout = k => {
-  S.layout = k;
-  document.querySelectorAll('#layoutSeg button').forEach(b => b.classList.toggle('on', b.dataset.l === k));
-  compute();
-};
-window.toggleCls = c => {
-  S.clsOn.has(c) ? S.clsOn.delete(c) : S.clsOn.add(c);
-  document.querySelectorAll('#clsChips .chip').forEach(b => b.classList.toggle('on', S.clsOn.has(b.dataset.c)));
-  compute();
-};
-window.toggleRel = p => {
-  const all = [...new Set(S.G.edges.map(e => e.p))];
-  if (p === '*') S.relOn = S.relOn.size === all.length ? new Set() : new Set(all);
-  else S.relOn.has(p) ? S.relOn.delete(p) : S.relOn.add(p);
-  document.querySelectorAll('#relChips .chip').forEach(b => {
-    const pp = b.dataset.p;
-    b.classList.toggle('on', pp ? S.relOn.has(pp) : S.relOn.size === all.length);
-  });
-  compute();
-};
-window.graphSearch = v => { S.search = v.trim(); compute(); };
-window.resetGraph = () => {
-  S.focus = null; S.search = ''; $('#gSearch').value = '';
-  S.clsOn = new Set(Object.keys(CLS));
-  S.relOn = new Set([...new Set(S.G.edges.map(e => e.p))]);
-  document.querySelectorAll('#clsChips .chip,#relChips .chip').forEach(b => b.classList.add('on'));
-  compute();
-};
 /* 다시 그리라는 말은 곧 크기가 달라졌다는 말이다 — 테마 전환·전체화면·페이지 전환 모두 그렇다.
    캔버스를 다시 재지 않으면 숨어 있던 동안의 0px 를 그대로 쓴다. */
 export function redrawGraph() { if (S.G) { sizeCanvas(); compute(); } }
 /** 아이템 페이지에서 넘어올 때 — 그 개체의 이웃만 남기고 클래스·관계 필터는 모두 켠다 */
 window.graphFocus = id => {
   if (!S.G) return;
-  S.clsOn = new Set(Object.keys(CLS));
-  S.relOn = new Set([...new Set(S.G.edges.map(e => e.p))]);
-  document.querySelectorAll('#clsChips .chip,#relChips .chip').forEach(b => b.classList.add('on'));
-  S.search = ''; const gs = $('#gSearch'); if (gs) gs.value = '';
+  S.story = null; S.relKey = null;
   S.focus = id;
   compute();
 };
 
 /* ── 표시 대상 계산 + 레이아웃 ── */
-function compute() {
-  const G = S.G; if (!G) return;
-  let ns = G.nodes.filter(n => S.clsOn.has(n.cls));
-  let es = G.edges.filter(e => S.relOn.has(e.p));
-  const ids = new Set(ns.map(n => n.id));
-  es = es.filter(e => ids.has(e.s) && ids.has(e.o));
-
-  if (S.focus) {                                  // 이웃만
-    const keep = new Set([S.focus]);
-    es.forEach(e => { if (e.s === S.focus) keep.add(e.o); if (e.o === S.focus) keep.add(e.s); });
-    ns = ns.filter(n => keep.has(n.id));
-    const k2 = new Set(ns.map(n => n.id));
-    es = es.filter(e => k2.has(e.s) && k2.has(e.o));
+/* 성좌 선정 — 무엇을 그릴지가 이 화면의 절제다.
+   전체: 연결 상위 60 · 이야기: 큐레이션 refs · 관계: 그 술어의 대표 20쌍 · 에고: 이웃 상위 40. */
+function starCompute() {
+  const G = S.G;
+  let ns, es;
+  if (S.story) {
+    const keep = new Set(S.story.ids.map(long));
+    ns = G.nodes.filter(n => keep.has(n.id));
+    const ids = new Set(ns.map(n => n.id));
+    es = G.edges.filter(e => ids.has(e.s) && ids.has(e.o));
+  } else if (S.relKey) {
+    const pairs = G.edges.filter(e => e.p === S.relKey)
+      .sort((a, b) => ((S.deg.get(b.s) || 0) + (S.deg.get(b.o) || 0)) - ((S.deg.get(a.s) || 0) + (S.deg.get(a.o) || 0)))
+      .slice(0, 20);
+    const ids = new Set(pairs.flatMap(e => [e.s, e.o]));
+    ns = G.nodes.filter(n => ids.has(n.id));
+    es = pairs;
+  } else if (S.focus) {
+    const nb = new Map();
+    G.edges.forEach(e => {
+      if (e.s === S.focus) nb.set(e.o, true);
+      if (e.o === S.focus) nb.set(e.s, true);
+    });
+    const ids = new Set([S.focus,
+      ...[...nb.keys()].sort((a, b) => (S.deg.get(b) || 0) - (S.deg.get(a) || 0)).slice(0, 40)]);
+    ns = G.nodes.filter(n => ids.has(n.id));
+    es = G.edges.filter(e => ids.has(e.s) && ids.has(e.o));
+  } else {
+    ns = [...G.nodes].sort((a, b) => (S.deg.get(b.id) || 0) - (S.deg.get(a.id) || 0)).slice(0, 60);
+    const ids = new Set(ns.map(n => n.id));
+    es = G.edges.filter(e => ids.has(e.s) && ids.has(e.o));
   }
-  const deg = new Map(ns.map(n => [n.id, 0]));
-  es.forEach(e => { deg.set(e.s, deg.get(e.s) + 1); deg.set(e.o, deg.get(e.o) + 1); });
-
-  S.nodes = ns.map(n => ({ ...n, d: deg.get(n.id) || 0, x: 0, y: 0, vx: 0, vy: 0 }));
-  S.edges = es;
+  S.nodes = ns.map(n => ({ ...n, d: S.deg.get(n.id) || 0, x: 0, y: 0, vx: 0, vy: 0 }));
   const map = new Map(S.nodes.map(n => [n.id, n]));
   S.edges = es.map(e => ({ ...e, a: map.get(e.s), b: map.get(e.o) })).filter(e => e.a && e.b);
   $('#nNode').textContent = S.nodes.length;
   $('#nEdge').textContent = S.edges.length;
-  ({ network: lNetwork, arc: lArc, radial: lRadial, chord: lChord, hive: lHive, board: lBoard })[S.layout]();
-  if (S.layout !== 'network') markHub();
+  S.layout = 'network';
+  lNetwork();
+  /* 라벨 — 작은 그래프(이야기·관계·에고)는 전부, 성좌는 상위 10만. 소리를 하나로 줄인다. */
+  const all = S.nodes.length <= 42;
+  const top = new Set([...S.nodes].sort((a, b) => b.d - a.d).slice(0, 10));
+  S.nodes.forEach(n => n.lb = all || top.has(n));
+  /* 정착 — 중심 근처에서 제자리로 1.2초 한 번. 그 뒤로는 움직이지 않는다. */
+  if (!REDUCED) {
+    const { W, H } = { W: $('#graph').width, H: $('#graph').height };
+    S.nodes.forEach((n, i) => {
+      const a = i * 2.399;
+      n.sx = W / 2 + Math.cos(a) * W * .04;
+      n.sy = H / 2 + Math.sin(a) * H * .04;
+    });
+    S.settle0 = performance.now();
+  } else S.settle0 = 0;
+  renderInsight();
+}
+
+function compute() {
+  if (!S.G) return;
+  starCompute();
 }
 
 const dims = () => ({ W: $('#graph').width, H: $('#graph').height });
@@ -183,69 +351,6 @@ function lNetwork() {
 
 /** 힘 배치가 아닌 레이아웃(아크·보드 등)에서 주인공을 기억해 둔다.
     후광을 그릴 때만 쓴다 — 좌표는 건드리지 않는다. */
-function markHub() {
-  S.hub = S.focus ? S.nodes.find(n => n.id === S.focus)
-    : [...S.nodes].sort((a, b) => b.d - a.d)[0];
-}
-function lArc() {
-  const { W, H } = dims();
-  const sorted = [...S.nodes].sort((a, b) => order.indexOf(a.cls) - order.indexOf(b.cls) || b.d - a.d);
-  sorted.forEach((n, i) => {
-    n.x = 70 * devicePixelRatio + (i / Math.max(sorted.length - 1, 1)) * (W - 140 * devicePixelRatio);
-    n.y = H * .72;
-  });
-}
-function lRadial() {
-  const { W, H } = dims();
-  const hub = S.focus ? S.nodes.find(n => n.id === S.focus)
-    : [...S.nodes].sort((a, b) => b.d - a.d)[0];
-  if (!hub) return;
-  hub.x = W / 2; hub.y = H / 2;
-  const others = S.nodes.filter(n => n !== hub);
-  const ring1 = new Set(S.edges.filter(e => e.a === hub || e.b === hub)
-    .map(e => (e.a === hub ? e.b : e.a).id));
-  const r1 = others.filter(n => ring1.has(n.id)), r2 = others.filter(n => !ring1.has(n.id));
-  const R = Math.min(W, H);
-  r1.forEach((n, i) => { const a = (i / Math.max(r1.length, 1)) * Math.PI * 2; n.x = W / 2 + Math.cos(a) * R * .22; n.y = H / 2 + Math.sin(a) * R * .22; });
-  r2.forEach((n, i) => { const a = (i / Math.max(r2.length, 1)) * Math.PI * 2; n.x = W / 2 + Math.cos(a) * R * .42; n.y = H / 2 + Math.sin(a) * R * .42; });
-}
-function lChord() {
-  const { W, H } = dims();
-  const sorted = [...S.nodes].sort((a, b) => order.indexOf(a.cls) - order.indexOf(b.cls));
-  const R = Math.min(W, H) * .40;
-  sorted.forEach((n, i) => {
-    const a = (i / sorted.length) * Math.PI * 2 - Math.PI / 2;
-    n.x = W / 2 + Math.cos(a) * R; n.y = H / 2 + Math.sin(a) * R; n.ang = a;
-  });
-}
-function lHive() {
-  const { W, H } = dims();
-  const groups = {};
-  S.nodes.forEach(n => (groups[n.cls] ||= []).push(n));
-  const keys = Object.keys(groups).sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  const R = Math.min(W, H) * .42;
-  keys.forEach((k, gi) => {
-    const a = (gi / keys.length) * Math.PI * 2 - Math.PI / 2;
-    groups[k].sort((x, y) => y.d - x.d).forEach((n, i) => {
-      const t = .18 + (i / Math.max(groups[k].length - 1, 1)) * .82;
-      n.x = W / 2 + Math.cos(a) * R * t; n.y = H / 2 + Math.sin(a) * R * t;
-    });
-  });
-}
-function lBoard() {
-  const { W, H } = dims();
-  const groups = {};
-  S.nodes.forEach(n => (groups[n.cls] ||= []).push(n));
-  const keys = Object.keys(groups).sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  const colW = W / keys.length;
-  keys.forEach((k, gi) => {
-    groups[k].sort((x, y) => y.d - x.d).forEach((n, i) => {
-      n.x = colW * gi + colW / 2 + ((i % 2) - .5) * colW * .32;
-      n.y = 70 * devicePixelRatio + i * 34 * devicePixelRatio;
-    });
-  });
-  clampAll();
-}
 function clampAll() {
   const { W, H } = dims(), m = 40 * devicePixelRatio;
   S.nodes.forEach(n => {
@@ -331,26 +436,38 @@ function loop() {
 
   /* 가만히 둬도 조금씩 숨 쉬게 한다. 완전히 멈춰 있으면 그림처럼 보이고,
      크게 움직이면 읽기 어렵다 — 노드 반지름의 절반 남짓만. */
+  const star = true;
+  /* 정착 보간 — 성좌는 1.2초에 한 번 자리 잡고, 그 뒤로는 완전히 멈춘다(호흡 없음). */
+  const st = star && S.settle0 ? Math.min(1, (performance.now() - S.settle0) / 1200) : 1;
+  const ease = 1 - Math.pow(1 - st, 3);
   const T = (S.t = (S.t || 0) + 1) * .012;
   S.nodes.forEach((n, i) => {
     if (n.ph === undefined) n.ph = (i * 2.399) % 6.283;
-    const amp = 1.6 * devicePixelRatio * (1 + (n === S.hub ? 0 : .4));
+    const amp = star ? 0 : 1.6 * devicePixelRatio * (1 + (n === S.hub ? 0 : .4));
     n.ox = Math.sin(T + n.ph) * amp;
     n.oy = Math.cos(T * .84 + n.ph * 1.3) * amp;
+    if (star && st < 1 && n.sx !== undefined) {
+      n.dx = n.sx + (n.x - n.sx) * ease;
+      n.dy = n.sy + (n.y - n.sy) * ease;
+    } else { n.dx = n.x; n.dy = n.y; }
   });
 
   // 엣지
+  const shi = S.hiIds && S.hiIds.size;   // 장면 하이라이트 — 문장이 가리키는 별과 그 사이 선만 남긴다
+  const panel = css('--panel');
   S.edges.forEach(e => {
     const hi = S.hover && (e.a === S.hover || e.b === S.hover);
-    ctx.strokeStyle = hi ? acc : line;
-    ctx.globalAlpha = hi ? .95 : (S.search ? .18 : .6);
-    ctx.lineWidth = (hi ? 2 : 1) * devicePixelRatio;
+    const eh = shi && S.hiIds.has(e.a.id) && S.hiIds.has(e.b.id);
+    ctx.strokeStyle = hi || eh ? acc : line;
+    const gdim = star && S.glow && !(e.a.cls === S.glow || e.b.cls === S.glow);
+    ctx.globalAlpha = hi ? .95 : eh ? .9 : shi ? .07 : gdim ? .1 : (S.search ? .18 : star ? .5 : .6);
+    ctx.lineWidth = (hi ? 2 : eh ? 1.8 : 1) * devicePixelRatio;
     /* SKOS 관계는 점선이다. skos:broader 는 rdfs:subClassOf 가 아니라 추론이 일어나지 않는
        느슨한 계층이라, RiC-O 관계와 같은 실선으로 그리면 화면이 거짓말을 한다. */
     ctx.setLineDash(SKOS_EDGE.has(e.p) ? [4 * devicePixelRatio, 3 * devicePixelRatio] : []);
     ctx.beginPath();
-    const ax = e.a.x + (e.a.ox || 0), ay = e.a.y + (e.a.oy || 0);
-    const bx = e.b.x + (e.b.ox || 0), by = e.b.y + (e.b.oy || 0);
+    const ax = (e.a.dx ?? e.a.x) + (e.a.ox || 0), ay = (e.a.dy ?? e.a.y) + (e.a.oy || 0);
+    const bx = (e.b.dx ?? e.b.x) + (e.b.ox || 0), by = (e.b.dy ?? e.b.y) + (e.b.oy || 0);
     if (S.layout === 'arc') {
       const mx = (ax + bx) / 2, r = Math.abs(bx - ax) / 2;
       ctx.moveTo(ax, ay);
@@ -360,6 +477,20 @@ function loop() {
       ctx.quadraticCurveTo(W / 2, H / 2, bx, by);
     } else { ctx.moveTo(ax, ay); ctx.lineTo(bx, by); }
     ctx.stroke();
+    if (hi) {
+      /* 호버한 별에 닿은 선에는 관계유형을 얹는다 — 매개 구조(직위·사건)가 눈에 보이게. */
+      const lb = REL_KO[e.p] || String(e.p).split(/[#/]/).pop();
+      ctx.save();
+      ctx.setLineDash([]);
+      ctx.font = `${9.5 * devicePixelRatio}px ui-monospace,"SF Mono",Menlo,monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.globalAlpha = 1;
+      ctx.lineWidth = 3.5 * devicePixelRatio; ctx.strokeStyle = panel;
+      ctx.strokeText(lb, (ax + bx) / 2, (ay + by) / 2);
+      ctx.fillStyle = acc;
+      ctx.fillText(lb, (ax + bx) / 2, (ay + by) / 2);
+      ctx.restore();
+    }
   });
   ctx.globalAlpha = 1;
 
@@ -367,19 +498,32 @@ function loop() {
   S.nodes.forEach(n => {
     const r = nodeR(n);
     const hi = n === S.hover || (S.search && matches(n));
-    ctx.globalAlpha = S.search ? (matches(n) ? 1 : dim) : 1;
-    if (hi) { ctx.globalAlpha = 1; ctx.shadowColor = clsColor(n.cls); ctx.shadowBlur = 14 * devicePixelRatio; }
-    // 흔들림은 그릴 때만 더한다. 실제 좌표(n.x)는 그대로 둬야 클릭 판정이 안 흔들린다.
-    const d = { ...n, x: n.x + (n.ox || 0), y: n.y + (n.oy || 0) };
+    const nh = shi && S.hiIds.has(n.id);
+    const gdim = star && S.glow && n.cls !== S.glow;
+    ctx.globalAlpha = shi ? (nh ? 1 : .18) : S.search ? (matches(n) ? 1 : dim) : gdim ? .18 : 1;
+    if (hi) { ctx.globalAlpha = 1; ctx.shadowColor = star ? acc : clsColor(n.cls); ctx.shadowBlur = 14 * devicePixelRatio; }
+    // 흔들림·정착은 그릴 때만 더한다. 실제 좌표(n.x)는 그대로 둬야 클릭 판정이 안 흔들린다.
+    const d = { ...n, x: (n.dx ?? n.x) + (n.ox || 0), y: (n.dy ?? n.y) + (n.oy || 0) };
     if (n === S.hub && !S.search) {                    // 주인공에겐 옅은 후광
-      ctx.save(); ctx.globalAlpha = .1; ctx.fillStyle = clsColor(n.cls);
+      ctx.save(); ctx.globalAlpha = .08; ctx.fillStyle = star ? acc : clsColor(n.cls);
       ctx.beginPath(); ctx.arc(d.x, d.y, r + 9 * devicePixelRatio, 0, 7); ctx.fill(); ctx.restore();
     }
-    shape(ctx, d, r, clsColor(n.cls));
+    if (star) {
+      /* 성좌 문법 — 채움은 명패색, 테두리는 무채 1px. 색은 딱 두 곳:
+         허브(자주)와 발광 중인 클래스(그 클래스색). */
+      ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, 7);
+      ctx.fillStyle = panel; ctx.fill();
+      ctx.strokeStyle = nh ? acc : n === S.hub ? acc : (S.glow && n.cls === S.glow) ? clsColor(n.cls) : muted;
+      ctx.lineWidth = (nh || n === S.hub || (S.glow && n.cls === S.glow) ? 1.8 : 1) * devicePixelRatio;
+      ctx.stroke();
+    } else {
+      shape(ctx, d, r, clsColor(n.cls));
+    }
     ctx.shadowBlur = 0;
-    if (r > 7 * devicePixelRatio || hi || S.nodes.length < 46) {
-      ctx.fillStyle = hi ? fg : muted;
-      ctx.font = `${(hi ? 12.5 : 11) * devicePixelRatio}px "Nanum Myeongjo", serif`;
+    const showLb = star ? (n.lb || hi || nh) : (r > 7 * devicePixelRatio || hi || S.nodes.length < 46);
+    if (showLb) {
+      ctx.fillStyle = hi || nh ? fg : muted;
+      ctx.font = `${star ? 600 : ''} ${(hi ? 12.5 : 11) * devicePixelRatio}px "Nanum Myeongjo", serif`.trim();
       ctx.textAlign = 'center';
       const label = n.label.length > 14 ? n.label.slice(0, 13) + '…' : n.label;
       ctx.fillText(label, d.x, d.y + r + 13 * devicePixelRatio);
@@ -415,6 +559,15 @@ function onMove(ev) {
 }
 function onClick(ev) {
   const n = pick(ev);
-  S.focus = n ? (S.focus === n.id ? null : n.id) : null;
-  compute();
+  {
+    /* 성좌: 노드 = 에고 + 미니 패널, 빈 곳 = 언제나 전체 성좌로 복귀. */
+    if (n) { S.focus = S.focus === n.id ? null : n.id; }
+    else { S.focus = null; S.relKey = null; S.story = null; }
+    if (!S.focus) $('#gPanel')?.setAttribute('hidden', '');
+    else showPanel(n);
+    document.querySelectorAll('#gTabs .gtab').forEach(b =>
+      b.classList.toggle('on', !S.story && !S.relKey && b.dataset.k === ''));
+    if (!S.relKey) document.querySelectorAll('#gRels .grel').forEach(b => b.classList.remove('on'));
+    compute();
+  }
 }

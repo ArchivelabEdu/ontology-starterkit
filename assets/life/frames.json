@@ -1,10 +1,52 @@
 [
  {
+  "src": "assets/life/gt-teacher.jpg",
+  "year": "초등 시절",
+  "label": "초등학생 시절 선생님과 함께",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "place-jinan"
+ },
+ {
+  "src": "assets/life/gt-shinheung.jpg",
+  "year": "신흥고 시절",
+  "label": "전주 신흥고등학교 재학 시절 — 가운데가 정세균",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "org-sinheung-high-school"
+ },
+ {
+  "src": "assets/life/gt-library.jpg",
+  "year": "1973",
+  "label": "법학과 동기생들과 고려대 중앙도서관 앞에서 — 왼쪽이 정세균",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "place-korea-univ"
+ },
+ {
+  "src": "assets/life/gt-council.jpg",
+  "year": "1973",
+  "label": "고려대학교 총학생회 임원들과 함께 — 앞줄 가운데가 정세균",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "org-korea-university-student-council"
+ },
+ {
+  "src": "assets/life/gt-koyon.jpg",
+  "year": "1973.10",
+  "label": "고려대-연세대 정기전에서 대표로 꽃다발을 받는 고려대 총학생회장 정세균",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "org-korea-university-student-council"
+ },
+ {
   "src": "assets/life/1980-card-ssangyong.webp",
   "year": "1978–1995",
   "label": "쌍용그룹 상무이사 명함 — 丁世均",
   "credit": "Wikimedia Commons · CC BY-SA 4.0",
   "entity": "org-ssangyong"
+ },
+ {
+  "src": "assets/life/gt-longbeach.jpg",
+  "year": "1988",
+  "label": "미국 로스앤젤레스 롱비치 항에 입항한 쌍용 수출선에서 — 왼쪽이 정세균",
+  "credit": "『대한민국 국회를 말하다 08 정세균』(국회도서관) · 구술자 제공",
+  "entity": "org-ssangyong-usa"
  },
  {
   "src": "assets/life/1995-card-party.webp",
@@ -28,13 +70,6 @@
   "entity": "event-speaker-inaug"
  },
  {
-  "src": "assets/life/2016-speaker.webp",
-  "year": "2016.10",
-  "label": "국회의장",
-  "credit": "Wikimedia Commons · 공공누리 제1유형",
-  "entity": "pos-speaker-20-1"
- },
- {
   "src": "assets/life/2016-impeach.webp",
   "year": "2016.12",
   "label": "박근혜 대통령 탄핵소추안 가결 선포",
@@ -53,6 +88,20 @@
   "year": "2018.05",
   "label": "부처님오신날 봉축법요식",
   "credit": "Wikimedia Commons · CC BY-SA 2.0",
+  "entity": "agent-jsk"
+ },
+ {
+  "src": "assets/life/2021-tiktok-clap.jpg",
+  "year": "2021",
+  "label": "틱톡 @chungsyekyun — 박수 챌린지",
+  "credit": "틱톡 @chungsyekyun",
+  "entity": "agent-jsk"
+ },
+ {
+  "src": "assets/life/2021-tiktok-hiphop.jpg",
+  "year": "2021",
+  "label": "틱톡 @chungsyekyun — 가죽 재킷과 선글라스",
+  "credit": "틱톡 @chungsyekyun",
   "entity": "agent-jsk"
  }
 ]

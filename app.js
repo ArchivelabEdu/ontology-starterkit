@@ -21,6 +21,10 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl:  <http://www.w3.org/2002/07/owl#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX skos: <${SKOS}>
+PREFIX schema: <https://schema.org/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX oa:   <http://www.w3.org/ns/oa#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 `;
 export const $ = s => document.querySelector(s);
 export const esc = s => String(s ?? '').replace(/[&<>"]/g,
@@ -56,6 +60,10 @@ export const REL_KO = {
   isAssociatedWithPlace: '관련 장소', isOrWasRegulatedBy: '적용 규칙',
   resultsOrResultedIn: '결과', isRelatedTo: '관련',
   hasOrHadInstantiation: '구현체', isOrWasInstantiationOf: '원기록',
+  /* AP v2 보강층 — FOAF·Schema.org·RiC-O 행위자 연관 */
+  knows: '친분', isAgentAssociatedWithAgent: '관계 행위자',
+  containedInPlace: '상위 장소', containsPlace: '하위 장소',
+  birthPlace: '출생지', alumniOf: '출신 학교',
 };
 export const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
 export const clsColor = c => css((CLS[c] || { v: '--muted' }).v);
@@ -138,7 +146,11 @@ function route() {
      모양이라 거기서 개체로 들어가면 그래프가 비고 「그런 개체가 없습니다」가 떴다.
      접두 없는 아이템 주소에서는 컬렉션을 건드리지 않는다. */
   const bareItem = !col && rest.startsWith('item/');
-  if (!bareItem && want.join(',') !== now.join(',')) applyCollection(want);
+  /* 맨 홈(#/)도 마찬가지다 — 「홈으로 간다」는 화면 이동이지 「모두 내려라」는 상태 명령이
+     아니다. 예전에는 홈 복귀가 applyCollection([]) 을 타서 적재가 통째로 풀렸다(실측).
+     내리기는 pickNone/goPicked 이 명시적으로 한다. */
+  const bareHome = !col && !rest;
+  if (!bareItem && !bareHome && want.join(',') !== now.join(',')) applyCollection(want);
   navHrefs();
 
   /* 아직 안 골랐으면 어느 화면으로 가든 고르는 자리로 돌린다.
@@ -158,11 +170,13 @@ function route() {
     navMark(colHref('records'));
     return;
   }
-  // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지, 밖이면 홈
-  const id = PAGES.includes(rest) ? rest : (CUR.cols.length ? 'collection' : 'home');
+  // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지. 맨 홈은 적재 중이어도 홈이다.
+  const id = PAGES.includes(rest) ? rest : (bareHome ? 'home' : (CUR.cols.length ? 'collection' : 'home'));
   document.documentElement.dataset.page = id;
   document.body.classList.toggle('past-hero', id !== 'home');
   navMark(id === 'home' ? '' : colHref(id));
+  // 적재된 채로 홈에 오면 고르개가 「적재됨」 상태를 입은 채 다시 그려져야 한다.
+  if (id === 'home') drawPicker();
   scrollTo({ top: 0 });
   /* 숨어 있는 동안 컨테이너 크기가 0이라 지도·캔버스·연표가 제대로 안 그려진다.
      보이게 된 뒤 다시 재라고 알려 준다 — 전체화면 전환 때와 같은 이유다.
@@ -278,6 +292,18 @@ function pickerHtml(inPage) {
   const self = new Set(COLS.map(c => c.id));   // members 에는 컬렉션 개체 자신도 들어 있다
   const uni = new Set();
   picked.forEach(c => c.members.forEach(m => { if (!self.has(m)) uni.add(m); }));
+  /* 카드마다 지금 상태를 말로 단다 — 여러 컬렉션에서 하나만 내릴 때, 「체크를 끄고 적재」라는
+     두 단계가 카드 위에서 스스로 읽히게. 적재됨(켜져 있고 실려 있음) · 적재 대기(켰지만 아직) ·
+     내리기 대기(껐지만 아직 실려 있음). */
+  const liveOf = c => CUR.cols.includes(c.id);
+  const state = c => {
+    const on = PICK.has(short(c.id)), live = liveOf(c);
+    return live && on ? '<em class="st live">● 적재됨</em>'
+      : on ? '<em class="st wait">● 적재 대기</em>'
+      : live ? '<em class="st drop">● 내리기 대기</em>' : '';
+  };
+  /* 고른 것과 실린 것이 같으면 「적재」는 할 일이 없다 — 눌러도 그대로인 버튼은 죽여 둔다. */
+  const same = PICK.size === CUR.cols.length && CUR.cols.every(c => PICK.has(short(c)));
   return `
     <div class="picker" data-inpage="${inPage ? 1 : 0}">
     <div class="col-grid">
@@ -286,21 +312,24 @@ function pickerHtml(inPage) {
         <span class="col-face" aria-hidden="true"
           style="background:linear-gradient(160deg,${FACE_DUO[fi % FACE_DUO.length]})">${esc((c.title || '?').trim()[0])}</span>
         <b>${esc(c.title)}</b><span>${esc(cls(c))}</span>
-        <i>개체 ${c.n}</i></button>`).join('')}
+        <i>개체 ${c.n}</i>${state(c)}</button>`).join('')}
     </div>
     <div class="pick-bar">
-      <button class="btn primary" onclick="goPicked()" ${PICK.size ? '' : 'disabled'}>선택</button>
-      <button class="btn sm" onclick="pickAll()">전체</button>
-      <!-- 지금 뭐라도 켜져 있으면(체크됐거나 이미 적재됐거나) 해제할 게 있다.
+      <button class="btn primary" onclick="goPicked()" ${same ? 'disabled' : ''}>${(PICK.size || CUR.cols.length) && same ? '적재됨' : '적재'}</button>
+      <button class="btn sm" onclick="pickAll()">모두 고르기</button>
+      <!-- 지금 뭐라도 켜져 있으면(체크됐거나 이미 적재됐거나) 내릴 게 있다.
            체크만 0이고 CUR.cols 는 아직 안 지워졌을 수 있다 — 카드를 손으로 눌러 마지막
-           하나를 껐을 때가 그렇다. 그 경우에도 해제가 눌려야 실제로 내려간다. -->
-      <button class="btn sm" onclick="pickNone()" ${(PICK.size || CUR.cols.length) ? '' : 'disabled'}>해제</button>
+           하나를 껐을 때가 그렇다. 그 경우에도 이 버튼이 눌려야 실제로 내려간다. -->
+      <button class="btn sm" onclick="pickNone()" ${(PICK.size || CUR.cols.length) ? '' : 'disabled'}>모두 내리기</button>
       <span class="status">${[
         inPage && CUR.cols.length
-          ? `지금 보는 것 ${CUR.cols.map(c => esc(COLS.find(x => x.id === c)?.title ?? '')).join(', ')}`
+          ? `적재됨 ${CUR.cols.map(c => esc(COLS.find(x => x.id === c)?.title ?? '')).join(', ')}`
           : '',
-        PICK.size ? `${PICK.size}건 · 개체 ${uni.size}`
-          : inPage ? '카드를 눌러 바꾸세요' : '카드를 눌러 컬렉션을 고르세요',
+        same
+          ? (CUR.cols.length ? '' : '카드를 눌러 컬렉션을 고르세요')
+          : PICK.size ? `고른 것 ${PICK.size}건 · 개체 ${uni.size} — 「적재」를 누르면 반영됩니다`
+          : CUR.cols.length ? '고른 것이 없습니다 — 「적재」를 누르면 모두 내립니다'
+          : '카드를 눌러 컬렉션을 고르세요',
       ].filter(Boolean).join(' · ')}</span>
     </div></div>`;
 }
@@ -311,12 +340,18 @@ function pickerHtml(inPage) {
 const PICK = new Set();
 window.togglePick = id => { PICK.has(id) ? PICK.delete(id) : PICK.add(id); repaintPicker(); };
 window.pickAll = () => { COLS.forEach(c => PICK.add(short(c.id))); repaintPicker(); };
-/* 예전엔 여기서 체크만 지우고 끝났다 — 실제로 적재된 것(CUR.cols · G)은 그대로 남아,
-   화면은 「다 해제됨」인데 그래프는 계속 떠 있는 어긋남이 났다(기록·지도·관계망 어디를 봐도
-   그대로). 「해제」는 보류 없이 **그 자리에서 바로 반영**되어야 하는 동작이라, 체크만 지우지 않고
-   빈 컬렉션으로 즉시 이동한다 — hasPick() 이 false 가 되어 route() 가 고르는 화면으로 돌려보낸다. */
-window.pickNone = () => { PICK.clear(); location.hash = '#/'; };
-window.goPicked = () => { location.hash = PICK.size ? `#/c/${[...PICK].map(encodeURIComponent).join(',')}` : '#/'; };
+/* 「모두 내리기」는 상태 명령이다 — 주소 이동에 실어 보내지 않고 **여기서 직접 내린다.**
+   예전에는 '#/' 로 보내 route 가 내리게 했는데, 그러면 홈 주소 자체가 내리기 명령이 되어
+   로고를 눌러 홈에 돌아오기만 해도 적재가 통째로 풀렸다(실측). 내린 뒤의 홈 이동은 화면 전환일 뿐이다. */
+window.pickNone = () => {
+  PICK.clear();
+  applyCollection([]);
+  if (location.hash !== '#/') location.hash = '#/'; else route();
+};
+window.goPicked = () => {
+  if (PICK.size) location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}`;
+  else window.pickNone();   // 다 꺼 두고 「적재」 — 모두 내리기와 같은 뜻
+};
 /* 같은 고르개가 두 자리에 있다 — 첫 화면(#pickBody)과 컬렉션 페이지(#colBody).
    예전에는 `$('#pickBody') || $('#colBody')` 로 한 곳만 골랐는데, #pickBody 는 숨어 있어도
    늘 DOM 에 남아 있어 **컬렉션 페이지에서는 안 보이는 쪽만 다시 그렸다** —
@@ -381,6 +416,15 @@ function loadedBanner() {
       </div>
       <div class="lb-bar" role="img" aria-label="개체 구성비">${bars}</div>
       <div class="lb-legend">${legend}</div>
+      <div class="lb-go">
+        <span class="lb-go-k">다음 단계 — 지금 눌러 보세요</span>
+        <div class="lb-go-grid">
+        ${[['records', '검색', '이름·연결로 개체 찾기'], ['place', '장소', '지도 위 구술의 자리'],
+           ['event', '연표', '사건의 시간축'], ['graph-sec', '관계망', '전체 그래프 한눈에'],
+           ['subject', '주제', '시소러스와 전시'], ['query', '질문', 'SPARQL로 물어보기']]
+          .map(([p, t, d]) => `<a class="lb-go-a" href="${colHref(p)}"><b>${t} →</b><span>${esc(d)}</span></a>`).join('')}
+        </div>
+      </div>
     </div>`;
 }
 /** 배너가 그려진 뒤에 부른다 — innerHTML 로 넣은 직후엔 엘리먼트가 아직 없다. */
@@ -557,10 +601,12 @@ function buildModel() {
     same: same.get(r.s) || [], uuid: uu.get(r.s) || '',
   }));
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
+  /* AP v2: foaf(친분)·schema(장소 계층·이력)도 관계다. prov·oa·rdf 는 생성이력층 — 관계망에 올리지 않는다. */
   const er = rows(`SELECT ?s ?p ?o WHERE {
-    ?s ?p ?o . FILTER(isIRI(?o) && (STRSTARTS(STR(?p), "${RICO}") || STRSTARTS(STR(?p), "${SKOS}"))) }`);
+    ?s ?p ?o . FILTER(isIRI(?o) && (STRSTARTS(STR(?p), "${RICO}") || STRSTARTS(STR(?p), "${SKOS}")
+      || STRSTARTS(STR(?p), "http://xmlns.com/foaf/0.1/") || STRSTARTS(STR(?p), "https://schema.org/"))) }`);
   G.edges = er.filter(e => G.byId.has(e.s) && G.byId.has(e.o))
-    .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] }));
+    .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] || e.p.split('/').pop() }));
   buildCollections();
   recount();
 }
@@ -644,7 +690,9 @@ function writeStatus() {
      그래서 안 골랐을 때는 문장 자체를 바꾼다. */
   const line = hasPick()
     ? `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
-    : `그래프 준비 완료(트리플 ${ALL_TRIPLES}개) — 컬렉션을 골라야 표시됩니다 · SPARQL 1.1 (Oxigraph WASM)`;
+    /* 내린 상태는 「적재 0」을 앞세우고 수치는 더 들지 않는다 — 어떤 수를 곁들여도
+       지금 떠 있는 것처럼 읽혀 「내렸는데 0이 안 된다」로 보였다(실측 두 번). */
+    : `적재 0 — 미적재 컬렉션 ${COLS.length}건 중 지식 그래프에 올릴 대상을 골라 「적재」를 누르세요 · SPARQL 1.1 (Oxigraph WASM)`;
   if (el) el.textContent = line;
   /* 같은 문장을 검색 페이지 머리에도 쓴다 — 검색이 도는 그래프가 지금 몇 개짜리인지
      그 자리에서 보이도록. 원천이 한 곳이라 두 표시가 어긋날 일이 없다. */
@@ -917,7 +965,7 @@ window.openExpo = key => {
      · refs 는 그래프에 실재하는 id 여야 한다 — 없으면 화면에서 조용히 빠진다.
 
    지금은 「탄핵」 하나만 있다. 다른 주제로 늘리려면 이 객체에 키를 더하면 된다. */
-const SUBJ_STORY = {
+export const SUBJ_STORY = {
   'concept-tanhaek': {
     kicker: '큐레이션 전시',
     title: '두 번의 탄핵소추,\n그리고 그 사이의 국회',
@@ -1060,8 +1108,8 @@ function renderStory(key) {
         <div class="act-body">
           <h4>${esc(a.title)}</h4>
           <p>${esc(a.narr)}</p>
-          ${a.quotes.map(q => `<blockquote class="act-quote">${spTag()}${esc(q.sent)}
-            <cite>구술 원문 · ${q.i + 1}단락</cite></blockquote>`).join('')}
+          ${a.quotes.map(q => `<blockquote class="act-quote">${esc(q.sent)}
+            <cite>${esc(narratorLabel())} 구술 원문 · ${q.i + 1}단락</cite></blockquote>`).join('')}
           ${a.refs.length ? `<div class="chips-l">${a.refs.map(chip).join('')}</div>` : ''}
         </div>
         ${a.media && (i % 2) ? media(a.media) : ''}
@@ -1196,10 +1244,14 @@ function drawMap() {
   /* 첫 배율은 「컨테이너가 크기를 갖는 순간」에 맞춰야 한다 — route 의 60ms 한 번으로는
      레이아웃이 아직 0 인 판을 놓치고, fitMap 의 크기 가드에 걸려 조용히 빠진 채 재시도가 없다
      (증상: 첫 진입이 씨앗 뷰 줌 7 그대로). 크기 변화마다 다시 재고, 만진 뒤에는 자동 맞춤만 멈춘다. */
+  let rsT = null;   // 리사이즈 드래그 중 매 프레임 fitBounds 를 돌리면 무겁다 — 끝나고 한 번만
   new ResizeObserver(() => {
     if (!MAP.map) return;
-    MAP.map.invalidateSize();
-    if (!MAP.touched) fitMap();
+    clearTimeout(rsT);
+    rsT = setTimeout(() => {
+      MAP.map.invalidateSize();
+      if (!MAP.touched) fitMap();
+    }, 150);
   }).observe(MAP.map.getContainer());
 
   drawMarkers(ps);
@@ -1504,7 +1556,8 @@ export const LANG = { mode: 'network', words: [], byChapter: [], paras: [] };
    hero.js(첫 화면 몰핑 초상)가 읽는 것과 같은 파일을 여기서도 읽어 인물 하이라이트와
    전시가 함께 쓴다 — 이미지 출처 표기를 한 곳에서 관리하기 위해서다. */
 export const LIFE = [];
-const STOP = new Set(['그리고', '하지만', '그런데', '있는', '없는', '하는', '이런', '저런', '그런', '그래서',
+/* '그대'는 어간 절단이 만든 유령 토큰이다 — '그대로'가 잘려 2인칭 대명사처럼 남는다. */
+const STOP = new Set(['그대', '그리고', '하지만', '그런데', '있는', '없는', '하는', '이런', '저런', '그런', '그래서',
   '것이', '것을', '것도', '거예요', '그때', '해서', '때문에', '우리', '저는', '제가', '많이', '아주',
   '이렇게', '그렇게', '어떻게', '무슨', '그러니까', '이제', '정말', '조금', '하나', '이런저런',
   '있었', '했어요', '하고', '그거', '뭐가', '이라고', '이라는', '라고', '한다는', '거는', '것은',
@@ -1770,11 +1823,6 @@ export function narratorLabel() {
   const n = e && (G.byId.get(e.o) || ALL.nodes.find(m => m.id === e.o));
   return n?.label || '';
 }
-export const spTag = () => {
-  const w = narratorLabel();
-  return w ? `<b class="sp">◯${esc(w)}</b>` : '';
-};
-
 /* 오늘의 목소리 — 히어로에 상시 노출되는 한 문장. 큐레이터가 화자를 검증해 둔 전시 인용
    구간(quoteX/quotes)에서 날짜로 돌려 고른다. 렌더 시점에 원문에서 다시 꺼내므로
    코퍼스를 갈아끼우면 자동으로 사라지거나 새 문장이 된다 — 문자열로 박아 두지 않는다. */
@@ -1787,8 +1835,8 @@ function paintTodayVoice() {
   const q = qs[new Date().getDate() % qs.length];
   const x = excerptAt(q.pi, q.from, q.to);
   if (!x) { el.hidden = true; return; }
-  el.innerHTML = `<blockquote>${spTag()}${esc(x.sent)}
-    <cite>오늘의 목소리 — 구술 ${x.i + 1}단락 · 원문에서 그대로</cite></blockquote>`;
+  el.innerHTML = `<blockquote>${esc(x.sent)}
+    <cite>오늘의 목소리 — ${esc(narratorLabel())} 구술 ${x.i + 1}단락 · 원문에서 그대로</cite></blockquote>`;
   el.hidden = false;
 }
 

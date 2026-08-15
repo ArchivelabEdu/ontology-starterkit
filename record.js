@@ -192,11 +192,6 @@ function personHighlight(n, out, inn) {
 
   const positionsAll = (out['occupiesOrOccupied'] || []).filter(Boolean)
     .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  // 실측 154건 — 다 늘어놓으면 하이라이트가 아니라 그 자체로 페이지가 된다.
-  // 최근 것 위주로 자르고, 나머지는 숨기지 않고 "+N건"으로 있다는 사실만 알린다.
-  const POS_CAP = 6;
-  const positions = positionsAll.slice(-POS_CAP).reverse();
-  const posMore = positionsAll.length - positions.length;
 
   const events = (out['isOrWasParticipantIn'] || []).filter(Boolean);
   // 연표는 흐름을 보는 자리 — 자르기 전 전체에서 만든다.
@@ -236,45 +231,109 @@ function personHighlight(n, out, inn) {
   const maxS = top.length ? Math.max(...top.map(x => x.s)) : 1;
 
   // 생애 장면 — 사진마다 연도·설명·출처. 개체가 그래프에 있으면 그 개체로 링크된다.
-  const film = (isNarrator && LIFE.length) ? `<div class="p-film">
-      <div class="p-film-head"><h4>생애 장면</h4><span>${LIFE.length}컷 · 출처는 각 장면에</span></div>
-      <div class="p-film-track">${LIFE.map(f => {
+  /* 명함 스캔(-card-)은 생애 「장면」이 아니라 실물 기록이라 사진 갤러리의 결을 깬다 — 뺀다.
+     해당 개체 페이지(쌍용그룹·새정치국민회의)의 뷰어에는 그대로 남는다. */
+  const cuts = LIFE.filter(f => !f.src.includes('-card-'));
+  /* 갤러리 확장 — 이 인물에 **연결된** 개체의 사진을 곁들인다. 선별 규칙(전부 결정적):
+     사건·활동·장소·인물만(단체는 로고 위험), 장소의 png 는 지도 조각이라 제외,
+     극소형·저품질로 확인된 파일은 데니리스트. 순서는 유형 라운드로빈 —
+     세로 초상과 가로 풍경이 번갈아 나와 모자이크 리듬이 생긴다. */
+  const GAL_DENY = ['person-kim-jong-in', 'person-woo-byeong-u', 'place-daegu-airport',
+    'place-cheongwadae', 'place-new-york'];
+  const seenImg = new Set([n.img]);
+  const galOk = o => o && o.img && !seenImg.has(o.img) && !o.img.includes('-card-')
+    && ['Event', 'Activity', 'Place', 'Person'].includes(o.cls)
+    && !(o.cls === 'Place' && /\.png$/i.test(o.img))
+    && !GAL_DENY.some(d => o.img.includes(d));
+  const pool = {};
+  [...Object.values(out), ...Object.values(inn)].flat().forEach(o => {
+    if (galOk(o)) { seenImg.add(o.img); (pool[o.cls] ||= []).push(o); }
+  });
+  Object.values(pool).forEach(l => l.sort((a, b) => a.label.localeCompare(b.label)));
+  /* 연결 사진은 6컷까지만 — 갤러리의 주인공은 구술총서의 생애 컷들이고,
+     연결 개체 사진은 곁들임이다(수십 장 이어 붙이면 정치인 얼굴 벽이 된다). */
+  const rel = [];
+  for (let i = 0; rel.length < 6; i++) {
+    let got = false;
+    for (const c of ['Event', 'Activity', 'Place', 'Person']) {
+      const x = pool[c]?.[i];
+      if (x && rel.length < 6) { rel.push(x); got = true; }
+    }
+    if (!got) break;
+  }
+  const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
+      title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
+      <img src="${esc(o.img)}" alt="${esc(o.label)}"></a>`).join('');
+  /* 갤러리는 무괘 — 라벨도 선도 없이 어록 다음에 흐른다. 출처는 각 컷의 호버와
+     개체 페이지 뷰어가 진다(규율 유지). */
+  /* 이미지가 하나 실릴 때마다 비율이 확정되므로 masonry 를 다시 잰다(디바운스). */
+  setTimeout(() => document.querySelectorAll('.p-film-track img').forEach(img => {
+    if (img.complete) masonrySoon();
+    else { img.addEventListener('load', masonrySoon, { once: true });
+           img.addEventListener('error', masonrySoon, { once: true }); }
+  }), 0);
+  const film = (isNarrator && cuts.length) ? `<div class="p-film">
+      <div class="p-film-track">${cuts.map(f => {
         const ent = f.entity && G.byId.get(long(f.entity));
-        const inner = `<img src="${esc(f.src)}" alt="${esc(f.label)}" loading="lazy">
-          <figcaption><b>${esc(f.year)}</b><span>${esc(f.label)}</span><em>${esc(f.credit)}</em></figcaption>`;
+        /* 이미지만 — 글자는 없다. 연도·설명·크레딧(출처 규율)은 호버 제목이 지고,
+           눌러 들어간 개체 페이지의 뷰어가 같은 정보를 캡션으로 제대로 보여 준다.
+           비율도 원본 그대로 — 자르지 않는다. */
+        const inner = `<img src="${esc(f.src)}" alt="${esc(f.label)}">`;
+        const tip = `${f.year} · ${f.label} — ${f.credit}`;
+        if (ent && ent.id === n.id)
+          return `<button class="p-frame" onclick="mvJump('${esc(f.src)}')" title="${esc(tip)} — 뷰어로 보기">${inner}</button>`;
         return ent
-          ? `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(f.entity))}">${inner}</a>`
-          : `<figure class="p-frame">${inner}</figure>`;
-      }).join('')}</div>
+          ? `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(f.entity))}" title="${esc(tip)}">${inner}</a>`
+          : `<figure class="p-frame" title="${esc(tip)}">${inner}</figure>`;
+      }).join('')}${relFrames}</div>
     </div>` : '';
 
+  /* A-1 전기(傳記) 한 줄 — 배지 알약을 걷고, 대표 직함(재임 시작 최신 — 데이터가 정한다)만
+     먹글로 서고 나머지는 배음으로 눕는다. 수치 극장(p-stats)은 서지 정의목록의 「연결」 행이 흡수했다. */
+  const bio = (() => {
+    if (!positionsAll.length) return '';
+    const dated = positionsAll.filter(p => p.date);
+    const lead = dated.length ? dated[dated.length - 1] : positionsAll[positionsAll.length - 1];
+    /* 실데이터는 재임이 수십 건 — 전기 한 줄은 최근 5건까지만 이름을 부르고
+       나머지는 수로만 남긴다(전체는 아래 연결된 개체·서지의 연결 행에 있다). */
+    const rest = positionsAll.filter(p => p !== lead).reverse().slice(0, 5);
+    const more = positionsAll.length - 1 - rest.length;
+    return `<div class="p-bio">
+      <a class="lead" href="${lnk(lead)}">${esc(lead.label)}</a>${lead.date ? `<em>${esc(lead.date)}~</em>` : ''}
+      ${rest.length ? `<span class="dash">—</span><span class="rest">${rest.map(p =>
+        `<a href="${lnk(p)}">${esc(p.label)}</a>`).join(' · ')}${more > 0 ? ` · 외 ${more}건` : ''}</span>` : ''}
+    </div>`;
+  })();
+
   return `<div class="p-hl">
-    ${positions.length ? `<div class="p-badges">${positions.map(p =>
-      `<a class="p-badge" href="${lnk(p)}">${esc(p.label)}${p.date ? ` <em>${esc(p.date)}~</em>` : ''}</a>`).join('')}
-      ${posMore > 0 ? `<span class="p-badge more">+${posMore}건 — 아래 연결된 개체에 전체</span>` : ''}</div>` : ''}
+    ${bio}
 
-    ${quote ? `<blockquote class="p-quote"><p><b class="sp">◯${esc(n.label)}</b>${esc(quote.sent)}</p>
-      <cite>구술 원문 · ${quote.i + 1}단락 — 원문에서 가장 특징적인 대목(tf-idf)에서 그대로 가져왔습니다</cite></blockquote>` : ''}
-
-    <div class="p-stats">
-      <div><b>${totalLinks.toLocaleString('ko-KR')}</b><span>연결</span></div>
-      <div><b>${positionsAll.length.toLocaleString('ko-KR')}</b><span>재임·직위</span></div>
-      <div><b>${events.length.toLocaleString('ko-KR')}</b><span>참여 사건</span></div>
-      <div><b>${subjects.length.toLocaleString('ko-KR')}</b><span>다룬 주제</span></div>
-    </div>
+    ${quote ? `<blockquote class="p-quote"><p>${esc(quote.sent)}</p>
+      <cite>${esc(n.label)} 구술 · ${quote.i + 1}단락 — 원문에서 가장 특징적인 대목(tf-idf)에서 그대로 가져왔습니다</cite></blockquote>` : ''}
 
     ${film}
 
-    <div class="p-cards">
-      ${top.length ? `<div class="p-card">
+    ${top.length ? `<div class="p-card">
         <h4>핵심 키워드</h4>
-        <div class="p-kw">${top.map(x => `<button class="p-kwc" style="--k:${(x.s / maxS).toFixed(3)}"
-          onclick="personKeyword(this,'${esc(x.w)}')">${esc(x.w)}</button>`).join('')}</div>
+        <div class="p-kw">${top.map(x => {
+          /* 단락 지문 — 이 말이 구술 몇 단락에 몰려 있는지를 단락 수만큼의 칸으로 눕힌다.
+             칸의 진하기는 그 단락에서의 빈도. 크기(칩)만 있던 정보에 「어디의 말인가」가 붙는다. */
+          const cells = LANG.byChapter.map(c => c.freq[x.w] || 0);
+          const mx = Math.max(...cells, 1);
+          const strip = cells.map(v =>
+            `<i style="opacity:${v ? (0.25 + 0.75 * v / mx).toFixed(2) : 0}"></i>`).join('');
+          return `<button class="p-kwc" style="--k:${(x.s / maxS).toFixed(3)}"
+            onclick="personKeyword(this,'${esc(x.w)}')">
+            <b>${esc(x.w)}</b>
+            <span class="kw-strip" aria-hidden="true">${strip}</span>
+            <em>${x.pi + 1}단락</em></button>`; }).join('')}</div>
         <div class="p-kw-out" hidden></div>
-        <p class="p-cardnote">글자가 클수록 원문 한 대목에 유난히 몰린 말입니다(tf-idf). 눌러 보세요 —
+        <p class="p-cardnote">글자가 굵을수록 원문 한 대목에 유난히 몰린 말(tf-idf), 오른쪽 띠는 그 말이
+          구술 ${LANG.byChapter.length}단락 중 어디에 몰려 있는지입니다. 눌러 보세요 —
           그 말이 나온 문장이 그대로 열립니다.</p>
       </div>` : ''}
 
+    <div class="p-cards">
       ${timeline.length ? `<div class="p-card">
         <h4>연표 <span>${timeline.length}</span></h4>
         <ul class="p-tl">${timeline.slice(0, 7).map(x => `<li>
@@ -312,6 +371,48 @@ window.personKeyword = (btn, w) => {
   card.querySelectorAll('.p-kwc').forEach(b => b.classList.toggle('on', b === btn));
 };
 
+/* ── 개체 미디어 뷰어 ──
+   이 개체에 붙은 미디어를 전부 모은다. 원천은 두 곳뿐이다(지어내지 않는다):
+   ① 개체 자신의 foaf:depiction — 출처는 n.imgSrc
+   ② 생애 장면(frames.json)에서 이 개체를 가리키는 컷 — 연도·설명·크레딧이 딸려 온다.
+   ①의 캡션은 개체를, ②의 캡션은 그 장면을 말하므로 둘이 다른 것이 정상이다.
+   그 정보를 이미지 카드에 그대로 붙여 다니게 해야 「필름에서 본 설명과 페이지 제목이
+   다르다」는 혼동이 사라진다 — 설명은 개체가 아니라 장면의 것이었다. */
+function mediaOf(n) {
+  const list = [];
+  if (n.img) list.push({ src: n.img, cap: n.label, credit: n.imgSrc || '' });
+  LIFE.filter(f => f.entity && long(f.entity) === n.id)
+    .forEach(f => list.push({ src: f.src, cap: `${f.year} · ${f.label}`, credit: f.credit || '' }));
+  return list;
+}
+let MV = [];
+let MV_I = 0;
+window.mvShow = i => {
+  const m = MV[i]; if (!m) return;
+  MV_I = i;
+  const img = $('#mvImg'), cap = $('#mvCap'), pg = $('#mvPg');
+  if (img) { img.src = m.src; img.alt = m.cap; }
+  if (cap) { cap.querySelector('b').textContent = m.cap; cap.querySelector('em').textContent = m.credit; }
+  if (pg) pg.textContent = `${i + 1} / ${MV.length}`;
+};
+window.mvStep = d => mvShow((MV_I + d + MV.length) % MV.length);
+/* 갤러리에서 「본인」 컷을 누르면 — 같은 페이지로 가는 링크는 죽은 클릭처럼 느껴진다 —
+   상단 뷰어를 그 사진으로 넘기고 화면을 뷰어로 올린다. */
+window.mvJump = src => {
+  const i = MV.findIndex(m => m.src === src);
+  if (i < 0) return;
+  mvShow(i);
+  document.querySelector('.m-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+/* 캡션은 접어 둔다 — 사진이 먼저 말하고, 출처·설명은 원할 때 편다. */
+window.mvCapToggle = btn => {
+  const cap = $('#mvCap');
+  if (!cap) return;
+  cap.hidden = !cap.hidden;
+  btn.setAttribute('aria-expanded', String(!cap.hidden));
+  btn.textContent = cap.hidden ? '캡션' : '캡션 닫기';
+};
+
 function item(sid) {
   const n = G.byId.get(long(sid));
   const el = $('#itemView');
@@ -340,6 +441,18 @@ function item(sid) {
   }
   const total = rows.reduce((s, r) => s + r.list.length, 0);
 
+  /* 서지의 「연결」 행 — 사람이면 재임·사건·주제 요약을 곁들인다(옛 통계 띠의 자리). */
+  const linkRow = (() => {
+    if (n.cls !== 'Person') return String(total);
+    const R = (out['occupiesOrOccupied'] || []).length;
+    const E = (out['isOrWasParticipantIn'] || []).length;
+    const recIds = new Set([...(inn['hasCreator'] || []), ...(inn['hasAuthor'] || [])].filter(Boolean).map(x => x.id));
+    const S = new Set();
+    G.edges.forEach(e => {
+      if (recIds.has(e.s) && e.p === 'hasOrHadSubject' && G.byId.get(e.o)?.cls === 'Concept') S.add(e.o);
+    });
+    return `${total} — 재임 ${R} · 사건 ${E} · 주제 ${S.size}`;
+  })();
   const facts = [
     ['유형', CLS[n.cls].ko + ` <code>rico:${n.cls}</code>`],
     n.date && ['날짜', esc(n.date)],
@@ -353,16 +466,29 @@ function item(sid) {
         ${esc(ko)} <span>${esc(id)}</span> ↗</a>`;
     }).join(' ') + `<div class="note">owl:sameAs — 다른 데이터셋의 같은 개체. 대칭·이행 관계이므로
       확인한 것만 붙입니다.</div>`],
+    ['연결', linkRow],
   ].filter(Boolean);
+
+  /* 미디어가 있으면 상단 뷰어가 머리의 작은 초상을 대신한다 — 같은 사진을 두 번 걸지 않는다. */
+  const media = mediaOf(n);
+  MV = media; MV_I = 0;
 
   el.innerHTML = `<div class="item-wrap">
     <a class="back" href="${colHref('records')}">← 검색으로</a>
 
-    <div class="item-head${n.img ? ' with-img' : ''}">
-      ${n.img ? `<figure class="portrait"><img src="${esc(n.img)}" alt="${esc(n.label)}">
-        ${n.imgSrc ? `<figcaption>${esc(n.imgSrc)}</figcaption>` : ''}</figure>` : ''}
+    ${media.length ? `<figure class="m-view">
+      <div class="m-stage"><img id="mvImg" src="${esc(media[0].src)}" alt="${esc(media[0].cap)}"></div>
+      <div class="m-bar">
+        ${media.length > 1 ? `<button class="m-nav" onclick="mvStep(-1)" aria-label="이전 이미지">‹</button>
+          <span class="m-pg" id="mvPg">1 / ${media.length}</span>
+          <button class="m-nav" onclick="mvStep(1)" aria-label="다음 이미지">›</button>` : ''}
+        <button class="m-cap-btn" onclick="mvCapToggle(this)" aria-expanded="false">캡션</button>
+      </div>
+      <figcaption id="mvCap" hidden><b>${esc(media[0].cap)}</b><em>${esc(media[0].credit)}</em></figcaption>
+    </figure>` : ''}
+
+    <div class="item-head">
       <div>
-        <span class="badge" style="background:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
         <h2>${esc(n.label)}</h2>
         ${n.desc ? `<p class="lead">${esc(n.desc)}</p>` : ''}
       </div>
@@ -370,9 +496,10 @@ function item(sid) {
 
     ${n.cls === 'Person' ? personHighlight(n, out, inn) : ''}
 
-    <table class="item-facts">${facts.map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>
+    <h3 class="zsec">서지</h3>
+    <dl class="facts-dl">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
 
-    <h3>연결된 개체 <span>${total}</span></h3>
+    <h3 class="zsec">연결된 개체 <span>${total}</span></h3>
     ${total ? rows.map(r => `
       <div class="link-row">
         <div class="rel">${r.dir} ${esc(r.ko)}
@@ -397,7 +524,55 @@ function item(sid) {
   el.classList.add('on');
   document.body.classList.add('item-open');
   el.scrollTop = 0;
+  buildMasonry();
 }
+
+/** 갤러리 masonry — 바닥까지 일자.
+ *  ① 열 폭(≈168px)으로 열 수를 정하고, 각 컷의 표시 높이(열폭÷원본비율)를 잰다.
+ *  ② 가장 짧은 기둥에 차례로 쌓는다(greedy) — 기둥 높이가 서로 엇비슷해진다.
+ *  ③ 남은 몇 % 차이는 기둥별 비례 스케일로 흡수한다 — 열 폭은 그대로,
+ *     세로만 살짝 늘거나 줄어 cover 크롭 1~5% 안에서 바닥이 정확히 맞는다. */
+function buildMasonry() {
+  const track = document.querySelector('.p-film-track');
+  if (!track) return;
+  const W = track.clientWidth;
+  if (!W) return;
+  const GAP = 6, IDEAL = 168;
+  const frames = [...track.querySelectorAll('.p-frame')];
+  if (!frames.length) return;
+  const K = Math.max(2, Math.round((W + GAP) / (IDEAL + GAP)));
+  const colW = (W - GAP * (K - 1)) / K;
+  const items = frames.map(f => {
+    const img = f.querySelector('img');
+    const ar = (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : .75;
+    return { f, h: colW / ar };
+  });
+  const cols = Array.from({ length: K }, () => ({ h: 0, items: [] }));
+  const total = c => c.h + GAP * Math.max(0, c.items.length - 1);   // 간격까지 넣은 기둥 총높이
+  items.forEach(it => {
+    const c = cols.reduce((a, b) => (total(b) < total(a) ? b : a));
+    c.items.push(it); c.h += it.h;
+  });
+  const used = cols.filter(c => c.items.length);
+  const target = used.reduce((s, c) => s + total(c), 0) / used.length;
+  track.textContent = '';
+  used.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'p-col';
+    d.style.width = colW.toFixed(2) + 'px';
+    /* 간격은 스케일되지 않으므로 빼고 나눈다 — 이걸 빼먹으면 기둥별 컷 수 차이만큼
+       (6px × 개수차) 바닥이 어긋난다(실측 12px). */
+    const s = (target - GAP * Math.max(0, c.items.length - 1)) / c.h;
+    c.items.forEach(it => {
+      it.f.style.height = (it.h * s).toFixed(2) + 'px';
+      d.appendChild(it.f);
+    });
+    track.appendChild(d);
+  });
+}
+let msT = null;
+const masonrySoon = () => { clearTimeout(msT); msT = setTimeout(buildMasonry, 60); };
+addEventListener('load', masonrySoon);
 
 /** 지도 페이지로 가서 그 장소를 고른다.
     예전에는 closeItem() 이 기록 페이지로 되돌려 놓아 지도가 안 보였다. */
