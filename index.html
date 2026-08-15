@@ -985,7 +985,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
    기둥별로 높이를 몇 % 만 비례 조정해 모든 기둥의 바닥을 정확히 맞춘다. */
 .p-film-track{display:flex;gap:10px;align-items:flex-start}
 .p-col{display:flex;flex-direction:column;gap:10px;min-width:0}
-.p-frame{display:block;width:100%;overflow:hidden;position:relative;
+.p-frame{display:block;width:100%;overflow:hidden;position:relative;container-type:inline-size;
   border-radius:var(--r-img);text-decoration:none;color:var(--fg)}
 /* 갤러리 색조 — 흑백. 색을 조금이라도 남기면 원본이 컬러냐 흑백이냐에 따라 결과가
    갈려 갤러리가 두 무리로 보인다(실측). 색을 완전히 지우면 1970년대 원판과 근래 사진이
@@ -993,16 +993,19 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 .p-frame img{filter:grayscale(1) contrast(.8) brightness(1.08);transition:filter .4s ease}
 /* 호버하면 그 컷만 원래 색으로 — 평소엔 한 톤으로 앉고, 들여다볼 때 자료 그대로가 보인다. */
 .p-frame:hover img{filter:none}
-/* 연도 — 사진 위에 사이트 강조색으로. 호버로 색이 돌아오면 글자는 그 자리의 밝기에
-   맞춰(record.js tintYear) 먹 또는 흰색이 된다 — 자주 글자는 컬러 사진 위에서 묻힌다. */
-.p-yr{position:absolute;left:.55rem;bottom:.45rem;z-index:1;pointer-events:none;
-  font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.06em;
+/* 연도 — 사진 한가운데 큰 글씨로. 사이트 강조색으로 서고, 호버로 색이 돌아오면
+   글자는 그 자리의 밝기에 맞춰(record.js tintYear) 먹 또는 흰색이 된다.
+   크기는 컷 폭을 따른다(cqw) — 모자이크라 컷마다 폭이 다르기 때문이다. */
+.p-yr{position:absolute;inset:0;z-index:1;pointer-events:none;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-weight:700;letter-spacing:.1em;
+  font-size:min(24cqw,3.6rem);line-height:1;
   color:var(--accent);transition:color .4s ease,text-shadow .4s ease;
-  text-shadow:0 1px 6px color-mix(in srgb,var(--panel) 70%,transparent)}
+  text-shadow:0 2px 14px color-mix(in srgb,var(--panel) 65%,transparent)}
 /* 어두운 컷 위에서는 자주가 그대로 묻힌다 — 같은 색을 흰쪽으로 밝혀 쓴다(색은 유지). */
 .p-frame[data-tone="dark"] .p-yr{color:color-mix(in srgb,var(--accent) 42%,#fff);
-  text-shadow:0 1px 6px rgba(0,0,0,.55)}
-.p-frame:hover .p-yr{color:var(--yr-hover,#fff);text-shadow:0 1px 8px rgba(0,0,0,.45)}
+  text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.p-frame:hover .p-yr{color:var(--yr-hover,#fff);text-shadow:0 2px 16px rgba(0,0,0,.5)}
 a.p-frame:hover img,button.p-frame:hover img{outline:1px solid var(--accent-2);outline-offset:-1px}
 button.p-frame{padding:0;border:0;background:none;cursor:pointer;font:inherit}
 .p-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
