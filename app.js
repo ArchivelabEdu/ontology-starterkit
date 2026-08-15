@@ -751,8 +751,8 @@ function writeStatus() {
      화면을 옮길 때마다 다시 헤아려야 한다. 컬렉션 이름은 콜라벨(브레드크럼과 같은 규칙)로 든다. */
   const colPart = CUR.cols.length ? `컬렉션 ${CUR.cols.length}건(${colLabel()}) · ` : '';
   const line = hasPick()
-    ? `그래프 적재 완료 — ${colPart}트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
-    : `적재 0 — 컬렉션 0건 · 트리플 0개 · 개체 0 · 관계 0 · SPARQL 1.1 (Oxigraph WASM)`;
+    ? `그래프 적재 완료 — ${colPart}트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length}`
+    : `적재 0 — 컬렉션 0건 · 트리플 0개 · 개체 0 · 관계 0`;
   if (el) el.textContent = line;
   const setAll = (sel, v) => document.querySelectorAll(sel).forEach(n => { n.textContent = v; });
   /* 표지의 수치는 **지금 적재된 것**을 말한다. 전체 발행본 수치를 박아 두면 아무것도 안 골랐는데도
