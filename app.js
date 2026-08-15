@@ -738,6 +738,10 @@ export function applyCollection(ids, redraw = true) {
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
   G.edges = ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o));
   rescope();
+  if (redraw) loadCorpus().then(() => {
+    paintTodayVoice();
+    if (document.documentElement.dataset.page === 'lang') drawLang();
+  });
   /* 트리플 수는 다시 지은 스토어에서 직접 센다 — 화면·질의가 보는 것과 같은 그래프여야
      「적재 7,986개」가 말 그대로 참이 된다(예전에는 개체 목록으로 세어 스토어와 따로 놀았다). */
   if (COLS.length) TRIPLES = CUR.cols.length
@@ -1651,7 +1655,7 @@ window.tlDetail = id => {
 };
 
 /* ══════════ 언어 ══════════ */
-export const LANG = { mode: 'network', words: [], byChapter: [], paras: [] };
+export const LANG = { mode: 'network', words: [], byChapter: [], paras: [], meta: [] };
 /* 생애 장면 — assets/life/frames.json. 연도·설명·크레딧이 딸린 큐레이션 이미지 8컷.
    hero.js(첫 화면 몰핑 초상)가 읽는 것과 같은 파일을 여기서도 읽어 인물 하이라이트와
    전시가 함께 쓴다 — 이미지 출처 표기를 한 곳에서 관리하기 위해서다. */
@@ -1684,10 +1688,32 @@ function stem(w) {
 }
 
 export async function loadCorpus() {
-  let text = '';
-  try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
-  const paras = text.split(/\n\s*\n/).filter(p => p.trim());
+  /* 원문도 적재를 따른다 — 고른 컬렉션의 원문(data/corpus/<컬렉션>.json)을 읽는다.
+     발행이 아직 그 파일을 내지 않는 그래프(팀이 corpus.txt 만 갈아끼운 경우)는 예전 길로 간다.
+     쪽 번호가 함께 오므로 단락 라벨이 「3단락」이 아니라 「p.114」가 된다 — 그래프의 출처 위치와 같은 말이다. */
+  const paras = [], meta = [];
+  for (const id of CUR.cols) {
+    const key = short(id);
+    try {
+      const j = await (await fetch(`data/corpus/${encodeURIComponent(key)}.json`, { cache: 'no-cache' })).json();
+      (j.paras || []).forEach(x => { paras.push(x.text); meta.push({ page: x.page, rec: x.rec, col: key }); });
+    } catch (e) { /* 그 컬렉션은 원문을 함께 발행하지 않았다 — 조용히 넘어간다 */ }
+  }
+  /* 예전 길은 **컬렉션이 아예 없는 그래프**에만 남긴다. 컬렉션을 골랐는데 그 컬렉션이 원문을
+     함께 발행하지 않았다면, 남의 원문(corpus.txt)을 대신 보여주는 것이 더 나쁘다 — 비워 둔다. */
+  if (!paras.length && !COLS.length) {
+    let text = '';
+    try { text = await (await fetch('data/corpus.txt', { cache: 'no-cache' })).text(); } catch (e) { }
+    text.split(/\n\s*\n/).filter(p => p.trim()).forEach(p => { paras.push(p); meta.push({}); });
+  }
+  LANG.meta = meta;
   LANG.paras = paras;
+  /* 지금 무엇을 읽고 있는지 화면에 밝힌다 — 쪽 수는 적재를 따라 바뀐다. */
+  const sc = $('#langScope');
+  if (sc) sc.textContent = !paras.length ? '원문 없음 —'
+    : meta.some(m => m.page) ? `적재된 원문 ${paras.length}쪽` : `원문 ${paras.length}단락`;
+  const nc = $('#langNone');
+  if (nc) nc.hidden = !!paras.length;
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
     .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
   const freq = {};
@@ -1697,7 +1723,8 @@ export async function loadCorpus() {
   // 단락(≈회차) × 어휘
   LANG.byChapter = paras.map((p, i) => {
     const f = {}; tok(p).forEach(w => f[w] = (f[w] || 0) + 1);
-    return { i, label: `${i + 1}단락`, freq: f, total: tok(p).length };
+    const pg = LANG.meta[i]?.page;
+    return { i, label: pg ? `p.${pg}` : `${i + 1}단락`, freq: f, total: tok(p).length };
   });
   // 동시출현 (같은 문장)
   const co = new Map();
