@@ -2518,7 +2518,7 @@ ric:org-chosun-ilbo rico:name "조선일보사";
     rico:generalDescription "1996년 국정감사 후 의원 간 상호 평가를 기획·실시.";
     rico:identifier "org-chosun-ilbo", "urn:uuid:5bb1008f-023e-5a7c-8237-8efc58929ed4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-chosun-ilbo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · ChosunIlbo (January1-1940).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · ChosunIlbo (January1-1940).jpg · 1940 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q483924", "http://viaf.org/viaf/3094152140029411100000", "https://ko.wikipedia.org/wiki/%EC%A1%B0%EC%84%A0%EC%9D%BC%EB%B3%B4".
 ric:org-civil-service-training-institute rico:name "공무원연수원";
     rico:identifier "org-civil-service-training-institute", "urn:uuid:ab1e36c5-7307-56a2-85c2-30957a8cc1f3".
@@ -2566,7 +2566,7 @@ ric:org-deobureo-minjudang rico:name "더불어민주당(민주당)";
 ric:org-dong-a-ilbo rico:name "동아일보";
     rico:identifier "org-dong-a-ilbo", "urn:uuid:af7cf649-e53a-5abc-917b-9f4a3b2aa33e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-dong-a-ilbo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Dong a-ilbo 19200401.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Dong a-ilbo 19200401.jpg · 1920 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q486086", "http://viaf.org/viaf/15150999548229871223", "https://ko.wikipedia.org/wiki/%EB%8F%99%EC%95%84%EC%9D%BC%EB%B3%B4".
 ric:org-dongbuga-uiwon-oegyodan rico:name "동북아 평화협력 의원외교단";
     rico:identifier "org-dongbuga-uiwon-oegyodan", "urn:uuid:40df729d-d8f1-57cb-a45e-fd33e7cb0801".
@@ -2589,12 +2589,12 @@ ric:org-environment-labor-committee rico:name "환경노동위원회";
 ric:org-eu rico:name "EU";
     rico:identifier "org-eu", "urn:uuid:9e23feed-1753-54de-af5f-018b667a5c11";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-eu.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · EU on a globe.svg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · EU on a globe.svg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q458", "http://viaf.org/viaf/207634635", "https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%9F%BD_%EC%97%B0%ED%95%A9".
 ric:org-ewha rico:name "이화여자대학교";
     rico:identifier "org-ewha", "urn:uuid:7b45001a-2274-5a3d-b8a2-49bac69799c8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-ewha.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이화여자대학교 대강당.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이화여자대학교 대강당.jpg · 2020 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41114", "http://viaf.org/viaf/130716076", "https://ko.wikipedia.org/wiki/%EC%9D%B4%ED%99%94%EC%97%AC%EC%9E%90%EB%8C%80%ED%95%99%EA%B5%90".
 ric:org-finance-economy-committee rico:name "재정경제위원회(재경위)";
     rico:generalDescription "구술자가 초선·재선 6년간 활동한 상임위원회.";
@@ -2641,7 +2641,7 @@ ric:org-hanguk-nochong rico:name "한국노총";
     rico:generalDescription "노사정위원회 참여 노동단체.";
     rico:identifier "org-hanguk-nochong", "urn:uuid:10bf8e06-10c7-54e2-b271-5fb80a952afb";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-hanguk-nochong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · FKTU 2006.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · FKTU 2006.JPG · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q488530", "http://viaf.org/viaf/126700423", "https://ko.wikipedia.org/wiki/%ED%95%9C%EA%B5%AD%EB%85%B8%EB%8F%99%EC%A1%B0%ED%95%A9%EC%B4%9D%EC%97%B0%EB%A7%B9".
 ric:org-hannara rico:name "한나라당";
     rico:generalDescription "정권 교체 이후의 야당.";
@@ -2652,13 +2652,13 @@ ric:org-hyundai-motor rico:name "현대자동차";
     rico:generalDescription "1998년 여름 정리해고를 둘러싼 파업이 일어난 기업.";
     rico:identifier "org-hyundai-motor", "urn:uuid:0bf8dfa2-1d3c-5b35-9c4f-df1cd12c6a54";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-hyundai-motor.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HyundaiMotorsCompany KiaMotorsCompany.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HyundaiMotorsCompany KiaMotorsCompany.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q55931", "http://viaf.org/viaf/123682283", "https://ko.wikipedia.org/wiki/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8".
 ric:org-imf rico:name "IMF";
     rico:generalDescription "1997년 외환위기 당시 구제금융을 제공하며 입법을 요구.";
     rico:identifier "org-imf", "urn:uuid:6e5dfca1-04f8-5267-a137-0fade22a0a7c";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-imf.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · IMF building HR.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · IMF building HR.jpg · 2025 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q7804", "http://viaf.org/viaf/147860995", "https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C_%ED%86%B5%ED%99%94_%EA%B8%B0%EA%B8%88".
 ric:org-imf-crisis-investigation-committee rico:name "국회 IMF 환란원인 규명과 경제위기 진상조사를 위한 국정조사특별위원회";
     rico:identifier "org-imf-crisis-investigation-committee", "urn:uuid:90b26f96-5932-5f13-acff-e81f92f273b4".
@@ -2668,7 +2668,7 @@ ric:org-inauguration-committee rico:name "대통령직인수위원회";
 ric:org-incheon-si rico:name "인천시";
     rico:identifier "org-incheon-si", "urn:uuid:c88d9147-7ed5-56d3-b0f9-f88413bb0548";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-incheon-si.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Incheon Cityscape.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Incheon Cityscape.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q20934", "http://viaf.org/viaf/293221110", "https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C".
 ric:org-institutional-improvement-committee rico:name "국회 국가정보원 등 국가기관의 정치적 중립성 강화를 위한 제도개선 특별위원회";
     rico:identifier "org-institutional-improvement-committee", "urn:uuid:ff2da86a-2112-56cd-9871-f021c9b3c57f".
@@ -2713,17 +2713,17 @@ ric:org-joongang-ilbo rico:name "중앙일보사";
     rico:generalDescription "구술자 재선 때 의정 활동 평가를 실시.";
     rico:identifier "org-joongang-ilbo", "urn:uuid:07a2264f-895d-543f-8f9a-b19f47aae86d";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-joongang-ilbo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 1932년 1월 10일자 중앙일보 이봉창.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 1932년 1월 10일자 중앙일보 이봉창.jpg · 1932 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q483903", "https://ko.wikipedia.org/wiki/%EC%A4%91%EC%95%99%EC%9D%BC%EB%B3%B4".
 ric:org-kbs rico:name "KBS";
     rico:identifier "org-kbs", "urn:uuid:5db86250-1235-50b8-aa09-afaa675ddc87";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-kbs.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · KBS Main Building in 2018.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · KBS Main Building in 2018.jpg · 2018 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q498825", "http://viaf.org/viaf/151984509", "https://ko.wikipedia.org/wiki/%ED%95%9C%EA%B5%AD%EB%B0%A9%EC%86%A1%EA%B3%B5%EC%82%AC".
 ric:org-korail rico:name "한국철도공사";
     rico:identifier "org-korail", "urn:uuid:793ab985-f9df-53aa-baaf-6328e12f083e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-korail.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea Railroad Corporation.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea Railroad Corporation.jpg · 2012 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q18169", "http://viaf.org/viaf/125149616707303751105", "https://ko.wikipedia.org/wiki/%ED%95%9C%EA%B5%AD%EC%B2%A0%EB%8F%84%EA%B3%B5%EC%82%AC".
 ric:org-korea-caucus rico:name "코리아 코커스";
     rico:identifier "org-korea-caucus", "urn:uuid:b0c3f54c-e0c9-5471-ad64-d4af93822672".
@@ -2744,7 +2744,7 @@ ric:org-korea-voters-movement-alliance rico:name "한국유권자운동연합";
 ric:org-kyung-hee-university rico:name "경희대학교";
     rico:identifier "org-kyung-hee-university", "urn:uuid:2c35dc58-e04e-5721-9459-b68d1360a11b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-kyung-hee-university.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kyung Hee Univ. Administration Building(Seoul Campus).JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kyung Hee Univ. Administration Building(Seoul Campus).JPG · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q496536", "http://viaf.org/viaf/154783959", "https://ko.wikipedia.org/wiki/%EA%B2%BD%ED%9D%AC%EB%8C%80%ED%95%99%EA%B5%90".
 ric:org-legislation-judiciary-committee rico:name "법사위";
     rico:generalDescription "상임위 통과 법안이 본회의로 가기 전 거치는 위원회.";
@@ -2768,7 +2768,7 @@ ric:org-minju-nochong rico:name "민주노총";
     rico:generalDescription "노사정 타협 참여 조건으로 전교조 합법화를 요구. 이후 이탈.";
     rico:identifier "org-minju-nochong", "urn:uuid:18a2e66b-df95-5104-8703-c0634e16d871";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-minju-nochong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · KCTU 2006.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · KCTU 2006.JPG · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q489887", "https://ko.wikipedia.org/wiki/%EC%A0%84%EA%B5%AD%EB%AF%BC%EC%A3%BC%EB%85%B8%EB%8F%99%EC%A1%B0%ED%95%A9%EC%B4%9D%EC%97%B0%EB%A7%B9".
 ric:org-minju-tonghap-dang rico:name "민주통합당";
     rico:generalDescription "정당";
@@ -2787,7 +2787,7 @@ ric:org-moon-jae-in-government rico:name "문재인 정부";
 ric:org-munche-bu rico:name "문화체육관광부(문체부)";
     rico:identifier "org-munche-bu", "urn:uuid:1539c97d-d29a-5676-b1b8-3d43210e978a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-munche-bu.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ministry of Culture, Sports and Tourism(South Korea).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ministry of Culture, Sports and Tourism(South Korea).jpg · 2014 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q488744", "http://viaf.org/viaf/129413732", "https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EB%AC%B8%ED%99%94%EC%B2%B4%EC%9C%A1%EA%B4%80%EA%B4%91%EB%B6%80".
 ric:org-national-assembly rico:name "국회";
     rico:generalDescription "대한민국 국회.";
@@ -2853,7 +2853,7 @@ ric:org-pureunkkum-academy rico:name "학교법인 푸른꿈학원";
 ric:org-pusan-national-university rico:name "부산대학교";
     rico:identifier "org-pusan-national-university", "urn:uuid:55dfd57f-35a2-5ff8-a28f-612e24c8daea";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-pusan-national-university.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Pusan Natl Univ by Ficell 004.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Pusan Natl Univ by Ficell 004.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q53122", "http://viaf.org/viaf/265528010", "https://ko.wikipedia.org/wiki/%EB%B6%80%EC%82%B0%EB%8C%80%ED%95%99%EA%B5%90".
 ric:org-saejeongchi-minju-yeonhap rico:name "새정치민주연합";
     rico:generalDescription "정당";
@@ -2899,7 +2899,7 @@ ric:org-ssangyong-usa rico:name "쌍용USA";
 ric:org-supreme-peoples-assembly rico:name "최고인민회의";
     rico:identifier "org-supreme-peoples-assembly", "urn:uuid:29bb5d55-08e1-5b09-bd1e-e869c024f0cc";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-supreme-peoples-assembly.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Mansudae Assembly Hall.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Mansudae Assembly Hall.JPG · 2012 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q714698", "https://ko.wikipedia.org/wiki/%EC%B5%9C%EA%B3%A0%EC%9D%B8%EB%AF%BC%ED%9A%8C%EC%9D%98".
 ric:org-teukgwon-naeryeonoki-wiwonhoe rico:name "국회의원 특권 내려놓기 추진위원회";
     rico:generalDescription "구술자가 만들어 국회의원 특권 개선을 추진한 위원회";
@@ -2916,7 +2916,7 @@ ric:org-unification-foreign-affairs-trade-committee rico:name "국회 통일외�
 ric:org-us-congress rico:name "미국 의회";
     rico:identifier "org-us-congress", "urn:uuid:665555e4-9842-5cf2-9560-995685c74aab";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-us-congress.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · US Capitol west side.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · US Capitol west side.JPG · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11268", "http://viaf.org/viaf/128620508", "https://ko.wikipedia.org/wiki/%EB%AF%B8%EA%B5%AD_%EC%9D%98%ED%9A%8C".
 ric:org-yeoncheong rico:name "민주연합청년동지회(연청)";
     rico:generalDescription "전국 지회를 둔 외곽 청년 조직. 회원 규모는 만 명 정도.";
@@ -2926,31 +2926,31 @@ ric:org-yeoncheong rico:name "민주연합청년동지회(연청)";
 ric:org-yonsei-university rico:name "연세대";
     rico:identifier "org-yonsei-university", "urn:uuid:541c5616-2efd-57f5-baa8-0dcbfffb162b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/org-yonsei-university.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeonsei university 2011 (16).JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeonsei university 2011 (16).JPG · 2011 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q39988", "http://viaf.org/viaf/132225788", "https://ko.wikipedia.org/wiki/%EC%97%B0%EC%84%B8%EB%8C%80%ED%95%99%EA%B5%90".
 ric:person-ahn-hee-jung rico:name "안희정";
     rico:beginningDate "1965";
     rico:identifier "person-ahn-hee-jung", "urn:uuid:b4cfce11-a11b-5aeb-982d-7f5fd9765afa";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-ahn-hee-jung.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 안희정 벙커1.png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 안희정 벙커1.png · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12605902", "https://ko.wikipedia.org/wiki/%EC%95%88%ED%9D%AC%EC%A0%95".
 ric:person-alexander-vershbow rico:name "알렉산더 버시바우";
     rico:beginningDate "1952";
     rico:identifier "person-alexander-vershbow", "urn:uuid:8885c8ad-3881-5e07-bd07-d9480af303eb";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-alexander-vershbow.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Alexander Vershbow.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Alexander Vershbow.JPG · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q484005", "http://viaf.org/viaf/220977870", "https://ko.wikipedia.org/wiki/%EC%95%8C%EB%A0%89%EC%82%B0%EB%8D%94_%EB%B2%84%EC%8B%9C%EB%B0%94%EC%9A%B0".
 ric:person-an-cheol-su rico:name "안철수";
     rico:beginningDate "1962";
     rico:identifier "person-an-cheol-su", "urn:uuid:b7d65097-ae4c-5075-9009-680dadcddbfa";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-an-cheol-su.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ahn Cheol-Soo.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ahn Cheol-Soo.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q20995", "http://viaf.org/viaf/294842011", "https://ko.wikipedia.org/wiki/%EC%95%88%EC%B2%A0%EC%88%98".
 ric:person-bill-clinton rico:name "빌 클린턴";
     rico:beginningDate "1946";
     rico:identifier "person-bill-clinton", "urn:uuid:fc2e14a7-86be-5d11-ac58-395a57fcc928";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-bill-clinton.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Bill Clinton.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Bill Clinton.jpg · 1993 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q1124", "http://viaf.org/viaf/102338519", "https://ko.wikipedia.org/wiki/%EB%B9%8C_%ED%81%B4%EB%A6%B0%ED%84%B4".
 ric:person-carlos-gutierrez rico:name "카를로스 구티에레스";
     rico:identifier "person-carlos-gutierrez", "urn:uuid:394802aa-ea36-5736-b1fd-9a8ab53b8705".
@@ -2958,7 +2958,7 @@ ric:person-cheon-jeong-bae rico:name "천정배";
     rico:beginningDate "1954";
     rico:identifier "person-cheon-jeong-bae", "urn:uuid:93e6397d-c82b-5859-bcd9-4069ed73da50";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-cheon-jeong-bae.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chun Jung-bae.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chun Jung-bae.jpg · 2024 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12618957", "http://viaf.org/viaf/44209967", "https://ko.wikipedia.org/wiki/%EC%B2%9C%EC%A0%95%EB%B0%B0".
 ric:person-cho-seong-jun rico:name "조성준";
     rico:beginningDate "1948";
@@ -2968,19 +2968,19 @@ ric:person-cho-sun-hyeong rico:name "조순형";
     rico:beginningDate "1935";
     rico:identifier "person-cho-sun-hyeong", "urn:uuid:6b45d480-aaf9-52e9-a392-4940db8fd927";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-cho-sun-hyeong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 조순형.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 조순형.jpg · 2024 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16091888", "http://viaf.org/viaf/1633156565687623500008", "https://ko.wikipedia.org/wiki/%EC%A1%B0%EC%88%9C%ED%98%95".
 ric:person-cho-yong-su rico:name "조용수";
     rico:beginningDate "1930";
     rico:identifier "person-cho-yong-su", "urn:uuid:6214d768-f9e4-545f-a2e6-26ac5560ff1c";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-cho-yong-su.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 조용수 언론인.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 조용수 언론인.jpg · 2011 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16091907", "http://viaf.org/viaf/9601779", "https://ko.wikipedia.org/wiki/%EC%A1%B0%EC%9A%A9%EC%88%98_%281930%EB%85%84%29".
 ric:person-cho-yoon-sun rico:name "조윤선";
     rico:beginningDate "1966";
     rico:identifier "person-cho-yoon-sun", "urn:uuid:6ec455ed-671e-5432-bda7-69163299289a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-cho-yoon-sun.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea Mexico Ministerial Meeting 07 cropped.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea Mexico Ministerial Meeting 07 cropped.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12616979", "https://ko.wikipedia.org/wiki/%EC%A1%B0%EC%9C%A4%EC%84%A0".
 ric:person-choi-hye-kyung rico:name "최혜경";
     rico:generalDescription "구술자의 배우자";
@@ -2994,19 +2994,19 @@ ric:person-choi-sun-sil rico:name "최순실";
     rico:beginningDate "1956";
     rico:identifier "person-choi-sun-sil", "urn:uuid:fa888d28-e5ba-5fed-bfb2-e5d453cbb475";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-choi-sun-sil.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Choi Soon-sil.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Choi Soon-sil.jpg · 2024 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q27514522", "http://viaf.org/viaf/229153409752141582069", "https://ko.wikipedia.org/wiki/%EC%B5%9C%EC%88%9C%EC%8B%A4".
 ric:person-choo-mi-ae rico:name "추미애";
     rico:beginningDate "1958";
     rico:identifier "person-choo-mi-ae", "urn:uuid:9ae6ce02-06dd-5e8d-aff7-9d9c0b12edf4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-choo-mi-ae.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Choo Mi-ae's Portrait (2026.5).png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Choo Mi-ae's Portrait (2026.5).png · 2026 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11274387", "http://viaf.org/viaf/691144928061754341491", "https://ko.wikipedia.org/wiki/%EC%B6%94%EB%AF%B8%EC%95%A0".
 ric:person-chung-dae-chul rico:name "정대철";
     rico:beginningDate "1944";
     rico:identifier "person-chung-dae-chul", "urn:uuid:163f6e4a-44fb-5adf-a8f4-800bae714ba2";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-chung-dae-chul.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chungdc.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chungdc.jpg · 2009 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12615521", "https://ko.wikipedia.org/wiki/%EC%A0%95%EB%8C%80%EC%B2%A0".
 ric:person-chung-kyun-hwan rico:name "정균환";
     rico:beginningDate "1943";
@@ -3016,7 +3016,7 @@ ric:person-donald-trump rico:name "도널드 J. 트럼프";
     rico:beginningDate "1946";
     rico:identifier "person-donald-trump", "urn:uuid:4c30b6af-06bb-5bc3-8a29-0830be1e7139";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-donald-trump.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Official Presidential Portrait of President Donald J. Trump (2025) (cropped)(2).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Official Presidential Portrait of President Donald J. Trump (2025) (cropped)(2).jpg · 2025 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q22686", "http://viaf.org/viaf/49272447", "https://ko.wikipedia.org/wiki/%EB%8F%84%EB%84%90%EB%93%9C_%ED%8A%B8%EB%9F%BC%ED%94%84".
 ric:person-eo-jun-seon rico:name "어준선";
     rico:generalDescription "각주에서 확인된 자민련 소속 노사정위원회 위원. 인천 항만노조 출신.";
@@ -3041,7 +3041,7 @@ ric:person-han-seon-gyo rico:name "한선교";
     rico:beginningDate "1959";
     rico:identifier "person-han-seon-gyo", "urn:uuid:db66a385-fe90-584b-aefc-334ce324d28f";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-han-seon-gyo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · NMKCH Symposium logo 02 (8226740114).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · NMKCH Symposium logo 02 (8226740114).jpg · 2012 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12624094", "http://viaf.org/viaf/183154590236043082512", "https://ko.wikipedia.org/wiki/%ED%95%9C%EC%84%A0%EA%B5%90".
 ric:person-heo-yong-beom rico:name "허용범";
     rico:beginningDate "1964";
@@ -3051,7 +3051,7 @@ ric:person-hong-jun-pyo rico:name "홍준표";
     rico:beginningDate "1953";
     rico:identifier "person-hong-jun-pyo", "urn:uuid:4d53f28f-116d-5bc5-a842-14c81b6b91da";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-hong-jun-pyo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Hong Joon-pyo 20221125.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Hong Joon-pyo 20221125.jpg · 2022 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q5894103", "https://ko.wikipedia.org/wiki/%ED%99%8D%EC%A4%80%ED%91%9C".
 ric:person-hong-mun-jong rico:name "홍문종";
     rico:beginningDate "1955";
@@ -3065,7 +3065,7 @@ ric:person-hong-young-pyo rico:name "홍영표";
     rico:beginningDate "1957";
     rico:identifier "person-hong-young-pyo", "urn:uuid:87b9ce34-32fd-5467-a7c5-051902f3fdb0";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-hong-young-pyo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 홍영표 의원.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 홍영표 의원.jpg · 2024 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12625446", "https://ko.wikipedia.org/wiki/%ED%99%8D%EC%98%81%ED%91%9C".
 ric:person-hwang-gyo-an rico:name "황교안";
     rico:beginningDate "1957";
@@ -3080,7 +3080,7 @@ ric:person-hwang-woo-yea rico:name "황우여";
     rico:beginningDate "1947";
     rico:identifier "person-hwang-woo-yea", "urn:uuid:3f79a24d-cd6c-5e62-8719-fa2d118380c8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-hwang-woo-yea.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Hwang Woo-yea (17230687953) (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Hwang Woo-yea (17230687953) (cropped).jpg · 2015 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q4392537", "http://viaf.org/viaf/3153061324519202181", "https://ko.wikipedia.org/wiki/%ED%99%A9%EC%9A%B0%EC%97%AC".
 ric:person-hyeon-gyeong-dae rico:name "현경대";
     rico:beginningDate "1939";
@@ -3094,13 +3094,13 @@ ric:person-jeong-byeong-guk rico:name "정병국";
     rico:beginningDate "1958";
     rico:identifier "person-jeong-byeong-guk", "urn:uuid:47746646-d9ac-5bd8-9c84-dcdb03e0f8e4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-jeong-byeong-guk.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 정병국.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 정병국.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12615620", "http://viaf.org/viaf/573144928065254340886", "https://ko.wikipedia.org/wiki/%EC%A0%95%EB%B3%91%EA%B5%AD".
 ric:person-jeong-dong-yeong rico:name "정동영";
     rico:beginningDate "1953";
     rico:identifier "person-jeong-dong-yeong", "urn:uuid:cd78178b-d7a0-5e38-ada5-ea0318f90ee4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-jeong-dong-yeong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chung Dong-young taking a commemorative photo at the National Assembly.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chung Dong-young taking a commemorative photo at the National Assembly.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q491437", "http://viaf.org/viaf/535144928061554341520", "https://ko.wikipedia.org/wiki/%EC%A0%95%EB%8F%99%EC%98%81".
 ric:person-jeong-jang-hyeon rico:name "정장현";
     rico:generalDescription "제15대 국회의원선거에서 구술자와 겨룬 국민당 출신 비례대표.";
@@ -3116,7 +3116,7 @@ ric:person-jeong-ui-hwa rico:name "정의화";
     rico:beginningDate "1948";
     rico:identifier "person-jeong-ui-hwa", "urn:uuid:403d5ac4-3d87-547a-9fd3-3324bafc284e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-jeong-ui-hwa.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chung Ui-Hua 2014 in CFAU.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chung Ui-Hua 2014 in CFAU.jpg · 2014 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12615929", "http://viaf.org/viaf/161207702", "https://ko.wikipedia.org/wiki/%EC%A0%95%EC%9D%98%ED%99%94".
 ric:person-jeong-un-cheon rico:name "정운천";
     rico:beginningDate "1954";
@@ -3139,7 +3139,7 @@ ric:person-jung-mong-jun rico:name "정몽준";
     rico:beginningDate "1951";
     rico:identifier "person-jung-mong-jun", "urn:uuid:f646c257-fa38-52b8-9cb6-db72d6c45b8a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-jung-mong-jun.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · CMJhyundai.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · CMJhyundai.JPG · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q490114", "http://viaf.org/viaf/260887262", "https://ko.wikipedia.org/wiki/%EC%A0%95%EB%AA%BD%EC%A4%80".
 ric:person-jung-sye-kyun-ancestor-5 rico:name "구술자의 5대조 할아버지";
     rico:generalDescription "18세에 문과에 급제해 참판을 지냈다고 구술된 구술자의 5대조";
@@ -3152,13 +3152,13 @@ ric:person-kang-chang-hee rico:name "강창희";
     rico:beginningDate "1946";
     rico:identifier "person-kang-chang-hee", "urn:uuid:87a4f3c2-cc54-5645-9c08-f6fced4c272f";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kang-chang-hee.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Chang-Hee.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Chang-Hee.jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12583135", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%B0%BD%ED%9D%AC_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:person-kang-chang-il rico:name "강창일";
     rico:beginningDate "1952";
     rico:identifier "person-kang-chang-il", "urn:uuid:afcff4eb-9a91-5833-8a76-b44127427166";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kang-chang-il.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Chang-il in 2020.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kang Chang-il in 2020.jpg · 2020 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q10855142", "http://viaf.org/viaf/102153061239619201186", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%B0%BD%EC%9D%BC".
 ric:person-kang-jae-sup rico:name "강재섭";
     rico:beginningDate "1948";
@@ -3170,13 +3170,13 @@ ric:person-kang-un-tae rico:name "강운태";
     rico:beginningDate "1948";
     rico:identifier "person-kang-un-tae", "urn:uuid:d37c5ccf-d655-5eff-b07e-9cb65c358449";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kang-un-tae.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HD (광주MBC뉴스) 수영대회 사태 강운태 시장 공식 사과.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HD (광주MBC뉴스) 수영대회 사태 강운태 시장 공식 사과.jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12582996", "http://viaf.org/viaf/3159156565721023500006", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%9A%B4%ED%83%9C".
 ric:person-kim-bu-gyeom rico:name "김부겸";
     rico:beginningDate "1958";
     rico:identifier "person-kim-bu-gyeom", "urn:uuid:3dc7b81f-3714-5245-b70c-39c5275bff82";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-bu-gyeom.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Boo-kyum - 20170119 k (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Boo-kyum - 20170119 k (cropped).jpg · 2011 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12587534", "http://viaf.org/viaf/86145541825196600011", "https://ko.wikipedia.org/wiki/%EA%B9%80%EB%B6%80%EA%B2%B8".
 ric:person-kim-chang-seong rico:name "김창성";
     rico:generalDescription "경총 회장. 노사정위원회 경영계 대표.";
@@ -3193,7 +3193,7 @@ ric:person-kim-eo-jun rico:name "김어준";
     rico:beginningDate "1968";
     rico:identifier "person-kim-eo-jun", "urn:uuid:1c68a7c5-41be-5a86-8046-4cd17bb9f284";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-eo-jun.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 김어준 벙커1.png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 김어준 벙커1.png · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12587958", "http://viaf.org/viaf/259150468200004170777", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%96%B4%EC%A4%80".
 ric:person-kim-gi-sik rico:name "김기식";
     rico:beginningDate "1966";
@@ -3211,14 +3211,14 @@ ric:person-kim-han-gil rico:name "김한길";
     rico:beginningDate "1953";
     rico:identifier "person-kim-han-gil", "urn:uuid:8c584a03-82cc-5f58-b41d-549001e45aaa";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-han-gil.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 김한길 국민통합위원장.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 김한길 국민통합위원장.jpg · 2023 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q10855915", "http://viaf.org/viaf/23598778", "https://ko.wikipedia.org/wiki/%EA%B9%80%ED%95%9C%EA%B8%B8".
 ric:person-kim-hyeong-o rico:name "김형오";
     rico:generalDescription "제18대 국회의장";
     rico:beginningDate "1947";
     rico:identifier "person-kim-hyeong-o", "urn:uuid:6f1b1d58-4d2d-5d43-9e46-240c728ac1cc";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-hyeong-o.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Hyong-o 2010.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Hyong-o 2010.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q87652783", "https://ko.wikipedia.org/wiki/%EA%B9%80%ED%98%95%EC%98%A4".
 ric:person-kim-hyo-seok rico:name "김효석";
     rico:beginningDate "1949";
@@ -3234,21 +3234,21 @@ ric:person-kim-jeong-eun rico:name "김정은";
     rico:beginningDate "1984";
     rico:identifier "person-kim-jeong-eun", "urn:uuid:c5d3f162-dcac-57f0-b7b8-d98bd28dc174";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-jeong-eun.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jong-un and Vladimir Putin (2023-09-13) 12 (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jong-un and Vladimir Putin (2023-09-13) 12 (cropped).jpg · 2023 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q56226", "http://viaf.org/viaf/2418152140026211100002", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%A0%95%EC%9D%80".
 ric:person-kim-jong-in rico:name "김종인";
     rico:generalDescription "제18대 국회 헌법개정 자문위원장";
     rico:beginningDate "1940";
     rico:identifier "person-kim-jong-in", "urn:uuid:3487366a-6ba6-5d4c-871c-8a892619798a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-jong-in.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jongin's press conference in 2016 (cropped to Kim).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jongin's press conference in 2016 (cropped to Kim).jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16080415", "http://viaf.org/viaf/194125224", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%A2%85%EC%9D%B8".
 ric:person-kim-jong-pil rico:name "김종필";
     rico:generalDescription "자민련 총재, 전 총리. DJP연합의 한 축. 2018년 6월 별세.";
     rico:beginningDate "1926";
     rico:identifier "person-kim-jong-pil", "urn:uuid:1f5e41b1-5518-5a90-9681-2612072b22c4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-jong-pil.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jong-pil 1999.png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Jong-pil 1999.png · 1999 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q246167", "http://viaf.org/viaf/70410147", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%A2%85%ED%95%84".
 ric:person-kim-jung-gwon rico:name "김중권";
     rico:beginningDate "1939";
@@ -3262,7 +3262,7 @@ ric:person-kim-moon-soo rico:name "김문수";
     rico:beginningDate "1951";
     rico:identifier "person-kim-moon-soo", "urn:uuid:d08bb9f1-1dc5-5fb6-b062-21912fbcd2bf";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-moon-soo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Moon-soo (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Moon-soo (cropped).jpg · 2024 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q483861", "http://viaf.org/viaf/16152138517210980357", "https://ko.wikipedia.org/wiki/%EA%B9%80%EB%AC%B8%EC%88%98".
 ric:person-kim-sang-hyup rico:name "김상협";
     rico:generalDescription "1974년 총장으로, 구술자를 동아일보사에 추천했다고 구술됨";
@@ -3291,7 +3291,7 @@ ric:person-kim-woo-choong rico:name "김우중";
     rico:beginningDate "1936";
     rico:identifier "person-kim-woo-choong", "urn:uuid:82845d8d-5665-53ca-9ebc-15bdf4c23d5d";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-kim-woo-choong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim-woo-choong.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim-woo-choong.jpg · 1998 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q485829", "http://viaf.org/viaf/111112278", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%9A%B0%EC%A4%91".
 ric:person-kim-yun-hwan rico:name "김윤환";
     rico:generalDescription "제13대 국회 시절 김원기와 함께 원내총무를 지냄.";
@@ -3302,7 +3302,7 @@ ric:person-lee-dong-kwan rico:name "이동관";
     rico:beginningDate "1957";
     rico:identifier "person-lee-dong-kwan", "urn:uuid:6a6716d0-07e4-5125-b11a-59efca4ad38f";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-dong-kwan.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이동관.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이동관.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12611225", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EB%8F%99%EA%B4%80".
 ric:person-lee-gang-rae rico:name "이강래";
     rico:beginningDate "1953";
@@ -3312,27 +3312,27 @@ ric:person-lee-gwang-jae rico:name "이광재";
     rico:beginningDate "1965";
     rico:identifier "person-lee-gwang-jae", "urn:uuid:f64b9d25-9d97-5866-a025-78fae9863406";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-gwang-jae.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2011년 1월 24일 강원도지사 이광재 강릉중앙시장 방문 SAM 0060.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2011년 1월 24일 강원도지사 이광재 강릉중앙시장 방문 SAM 0060.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11265419", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EA%B4%91%EC%9E%AC_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:person-lee-hoi-chang rico:name "이회창";
     rico:generalDescription "1997년 대통령선거 후보 1번.";
     rico:beginningDate "1935";
     rico:identifier "person-lee-hoi-chang", "urn:uuid:9ae7eb66-2563-5fff-b9d7-885c04a05364";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-hoi-chang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Hoi-chang (2010).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Hoi-chang (2010).jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q496509", "http://viaf.org/viaf/36830058", "https://ko.wikipedia.org/wiki/%EC%9D%B4%ED%9A%8C%EC%B0%BD".
 ric:person-lee-in-je rico:name "이인제";
     rico:generalDescription "1997년 대통령선거 후보.";
     rico:beginningDate "1948";
     rico:identifier "person-lee-in-je", "urn:uuid:87bf08a1-bd3b-5c91-b4f1-90e6b21195e1";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-in-je.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2006년 11월 9일 국회의원 이인제 (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2006년 11월 9일 국회의원 이인제 (cropped).jpg · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11266541", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%9D%B8%EC%A0%9C".
 ric:person-lee-jeong-hyeon rico:name "이정현";
     rico:beginningDate "1958";
     rico:identifier "person-lee-jeong-hyeon", "urn:uuid:cc935e9c-a893-503c-ae67-75c63262ea55";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-jeong-hyeon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이정현 의원.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이정현 의원.jpg · 2023 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16091091", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%A0%95%ED%98%84_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:person-lee-ju-yeong rico:name "이주영";
     rico:beginningDate "1951";
@@ -3342,13 +3342,13 @@ ric:person-lee-ki-taek rico:name "이기택";
     rico:beginningDate "1937";
     rico:identifier "person-lee-ki-taek", "urn:uuid:7cc24be0-2a3b-5cb6-827a-96d21760458a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-ki-taek.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이기택197410.png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이기택197410.png · 1974 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11265493", "http://viaf.org/viaf/1197154592504443370007", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EA%B8%B0%ED%83%9D".
 ric:person-lee-mi-gyeong rico:name "이미경";
     rico:beginningDate "1950";
     rico:identifier "person-lee-mi-gyeong", "urn:uuid:e6d59846-8aac-5df7-bf4f-215bf5e17d1e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-mi-gyeong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이미경 20180212.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 이미경 20180212.jpg · 2018 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12611422", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EB%AF%B8%EA%B2%BD_%281950%EB%85%84%29".
 ric:person-lee-mok-hee rico:name "이목희";
     rico:generalDescription "노사정위원회 전문위원.";
@@ -3360,7 +3360,7 @@ ric:person-lee-myung-bak rico:name "이명박";
     rico:beginningDate "1941";
     rico:identifier "person-lee-myung-bak", "urn:uuid:8a2b52ba-b189-5853-8bff-87d9a39ac009";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-myung-bak.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Myung-bak presidential portrait.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Myung-bak presidential portrait.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q14342", "http://viaf.org/viaf/54050630", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EB%AA%85%EB%B0%95".
 ric:person-lee-se-jung rico:name "이세중";
     rico:generalDescription "변호사. 에너지복지재단 이사장을 맡았다고 구술됨.";
@@ -3369,7 +3369,7 @@ ric:person-lee-seok-hyeon rico:name "이석현";
     rico:beginningDate "1951";
     rico:identifier "person-lee-seok-hyeon", "urn:uuid:8ca23db1-8ec3-51ce-b46d-36373f11f2d5";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-seok-hyeon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Seok Hyun.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Seok Hyun.jpg · 2018 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12611720", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%84%9D%ED%98%84_%281951%EB%85%84%29".
 ric:person-lee-seok-su rico:name "이석수";
     rico:beginningDate "1963";
@@ -3379,77 +3379,77 @@ ric:person-lee-seung-man rico:name "이승만";
     rico:beginningDate "1875";
     rico:identifier "person-lee-seung-man", "urn:uuid:210e603e-3d89-5ccd-8b7f-15252a0e9b23";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-seung-man.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Rhee Syng-Man in 1948.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Rhee Syng-Man in 1948.jpg · 1948 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q171684", "http://viaf.org/viaf/46770135", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%8A%B9%EB%A7%8C".
 ric:person-lee-soo-sung rico:name "이수성";
     rico:generalDescription "총리. 구술자의 대정부 질문을 격려함.";
     rico:beginningDate "1939";
     rico:identifier "person-lee-soo-sung", "urn:uuid:e050b781-d01b-5009-a620-0ab9a43021c8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lee-soo-sung.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Soo-sung 1 (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Lee Soo-sung 1 (cropped).jpg · 1996 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q626171", "https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%88%98%EC%84%B1_%281939%EB%85%84%29".
 ric:person-lim-jong-in rico:name "임종인";
     rico:generalDescription "변호사 출신 의원. 과거사법 처리에 가장 격렬히 반대했다고 구술됨.";
     rico:beginningDate "1956";
     rico:identifier "person-lim-jong-in", "urn:uuid:889a4277-0e20-58cb-a60c-2abf27ee1456";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-lim-jong-in.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · LimJongIn.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · LimJongIn.JPG · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q3540819", "https://ko.wikipedia.org/wiki/%EC%9E%84%EC%A2%85%EC%9D%B8_%281956%EB%85%84%29".
 ric:person-moon-hee-sang rico:name "문희상";
     rico:beginningDate "1945";
     rico:identifier "person-moon-hee-sang", "urn:uuid:70222ff3-483a-5d51-961f-a6dcbd2806d7";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-moon-hee-sang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Moon Hee-sang in 2019.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Moon Hee-sang in 2019.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12595907", "http://viaf.org/viaf/119149841820402840037", "https://ko.wikipedia.org/wiki/%EB%AC%B8%ED%9D%AC%EC%83%81".
 ric:person-moon-jae-in rico:name "문재인";
     rico:generalDescription "구술 당시 정부의 대통령.";
     rico:beginningDate "1953";
     rico:identifier "person-moon-jae-in", "urn:uuid:6072c4c5-4e9c-53fc-997c-16e65ca12985";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-moon-jae-in.png";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Moon Jae-in, Official portrait in 2017.png";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Moon Jae-in, Official portrait in 2017.png · 2017 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q21001", "http://viaf.org/viaf/173142372", "https://ko.wikipedia.org/wiki/%EB%AC%B8%EC%9E%AC%EC%9D%B8".
 ric:person-na-gyeong-won rico:name "나경원";
     rico:beginningDate "1963";
     rico:identifier "person-na-gyeong-won", "urn:uuid:50539074-9806-568e-a29c-24696820f7d6";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-na-gyeong-won.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Na Kyung-won 2019.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Na Kyung-won 2019.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q6956410", "http://viaf.org/viaf/536144928078754340041", "https://ko.wikipedia.org/wiki/%EB%82%98%EA%B2%BD%EC%9B%90".
 ric:person-oh-se-hun rico:name "오세훈";
     rico:beginningDate "1961";
     rico:identifier "person-oh-se-hun", "urn:uuid:58445b8a-f1ff-56b6-92a7-dc89ff6cc239";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-oh-se-hun.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Oh Se-Hoon.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Oh Se-Hoon.jpg · 2011 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q494239", "http://viaf.org/viaf/3152138525010981096", "https://ko.wikipedia.org/wiki/%EC%98%A4%EC%84%B8%ED%9B%88".
 ric:person-park-byeong-seok rico:name "박병석";
     rico:beginningDate "1952";
     rico:identifier "person-park-byeong-seok", "urn:uuid:ef2f3a17-6dfe-5e7e-b420-25c40aac3ba4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-park-byeong-seok.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Speaker Park Byeong-seug receives a phone call from the President Moon Jae-in (2) (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Speaker Park Byeong-seug receives a phone call from the President Moon Jae-in (2) (cropped).jpg · 2020 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16079899", "http://viaf.org/viaf/448146461507327730920", "https://ko.wikipedia.org/wiki/%EB%B0%95%EB%B3%91%EC%84%9D".
 ric:person-park-chung-hee rico:name "박정희";
     rico:generalDescription "각주에서 10월유신을 단행한 대통령으로 언급됨";
     rico:beginningDate "1917";
     rico:identifier "person-park-chung-hee", "urn:uuid:6150d354-9047-54c9-ad86-e760120d35fa";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-park-chung-hee.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Park Chung Hee (박정희) Presidential Portrait.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Park Chung Hee (박정희) Presidential Portrait.jpg · 1963 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q14356", "http://viaf.org/viaf/32001182", "https://ko.wikipedia.org/wiki/%EB%B0%95%EC%A0%95%ED%9D%AC".
 ric:person-park-gwan-yong rico:name "박관용";
     rico:beginningDate "1938";
     rico:identifier "person-park-gwan-yong", "urn:uuid:d7fafff6-d249-59e8-9b22-d51e91287882";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-park-gwan-yong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · PARKKWANYONG2010.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · PARKKWANYONG2010.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12596508", "https://ko.wikipedia.org/wiki/%EB%B0%95%EA%B4%80%EC%9A%A9".
 ric:person-park-jin rico:name "박진";
     rico:beginningDate "1956";
     rico:identifier "person-park-jin", "urn:uuid:aae92e2e-a691-57a6-b84c-be916f387c91";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-park-jin.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Secretary Blinken Meets With Republic of Korea Foreign Minister Park Jin (52667046916) (cropped) (cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Secretary Blinken Meets With Republic of Korea Foreign Minister Park Jin (52667046916) (cropped) (cropped).jpg · 2023 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16090188", "http://viaf.org/viaf/59023267", "https://ko.wikipedia.org/wiki/%EB%B0%95%EC%A7%84_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:person-park-ju-seon rico:name "박주선";
     rico:beginningDate "1949";
     rico:identifier "person-park-ju-seon", "urn:uuid:9bb957e9-2ffc-5020-b226-ac951bd5db12";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-park-ju-seon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HD (광주MBC뉴스) 박주선, 배기운 엇갈린 항소심 판결 (박주선).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · HD (광주MBC뉴스) 박주선, 배기운 엇갈린 항소심 판결 (박주선).jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12597136", "https://ko.wikipedia.org/wiki/%EB%B0%95%EC%A3%BC%EC%84%A0".
 ric:person-park-sang-cheon rico:name "박상천";
     rico:generalDescription "총무. 「국민기초생활보장법」 처리를 위해 한나라당을 설득.";
@@ -3468,26 +3468,26 @@ ric:person-sim-jae-cheol rico:name "심재철";
     rico:beginningDate "1958";
     rico:identifier "person-sim-jae-cheol", "urn:uuid:ca35d757-526f-5797-b829-a3087b8d0307";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-sim-jae-cheol.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 심재철 원내대표.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 심재철 원내대표.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50062431", "http://viaf.org/viaf/26965241", "https://ko.wikipedia.org/wiki/%EC%8B%AC%EC%9E%AC%EC%B2%A0_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:person-sim-sang-jeong rico:name "심상정";
     rico:beginningDate "1959";
     rico:identifier "person-sim-sang-jeong", "urn:uuid:97b689d7-830a-52a0-ba89-ea03fd614e48";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-sim-sang-jeong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sim Sang-jung taking a commemorative photo with the Speaker of the National Assembly.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sim Sang-jung taking a commemorative photo with the Speaker of the National Assembly.jpg · 2015 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11255427", "http://viaf.org/viaf/88408573", "https://ko.wikipedia.org/wiki/%EC%8B%AC%EC%83%81%EC%A0%95".
 ric:person-son-hak-kyu rico:name "손학규";
     rico:beginningDate "1947";
     rico:identifier "person-son-hak-kyu", "urn:uuid:25843444-96f9-53b4-97f5-c50336c9ea2b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-son-hak-kyu.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sohn Hak-kyu taking a commemorative photo at the National Assembly.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sohn Hak-kyu taking a commemorative photo at the National Assembly.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q624531", "http://viaf.org/viaf/110767626", "https://ko.wikipedia.org/wiki/%EC%86%90%ED%95%99%EA%B7%9C".
 ric:person-ted-koppel rico:name "테드 코펠";
     rico:generalDescription "미국 방송 앵커. 김대중과 통역 없이 영어로 대화했다고 구술됨";
     rico:beginningDate "1940";
     rico:identifier "person-ted-koppel", "urn:uuid:b4f43f09-65d3-5f7f-b4e2-473c9e322cf8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-ted-koppel.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ted Koppel 2002.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Ted Koppel 2002.jpg · 2002 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q2096683", "http://viaf.org/viaf/60310451", "https://ko.wikipedia.org/wiki/%ED%85%8C%EB%93%9C_%EC%BD%94%ED%8E%A0".
 ric:person-won-hye-young rico:name "원혜영";
     rico:beginningDate "1951";
@@ -3497,7 +3497,7 @@ ric:person-woo-byeong-u rico:name "우병우";
     rico:beginningDate "1967";
     rico:identifier "person-woo-byeong-u", "urn:uuid:a449ba04-047d-5112-8b9e-480b324512a4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-woo-byeong-u.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 우병우 전 청와대 민정수석 검찰 출석 0.26 minutes Scene.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 우병우 전 청와대 민정수석 검찰 출석 0.26 minutes Scene.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q19599190", "https://ko.wikipedia.org/wiki/%EC%9A%B0%EB%B3%91%EC%9A%B0".
 ric:person-yeom-dong-yeol rico:name "염동열";
     rico:beginningDate "1961";
@@ -3516,41 +3516,41 @@ ric:person-yoon-gwang-ung rico:name "윤광웅";
     rico:beginningDate "1942";
     rico:identifier "person-yoon-gwang-ung", "urn:uuid:38ce5280-56bd-5290-bbd8-f6f913997ff0";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-yoon-gwang-ung.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yoon Kwang-ung2006.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yoon Kwang-ung2006.jpg · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q493385", "http://viaf.org/viaf/1424156565687023500005", "https://ko.wikipedia.org/wiki/%EC%9C%A4%EA%B4%91%EC%9B%85".
 ric:person-ys rico:name "YS";
     rico:generalDescription "본문에 'YS'로만 지칭됨. 대통령이 된 뒤 통합선거법을 만들었다고 구술됨";
     rico:beginningDate "1927";
     rico:identifier "person-ys", "urn:uuid:9140545b-96b1-5d87-bbd6-1326182dec1a";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-ys.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Young-sam presidential portrait.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kim Young-sam presidential portrait.jpg · 1993 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q165210", "http://viaf.org/viaf/947664", "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%98%81%EC%82%BC".
 ric:person-yu-il-ho rico:name "유일호";
     rico:beginningDate "1955";
     rico:identifier "person-yu-il-ho", "urn:uuid:2ca40766-2431-594e-94f9-e5331b0cb6ab";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-yu-il-ho.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Deputy PM Yoo Ilho Press Conference 04.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Deputy PM Yoo Ilho Press Conference 04.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16090573", "http://viaf.org/viaf/14149616516603750733", "https://ko.wikipedia.org/wiki/%EC%9C%A0%EC%9D%BC%ED%98%B8".
 ric:person-yu-seung-min rico:name "유승민";
     rico:beginningDate "1958";
     rico:identifier "person-yu-seung-min", "urn:uuid:75e9793a-c564-5e2a-b31e-5f1b7bad7f7d";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/person-yu-seung-min.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yoo Seong-min in Gangneung (Cropped).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yoo Seong-min in Gangneung (Cropped).jpg · 2017 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12609867", "https://ko.wikipedia.org/wiki/%EC%9C%A0%EC%8A%B9%EB%AF%BC_%28%EC%A0%95%EC%B9%98%EC%9D%B8%29".
 ric:place-baekdusan rico:name "백두산 천지";
     rico:identifier "place-baekdusan", "urn:uuid:6ab2e0db-55c7-59e7-b80f-9bcdd42025a3";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-baekdusan.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Baitou Mountain Tianchi.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Baitou Mountain Tianchi.jpg · 2005 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q714023", "https://ko.wikipedia.org/wiki/%EC%B2%9C%EC%A7%80".
 ric:place-bundang rico:name "분당";
     rico:identifier "place-bundang", "urn:uuid:93644bb3-3e50-5e4d-94c3-bb5d5f2d1617";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-bundang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seongnam-2013.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seongnam-2013.jpg · 2012 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50397", "https://ko.wikipedia.org/wiki/%EB%B6%84%EB%8B%B9%EA%B5%AC".
 ric:place-bupyeong rico:name "부평";
     rico:identifier "place-bupyeong", "urn:uuid:32cea42f-f86f-5aee-9e6c-59505702900e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-bupyeong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Bupyeong-gu Incheon Korea.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Bupyeong-gu Incheon Korea.jpg · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50391", "https://ko.wikipedia.org/wiki/%EB%B6%80%ED%8F%89%EA%B5%AC".
 ric:place-busan rico:name "부산";
     rico:generalDescription "발췌개헌이 통과된 피난 국회가 있던 곳";
@@ -3559,7 +3559,7 @@ ric:place-busan rico:name "부산";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "129.0756";
     rico:identifier "place-busan", "urn:uuid:294f4ffb-9aab-5bb8-8771-1f05d1807bd0";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-busan.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Busan-Busan Tower-01.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Busan-Busan Tower-01.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q16520", "http://viaf.org/viaf/168171217", "https://ko.wikipedia.org/wiki/%EB%B6%80%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C".
 ric:place-cheongwadae rico:name "청와대";
     <http://www.w3.org/2000/01/rdf-schema#comment> "기관";
@@ -3567,19 +3567,19 @@ ric:place-cheongwadae rico:name "청와대";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9748";
     rico:identifier "place-cheongwadae", "urn:uuid:e4ff05af-7ef5-5ff6-9d04-5346f60cbd7b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-cheongwadae.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Blue House Seoul 3.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Blue House Seoul 3.jpg · 2022 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q494577", "https://ko.wikipedia.org/wiki/%EC%B2%AD%EC%99%80%EB%8C%80".
 ric:place-china rico:name "중국";
     rico:generalDescription "대북 진출 경쟁국으로 언급.";
     rico:identifier "place-china", "urn:uuid:838328d8-2712-5ccc-ba4f-4c57abf1c05c";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-china.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Badaling China Great-Wall-of-China-01.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Badaling China Great-Wall-of-China-01.jpg · 2009 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q148", "http://viaf.org/viaf/132441531", "https://ko.wikipedia.org/wiki/%EC%A4%91%ED%99%94%EC%9D%B8%EB%AF%BC%EA%B3%B5%ED%99%94%EA%B5%AD".
 ric:place-chungcheongbuk-do rico:name "충청북도";
     rico:generalDescription "국가 균형 발전 대상으로 언급된 도.";
     rico:identifier "place-chungcheongbuk-do", "urn:uuid:e79ade96-fd87-5106-aaf6-abae234786aa";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-chungcheongbuk-do.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeongdong wine tunnel.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeongdong wine tunnel.jpg · 2026 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41066", "http://viaf.org/viaf/131359986", "https://ko.wikipedia.org/wiki/%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84".
 ric:place-daechi-dong rico:name "대치동";
     rico:generalDescription "한보가 있던 곳으로 회고된 지역.";
@@ -3590,7 +3590,7 @@ ric:place-daechi-dong rico:name "대치동";
 ric:place-daegu-airport rico:name "대구공항";
     rico:identifier "place-daegu-airport", "urn:uuid:ecb8bfe8-fe4e-52d6-a965-3556941c1885";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-daegu-airport.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Daegu International Airport 20161012.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Daegu International Airport 20161012.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q483254", "https://ko.wikipedia.org/wiki/%EB%8C%80%EA%B5%AC%EA%B5%AD%EC%A0%9C%EA%B3%B5%ED%95%AD".
 ric:place-daegu-seomun-market rico:name "대구 서문시장";
     <http://www.w3.org/2000/01/rdf-schema#comment> "지역";
@@ -3603,12 +3603,12 @@ ric:place-daejeon rico:name "대전";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.3845";
     rico:identifier "place-daejeon", "urn:uuid:aa60004e-9210-5dae-97b5-4c5b87066ab4";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-daejeon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 대전시 동구8경 식장산.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 대전시 동구8경 식장산.jpg · 2014 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q20921", "http://viaf.org/viaf/130204952", "https://ko.wikipedia.org/wiki/%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C".
 ric:place-denmark rico:name "덴마크";
     rico:identifier "place-denmark", "urn:uuid:5c414d3b-d7e5-5f70-a160-d80b34cc9823";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-denmark.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Dannebrog.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Dannebrog.jpg · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q35", "http://viaf.org/viaf/135958350", "https://ko.wikipedia.org/wiki/%EB%8D%B4%EB%A7%88%ED%81%AC".
 ric:place-donggyo-dong rico:name "동교동";
     <http://www.w3.org/2000/01/rdf-schema#comment> "정당";
@@ -3616,7 +3616,7 @@ ric:place-donggyo-dong rico:name "동교동";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9236";
     rico:identifier "place-donggyo-dong", "urn:uuid:ba141cf7-46c2-53fe-9bd0-f3bafdf5cc27";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-donggyo-dong.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yangwha-ro Donggyo-dong.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yangwha-ro Donggyo-dong.jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q5295910", "https://ko.wikipedia.org/wiki/%EB%8F%99%EA%B5%90%EB%8F%99_%28%EC%84%9C%EC%9A%B8%29".
 ric:place-donghaksa rico:name "동학사";
     <http://www.w3.org/2000/01/rdf-schema#comment> "기타";
@@ -3624,17 +3624,17 @@ ric:place-donghaksa rico:name "동학사";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.2100";
     rico:identifier "place-donghaksa", "urn:uuid:fed5c6db-5baa-56c9-9793-f7fd56fce589";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-donghaksa.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Daejeon-Donghaksa-02.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Daejeon-Donghaksa-02.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12593594", "http://viaf.org/viaf/1471150470086604330008", "https://ko.wikipedia.org/wiki/%EB%8F%99%ED%95%99%EC%82%AC".
 ric:place-france rico:name "프랑스";
     rico:identifier "place-france", "urn:uuid:f1f3a5ac-be66-5cbb-946d-674e094dbc9b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-france.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Paris from the Arc de Triomphe, 17 October 2019.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Paris from the Arc de Triomphe, 17 October 2019.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q142", "http://viaf.org/viaf/264091107", "https://ko.wikipedia.org/wiki/%ED%94%84%EB%9E%91%EC%8A%A4".
 ric:place-gangseo rico:name "강서";
     rico:identifier "place-gangseo", "urn:uuid:fb7c0877-063d-540d-aab8-cb3f3a790b13";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gangseo.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Gangseogu Office Intersection Seoul.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Gangseogu Office Intersection Seoul.jpg · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50192", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%84%9C%EA%B5%AC_%28%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%29".
 ric:place-gangwon-do rico:name "강원도";
     rico:generalDescription "넓은 선거구의 예시이자 국가 균형 발전 대상으로 언급된 도.";
@@ -3643,14 +3643,14 @@ ric:place-gangwon-do rico:name "강원도";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "128.1555";
     rico:identifier "place-gangwon-do", "urn:uuid:20f26eae-d039-57da-8c55-6ff98535dc53";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gangwon-do.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2016년 7월 22일 춘천시 전경 DSC03812.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 2016년 7월 22일 춘천시 전경 DSC03812.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41071", "http://viaf.org/viaf/146641190", "https://ko.wikipedia.org/wiki/%EA%B0%95%EC%9B%90%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84".
 ric:place-gangwon-wind-farm rico:name "강원풍력발전단지";
     rico:identifier "place-gangwon-wind-farm", "urn:uuid:6f523a71-1117-58c1-b566-7de5e4c72668".
 ric:place-germany rico:name "독일";
     rico:identifier "place-germany", "urn:uuid:8477dd23-ba0c-5b04-8311-e965a722f029";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-germany.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Aerial view of Berlin (32881394137).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Aerial view of Berlin (32881394137).jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q183", "http://viaf.org/viaf/135446758", "https://ko.wikipedia.org/wiki/%EB%8F%85%EC%9D%BC".
 ric:place-geumsan rico:name "충남 금산";
     rico:generalDescription "무진장 접경 지역.";
@@ -3667,12 +3667,12 @@ ric:place-gimcheon rico:name "경북 김천";
 ric:place-gumi rico:name "구미";
     rico:identifier "place-gumi", "urn:uuid:2df50ebf-646e-5bb1-8a65-5d89d2be4bea";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gumi.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · City at dawn.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · City at dawn.JPG · 2012 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q42073", "http://viaf.org/viaf/144260965", "https://ko.wikipedia.org/wiki/%EA%B5%AC%EB%AF%B8%EC%8B%9C".
 ric:place-gwacheon rico:name "과천";
     rico:identifier "place-gwacheon", "urn:uuid:456dc3a1-2ea2-548a-b686-e8ef9ddfb493";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gwacheon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Government Complex Gwacheon, 2011.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Government Complex Gwacheon, 2011.jpg · 2011 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q42064", "http://viaf.org/viaf/38150468230204171677", "https://ko.wikipedia.org/wiki/%EA%B3%BC%EC%B2%9C%EC%8B%9C".
 ric:place-gwangju rico:name "광주";
     <http://www.w3.org/2000/01/rdf-schema#comment> "지역";
@@ -3680,7 +3680,7 @@ ric:place-gwangju rico:name "광주";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.8526";
     rico:identifier "place-gwangju", "urn:uuid:10125f72-3b43-510d-8b9e-b329e40cbe04";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gwangju.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 무진고성지에서 내려다본 광주광역시 시가지.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 무진고성지에서 내려다본 광주광역시 시가지.jpg · 2025 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41283", "http://viaf.org/viaf/153622297", "https://ko.wikipedia.org/wiki/%EA%B4%91%EC%A3%BC%EA%B4%91%EC%97%AD%EC%8B%9C".
 ric:place-gwangju-jeonnam rico:name "광주·전남";
     rico:identifier "place-gwangju-jeonnam", "urn:uuid:389301ad-368b-534d-9ac5-9dc0b5852bfd".
@@ -3691,7 +3691,7 @@ ric:place-gyeongsangbuk-do rico:name "경상북도";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "128.5056";
     rico:identifier "place-gyeongsangbuk-do", "urn:uuid:28eabc2c-37fb-5b1f-bd89-c1c7f57b7312";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-gyeongsangbuk-do.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Uljin hupo port.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Uljin hupo port.jpg · 2026 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41154", "http://viaf.org/viaf/128997416", "https://ko.wikipedia.org/wiki/%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84".
 ric:place-honam rico:name "호남";
     rico:generalDescription "구술자의 출신 지역.";
@@ -3712,12 +3712,12 @@ ric:place-imsil rico:name "임실";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.2790";
     rico:identifier "place-imsil", "urn:uuid:0cf62867-fab9-524a-b769-4e2f01a7d4cf";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-imsil.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Imsilgun County 43 (16850101932).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Imsilgun County 43 (16850101932).jpg · 2015 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50319", "http://viaf.org/viaf/151265038", "https://ko.wikipedia.org/wiki/%EC%9E%84%EC%8B%A4%EA%B5%B0".
 ric:place-italy rico:name "이탈리아";
     rico:identifier "place-italy", "urn:uuid:fde37d00-02a0-593c-b29b-53b62f92343e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-italy.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Satellite image of Italy in March 2003.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Satellite image of Italy in March 2003.jpg · 2003 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q38", "http://viaf.org/viaf/152361066", "https://ko.wikipedia.org/wiki/%EC%9D%B4%ED%83%88%EB%A6%AC%EC%95%84".
 ric:place-jangchungdan rico:name "장충단";
     <http://www.w3.org/2000/01/rdf-schema#comment> "기타";
@@ -3725,19 +3725,19 @@ ric:place-jangchungdan rico:name "장충단";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.0057";
     rico:identifier "place-jangchungdan", "urn:uuid:be26361a-4daa-5a95-bc3b-04d006464742";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-jangchungdan.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul supyo gyo 001.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul supyo gyo 001.jpg · 2009 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q11268929", "https://ko.wikipedia.org/wiki/%EC%9E%A5%EC%B6%A9%EB%8B%A8%EA%B3%B5%EC%9B%90".
 ric:place-japan rico:name "일본";
     rico:generalDescription "대북 진출 경쟁국으로 언급.";
     rico:identifier "place-japan", "urn:uuid:beb5114c-8dc8-5fc0-8b11-ed8d5b746f1d";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-japan.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Satellite image of Japan in May 2003.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Satellite image of Japan in May 2003.jpg · 2003 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q17", "http://viaf.org/viaf/159367111", "https://ko.wikipedia.org/wiki/%EC%9D%BC%EB%B3%B8".
 ric:place-jeju-do rico:name "제주도";
     rico:generalDescription "국가 균형 발전 대상으로 언급된 도.";
     rico:identifier "place-jeju-do", "urn:uuid:50e357b1-904d-5549-b237-2673175e403e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-jeju-do.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Gotjawal Forest on Jeju Island-01.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Gotjawal Forest on Jeju Island-01.jpg · 2009 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41164", "https://ko.wikipedia.org/wiki/%EC%A0%9C%EC%A3%BC%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84".
 ric:place-jeollabuk-do rico:name "전라북도";
     rico:generalDescription "구술자가 연청 지회장을 맡았던 도이자 균형 발전 대상 도.";
@@ -3746,7 +3746,7 @@ ric:place-jeollabuk-do rico:name "전라북도";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.1530";
     rico:identifier "place-jeollabuk-do", "urn:uuid:70b01038-c956-5af6-b5b7-7cbd02b94cf1";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-jeollabuk-do.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chunhyang theme park.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Chunhyang theme park.jpg · 2026 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41157", "http://viaf.org/viaf/252039872", "https://ko.wikipedia.org/wiki/%EC%A0%84%EB%B6%81%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84".
 ric:place-jeongyeongnyeon-building rico:name "전경련 빌딩";
     rico:identifier "place-jeongyeongnyeon-building", "urn:uuid:6addb37e-4f12-53ff-b8ef-a6d250bc6909".
@@ -3757,7 +3757,7 @@ ric:place-jongno rico:name "종로(종로구)";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9794";
     rico:identifier "place-jongno", "urn:uuid:88a83391-5404-505f-bc6a-d5e2c7697456";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-jongno.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sejong-ro pedestrian stretch.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sejong-ro pedestrian stretch.jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q36929", "http://viaf.org/viaf/125542222", "https://ko.wikipedia.org/wiki/%EC%A2%85%EB%A1%9C%EA%B5%AC".
 ric:place-jung-gu rico:name "중구";
     <http://www.w3.org/2000/01/rdf-schema#comment> "지역";
@@ -3765,17 +3765,17 @@ ric:place-jung-gu rico:name "중구";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9976";
     rico:identifier "place-jung-gu", "urn:uuid:78e9ed65-0376-574e-852a-9c6e5ca67680";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-jung-gu.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Seoul-Namdaemun-Sungnyemun-22.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Seoul-Namdaemun-Sungnyemun-22.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50441", "http://viaf.org/viaf/144300172", "https://ko.wikipedia.org/wiki/%EC%A4%91%EA%B5%AC_%28%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%29".
 ric:place-kaesong-industrial-complex rico:name "개성공단";
     rico:identifier "place-kaesong-industrial-complex", "urn:uuid:a6e3148d-dec4-5b2e-beb4-00395677ed8e";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-kaesong-industrial-complex.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kaesong model complex.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Kaesong model complex.jpg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q495424", "http://viaf.org/viaf/135350782", "https://ko.wikipedia.org/wiki/%EA%B0%9C%EC%84%B1%EA%B3%B5%EC%97%85%EC%A7%80%EA%B5%AC".
 ric:place-korean-peninsula rico:name "한반도";
     rico:identifier "place-korean-peninsula", "urn:uuid:6bd5497c-fbbf-56fa-a3ef-7554cef254c3";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-korean-peninsula.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea 2003-05-01 NASA MODIS Terra 250m.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea 2003-05-01 NASA MODIS Terra 250m.jpg · 2003 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q483134", "https://ko.wikipedia.org/wiki/%ED%95%9C%EB%B0%98%EB%8F%84".
 ric:place-long-beach rico:name "롱비치 항";
     <http://www.w3.org/2000/01/rdf-schema#comment> "해외";
@@ -3790,7 +3790,7 @@ ric:place-los-angeles rico:name "로스앤젤레스", "로스앤젤레스(LA)";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-118.2437";
     rico:identifier "place-los-angeles", "urn:uuid:e5ccad8d-01ce-5a4b-804f-256bf3567e5f";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-los-angeles.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Los Angeles with Mount Baldy.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Los Angeles with Mount Baldy.jpg · 2019 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q65", "http://viaf.org/viaf/233013566", "https://ko.wikipedia.org/wiki/%EB%A1%9C%EC%8A%A4%EC%95%A4%EC%A0%A4%EB%A0%88%EC%8A%A4".
 ric:place-mujinjang rico:name "무진장(무주·진안·장수)";
     rico:generalDescription "구술자의 선거구. 5도 접경 지역이며 매우 넓음.";
@@ -3799,7 +3799,7 @@ ric:place-mujinjang rico:name "무진장(무주·진안·장수)";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "127.4250";
     rico:identifier "place-mujinjang", "urn:uuid:541fc618-ce48-5be5-a0b2-d077dea4bf78";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-mujinjang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Mujinjang Fire Station.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Mujinjang Fire Station.JPG · 2017 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q12595631", "http://viaf.org/viaf/70150468344704172223", "https://ko.wikipedia.org/wiki/%EB%AC%B4%EC%A7%84%EC%9E%A5_%28%EC%A7%80%EC%97%AD%29".
 ric:place-muju-anseong rico:name "무주 안성";
     <http://www.w3.org/2000/01/rdf-schema#comment> "지역구";
@@ -3809,13 +3809,13 @@ ric:place-muju-anseong rico:name "무주 안성";
 ric:place-new-zealand rico:name "뉴질랜드";
     rico:identifier "place-new-zealand", "urn:uuid:d36d1d85-b326-5b4d-aa73-5514e09ec8e1";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-new-zealand.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · New Zealand Topography.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · New Zealand Topography.jpg · 2000 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q664", "http://viaf.org/viaf/130102165", "https://ko.wikipedia.org/wiki/%EB%89%B4%EC%A7%88%EB%9E%9C%EB%93%9C".
 ric:place-north-korea rico:name "북한";
     rico:generalDescription "대북 경제 진출 주장의 대상.";
     rico:identifier "place-north-korea", "urn:uuid:a007b25f-0c81-5002-af44-743a72b807af";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-north-korea.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Jinrichengsquare.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Jinrichengsquare.JPG · 2010 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q423", "http://viaf.org/viaf/142577143", "https://ko.wikipedia.org/wiki/%EC%A1%B0%EC%84%A0%EB%AF%BC%EC%A3%BC%EC%A3%BC%EC%9D%98%EC%9D%B8%EB%AF%BC%EA%B3%B5%ED%99%94%EA%B5%AD".
 ric:place-norway rico:name "노르웨이";
     rico:identifier "place-norway", "urn:uuid:bd67201a-72a6-52c6-a989-b1571edad891";
@@ -3829,13 +3829,13 @@ ric:place-pohang rico:name "포항";
     rico:generalDescription "영일군의 현재 지명.";
     rico:identifier "place-pohang", "urn:uuid:4e832ea1-db5b-5950-83c7-4ee3e51efe8c";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-pohang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Pohang-Goryongpo Beach-01.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Korea-Pohang-Goryongpo Beach-01.jpg · 2008 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q42157", "http://viaf.org/viaf/138409508", "https://ko.wikipedia.org/wiki/%ED%8F%AC%ED%95%AD%EC%8B%9C".
 ric:place-russia rico:name "러시아";
     rico:generalDescription "대북 진출 경쟁국으로 언급.";
     rico:identifier "place-russia", "urn:uuid:8e38c126-54fd-5515-bc5e-8e413d45f018";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-russia.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Russia 87.74494E 66.20034N.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Russia 87.74494E 66.20034N.jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q159", "http://viaf.org/viaf/140306806", "https://ko.wikipedia.org/wiki/%EB%9F%AC%EC%8B%9C%EC%95%84".
 ric:place-samil-building rico:name "삼일빌딩";
     <http://www.w3.org/2000/01/rdf-schema#comment> "직장";
@@ -3851,7 +3851,7 @@ ric:place-sanggye-dong rico:name "상계동";
 ric:place-seongnam rico:name "성남";
     rico:identifier "place-seongnam", "urn:uuid:a239b93d-b468-5ac8-94cc-4368749bc574";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-seongnam.jpeg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sangyoung Jeon (120992823 cropped).jpeg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sangyoung Jeon (120992823 cropped).jpeg · 2015 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q42108", "http://viaf.org/viaf/133694125", "https://ko.wikipedia.org/wiki/%EC%84%B1%EB%82%A8%EC%8B%9C".
 ric:place-seoul rico:name "서울";
     rico:generalDescription "선거운동과 중재 후 복귀 지점으로 언급.";
@@ -3860,12 +3860,12 @@ ric:place-seoul rico:name "서울";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9780";
     rico:identifier "place-seoul", "urn:uuid:1670c3eb-41e3-5dbf-bed9-e7dd7de01706";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-seoul.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 덕수궁의 가을.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · 덕수궁의 가을.jpg · 2017 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q8684", "http://viaf.org/viaf/138220682", "https://ko.wikipedia.org/wiki/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C".
 ric:place-south-korea rico:name "대한민국";
     rico:identifier "place-south-korea", "urn:uuid:218f5c7a-b633-5b97-9288-c79fe2aac631";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-south-korea.jpeg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul (175734251).jpeg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul (175734251).jpeg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q884", "http://viaf.org/viaf/132441370", "https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD".
 ric:place-ssangyong-building rico:name "쌍용빌딩";
     rico:identifier "place-ssangyong-building", "urn:uuid:9127ddc8-331e-5f1f-b6a0-bad6f82ec6bb".
@@ -3873,19 +3873,19 @@ ric:place-sudogwon rico:name "수도권";
     rico:generalDescription "집중을 경계해야 한다고 언급된 지역.";
     rico:identifier "place-sudogwon", "urn:uuid:79b83902-135d-53c5-a67b-1ebd5da3bd6b";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-sudogwon.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul-Cityscape-03.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Seoul-Cityscape-03.jpg · 2006 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q407538", "https://ko.wikipedia.org/wiki/%EC%88%98%EB%8F%84%EA%B6%8C_%28%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%29".
 ric:place-sunchang rico:name "순창";
     rico:identifier "place-sunchang", "urn:uuid:63fe7eb7-5f42-5782-872d-66291a89face";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-sunchang.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sunchang Bus Terminal.JPG";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sunchang Bus Terminal.JPG · 2015 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50251", "http://viaf.org/viaf/150180679", "https://ko.wikipedia.org/wiki/%EC%88%9C%EC%B0%BD%EA%B5%B0".
 ric:place-suncheon rico:name "전남 순천";
     rico:identifier "place-suncheon", "urn:uuid:9b68b0b0-66a9-506b-ac4f-9fbd1abe4097".
 ric:place-sweden rico:name "스웨덴";
     rico:identifier "place-sweden", "urn:uuid:8217dab7-929d-5a69-b58e-931799d5a504";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-sweden.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sweden - Location Map (2013) - SWE - UNOCHA.svg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Sweden - Location Map (2013) - SWE - UNOCHA.svg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q34", "http://viaf.org/viaf/159364209", "https://ko.wikipedia.org/wiki/%EC%8A%A4%EC%9B%A8%EB%8D%B4".
 ric:place-thirty-eighth-parallel rico:name "삼팔선";
     rico:identifier "place-thirty-eighth-parallel", "urn:uuid:e1ddaae7-80b7-5c24-aeb1-3bf15f1d44fc".
@@ -3895,7 +3895,7 @@ ric:place-uk rico:name "영국";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-0.1278";
     rico:identifier "place-uk", "urn:uuid:6dc26a59-1f0d-500a-81a9-dceaa5704bd8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-uk.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Palace of Westminster from the dome on Methodist Central Hall.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Palace of Westminster from the dome on Methodist Central Hall.jpg · 2014 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q145", "http://viaf.org/viaf/127756949", "https://ko.wikipedia.org/wiki/%EC%98%81%EA%B5%AD".
 ric:place-ulsan rico:name "울산";
     rico:generalDescription "현대자동차 파업이 일어난 도시.";
@@ -3904,7 +3904,7 @@ ric:place-ulsan rico:name "울산";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "129.3114";
     rico:identifier "place-ulsan", "urn:uuid:e4973c1a-ee87-5433-92ff-ea19fe5b96e5";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-ulsan.jpeg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Shade Of Taehwagang (71978891).jpeg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Shade Of Taehwagang (71978891).jpeg · 2014 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q41278", "http://viaf.org/viaf/236605733", "https://ko.wikipedia.org/wiki/%EC%9A%B8%EC%82%B0%EA%B4%91%EC%97%AD%EC%8B%9C".
 ric:place-usa rico:name "미국";
     rico:generalDescription "구술자가 MBA를 하고 주재원으로 근무한 나라. 균형 발전 논의의 비교 사례.";
@@ -3913,12 +3913,12 @@ ric:place-usa rico:name "미국";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "-77.0369";
     rico:identifier "place-usa", "urn:uuid:81469d0c-b734-5f06-ac6f-7c70e8a0146d";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-usa.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · United States - Location Map (2013) - USA - UNOCHA.svg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · United States - Location Map (2013) - USA - UNOCHA.svg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q30", "http://viaf.org/viaf/130168302", "https://ko.wikipedia.org/wiki/%EB%AF%B8%EA%B5%AD".
 ric:place-wanju rico:name "완주";
     rico:identifier "place-wanju", "urn:uuid:17614cae-75bf-55c2-b482-f5936a2596b0";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-wanju.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Wanju (Gui), South Korea - June 2016 (48).jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Wanju (Gui), South Korea - June 2016 (48).jpg · 2016 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q50312", "https://ko.wikipedia.org/wiki/%EC%99%84%EC%A3%BC%EA%B5%B0".
 ric:place-washington rico:name "워싱턴";
     <http://www.w3.org/2000/01/rdf-schema#comment> "해외";
@@ -3943,7 +3943,7 @@ ric:place-yeongnak-church rico:name "영락교회";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9946";
     rico:identifier "place-yeongnak-church", "urn:uuid:1623e9bf-a302-57e6-9b2d-01c518014883";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-yeongnak-church.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Young Nak Church 2007.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Young Nak Church 2007.jpg · 2007 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q1756443", "https://ko.wikipedia.org/wiki/%EC%98%81%EB%9D%BD%EA%B5%90%ED%9A%8C".
 ric:place-yeongnam rico:name "영남";
     rico:generalDescription "호남과 대비되는 지역.";
@@ -3960,7 +3960,7 @@ ric:place-yeouido rico:name "여의도";
     <http://www.w3.org/2003/01/geo/wgs84_pos#long> "126.9245";
     rico:identifier "place-yeouido", "urn:uuid:f20b4243-a0db-5673-81f0-41d73607de75";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/place-yeouido.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeouido2025.jpg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Yeouido2025.jpg · 2025 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q22982", "https://ko.wikipedia.org/wiki/%EC%97%AC%EC%9D%98%EB%8F%84".
 ric:place-yeouido-hotel rico:name "여의도호텔";
     rico:identifier "place-yeouido-hotel", "urn:uuid:b675a91b-b56d-5f1c-9a67-a18f21ad49fb".
@@ -4265,7 +4265,7 @@ ric:pos-secretary-general rico:name "사무총장";
 ric:pos-seoul-mayor rico:name "서울시장";
     rico:identifier "pos-seoul-mayor", "urn:uuid:1da42cfd-bc86-5010-966b-0f2114b173c8";
     <http://xmlns.com/foaf/0.1/depiction> "assets/media/pos-seoul-mayor.jpg";
-    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Flag of Seoul.svg";
+    <http://www.w3.org/2000/01/rdf-schema#label> "Wikimedia Commons · Flag of Seoul.svg · 2013 촬영";
     <http://www.w3.org/2002/07/owl#sameAs> "http://www.wikidata.org/entity/Q488289", "https://ko.wikipedia.org/wiki/%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%EC%9E%A5".
 ric:pos-sk-hoejang rico:name "SK 회장";
     rico:generalDescription "SK의 회장직.";
