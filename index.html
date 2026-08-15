@@ -12,8 +12,9 @@
 :root{
   /* 석조 70 — 의사당 화강암의 세계. 바탕이 연해질 때 명패 백도 같이 올려 단차 4~5%를 지킨다.
      액센트는 국회 자주(무궁화 심벌), 조연은 돔 청록(의사당 지붕) — 호버 테두리·잔글씨에만. */
-  /* AP: 인물 페이지(순백 열람실)의 명패·헤어라인을 사이트 전면으로 — 바탕 화강암은 유지 */
-  --bg:#eef0ee; --panel:#ffffff; --fg:#22262a; --muted:#5b6266; --line:#e0e4e2;
+  /* 디자인 기준은 인물 페이지(순백 열람실)다 — 바탕도 명패도 순백, 구분은 헤어라인 한 줄로.
+     화강암(#eef0ee)은 바탕에서 물러나고, 남은 것은 종이와 선과 활자뿐이다. */
+  --bg:#ffffff; --panel:#ffffff; --fg:#22262a; --muted:#5b6266; --line:#e4e7e5;
   --accent:#7b2f61; --accent-2:#2a6f66; --accent-soft:#f0e4ec;
   --person:#9b3535; --org:#b08840; --place:#2f6b5c; --event:#5b4b9e;
   --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a;--concept:#3f6f9c; --activity:#8a6d2f;
@@ -236,7 +237,7 @@ body.past-hero #heroSwap{opacity:0;pointer-events:none}
 
 /* ───── 기록 찾아보기 ───── */
 .rec-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.2rem 0 .6rem}
-.rec-bar input{flex:1;min-width:220px;padding:.6rem .9rem;border:1px solid var(--line);border-radius:10px;
+.rec-bar input{flex:1;min-width:220px;padding:.6rem .9rem;border:1px solid var(--line);border-radius:6px;
   background:var(--panel);color:var(--fg);font:inherit;font-size:.92rem}
 .rec-bar input:focus{outline:none;border-color:var(--accent)}
 .rec-group{margin:1.6rem 0 0}
@@ -265,9 +266,6 @@ mark{background:var(--accent-soft);color:inherit;padding:0 .1em;border-radius:2p
 body.item-open{overflow:hidden}
 #itemView{position:fixed;inset:61px 0 0 0;z-index:800;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;
   container-type:inline-size}
-/* 개체 페이지는 순백 열람실 — 홈·목록의 화강암과 층이 갈린다(유로피아나: 목록은 톤, 아이템은 백).
-   다크 테마에서는 밤의 화강암 토큰을 그대로 쓴다. */
-:root:not([data-theme=dark]) #itemView{--bg:#ffffff;--panel:#ffffff;--line:#e4e7e5}
 #itemView.on{display:block}
 .item-wrap{max-width:820px;margin:0 auto;padding:2.2rem 1.4rem 5rem}
 .item-wrap .back{display:inline-block;margin-bottom:1.6rem;font-size:.86rem;text-decoration:none}
@@ -302,7 +300,7 @@ body.item-open{overflow:hidden}
 .m-cap-btn:hover{color:var(--accent)}
 .item-head .portrait{margin:0}
 .item-head .portrait img{width:180px;height:auto;max-height:240px;object-fit:cover;
-  border-radius:12px;border:1px solid var(--line);display:block;background:var(--panel)}
+  border-radius:var(--r-card);border:1px solid var(--line);display:block;background:var(--panel)}
 .item-head .portrait figcaption{font-size:.66rem;color:var(--muted);margin-top:.35rem;line-height:1.4}
 .ext{display:inline-flex;align-items:center;gap:.3rem;padding:.16rem .5rem;border-radius:6px;
   border:1px solid var(--line);text-decoration:none;font-size:.8rem;margin-right:.3rem}
@@ -337,7 +335,7 @@ main>section{display:none}
    200ms 씩 밀려 세어 올라가고, 다 세면 구성비 막대가 폭을 채운다.
    .on 이 붙기 전에는 전부 투명 + 8px 아래에 있다 — JS 가 다음 프레임에 붙여 준다
    (같은 프레임에 붙이면 브라우저가 시작 상태를 건너뛰고 전환이 생략된다). */
-.lb{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+.lb{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);
   padding:1.4rem 1.5rem 1.5rem;margin-bottom:1.2rem;overflow:hidden}
 .lb-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem}
 .lb-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;
@@ -499,14 +497,14 @@ main>section{display:none}
 .subj-sum{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-bottom:.9rem}
 .subj-sum b{color:var(--accent);font-weight:700}
 .subj-search{display:flex;gap:.5rem;align-items:center;margin-bottom:1.1rem}
-.subj-search input{flex:1;min-width:0;padding:.62rem .95rem;border-radius:12px;
+.subj-search input{flex:1;min-width:0;padding:.62rem .95rem;border-radius:var(--r-card);
   border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit;font-size:.9rem}
 .subj-search input:focus{outline:none;border-color:var(--accent)}
 
 /* ── 시소러스 목록 ── 참고: 수원학 아카이브 주제 페이지.
    상위 주제는 카드 단위, 하위는 왼쪽 괘선 들여쓰기, 자료가 달린 주제는 썸네일 칩을 바로 보여준다. */
-.th-scheme{border:1px solid var(--line);border-radius:16px;background:var(--panel);
-  padding:1.15rem 1.25rem 1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.th-scheme{border:1px solid var(--line);border-radius:var(--r-card);background:var(--panel);
+  padding:1.15rem 1.25rem 1.25rem;margin-bottom:1rem}
 .th-scheme>header{display:flex;align-items:baseline;gap:.6rem}
 .th-scheme>header b{font-family:var(--serif);font-size:1.12rem;font-weight:800}
 .th-scheme>header span{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
@@ -543,7 +541,7 @@ main>section{display:none}
 .expo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,440px));
   justify-content:start;gap:1rem;margin-bottom:1.2rem}
 .expo-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-card);
-  overflow:hidden;background:var(--panel);box-shadow:var(--shadow);cursor:pointer;
+  overflow:hidden;background:var(--panel);cursor:pointer;
   transition:border-color .12s,transform .12s}
 .expo-card:hover{border-color:var(--accent-2);transform:translateY(-2px)}
 .expo-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow)}
@@ -613,7 +611,7 @@ main>section{display:none}
   .act-rail i{display:none}
   .act-main,.act.alt .act-main{grid-template-columns:1fr}
 }
-.spane{border:1px solid var(--concept);border-radius:12px;background:var(--panel);padding:1rem 1.1rem}
+.spane{border:1px solid var(--concept);border-radius:var(--r-card);background:var(--panel);padding:1rem 1.1rem}
 .spane h3{margin:0 0 .3rem;font-family:var(--serif);font-size:1.15rem}
 .slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.4rem;margin-top:.7rem}
 a.sitem{display:flex;align-items:center;gap:.45rem;text-decoration:none;color:var(--fg);
@@ -645,11 +643,11 @@ button.col-card{text-align:left;font:inherit;cursor:pointer}
 :root[data-page="home"] #homeIndex{display:grid;
   grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:.7rem;margin:1.6rem 0 1rem}
 #homeIndex a{display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
-  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem}
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);padding:.9rem 1.1rem}
 #homeIndex a:hover{border-color:var(--accent)}
 .col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:.9rem 0}
 .col-card{position:relative;display:flex;flex-direction:column;gap:.2rem;text-decoration:none;color:var(--fg);
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 2.2rem .85rem 1rem;text-align:left}
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);padding:.85rem 2.2rem .85rem 1rem;text-align:left}
 .col-card.on::after{content:'✓';position:absolute;top:.7rem;right:.9rem;color:var(--accent);font-weight:700;font-size:.95rem}
 .col-card:hover{border-color:var(--accent)}
 .col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -703,7 +701,7 @@ body.story-on #storyLayer{display:block}
 
 .story-card{position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);
   width:min(560px,calc(100% - 6rem));background:var(--panel);border:1px solid var(--line);
-  border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.2rem;animation:sIn .35s ease}
+  border-radius:var(--r-card);box-shadow:var(--shadow);padding:1rem 1.2rem;animation:sIn .35s ease}
 @keyframes sIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 .story-card .act{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--accent);
   display:flex;gap:.6rem;align-items:baseline}
@@ -753,7 +751,7 @@ body.story-on #storyLayer{display:block}
 section.fs{position:fixed;inset:0;z-index:940;background:var(--bg);margin:0;padding:1.2rem 1.4rem;
   overflow:auto;max-width:none}
 section.fs .sec-head p{display:none}
-section.fs .panel,section.fs #graph,section.fs #map{border-radius:12px}
+section.fs .panel,section.fs #graph,section.fs #map{border-radius:var(--r-card)}
 section.fs #map,section.fs .map-wrap{height:calc(100vh - 230px)}
 section.fs #graph{height:calc(100vh - 320px)}
 section.fs .tl-wrap{max-height:calc(100vh - 260px)}
@@ -767,7 +765,7 @@ section{padding-top:4.5rem;scroll-margin-top:60px}
 .sec-head h2{font-family:var(--serif);font-weight:800;font-size:clamp(1.5rem,2.8vw,2.1rem);
   letter-spacing:-.025em;margin:.25rem 0 .5rem}
 .sec-head p{color:var(--muted);margin:0;max-width:70ch;font-size:.95rem}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
 
 /* 칩 */
 .chips{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0}
@@ -789,18 +787,18 @@ section{padding-top:4.5rem;scroll-margin-top:60px}
 
 /* 세그먼트 컨트롤 */
 .seg{display:inline-flex;gap:.15rem;background:var(--panel);border:1px solid var(--line);
-  border-radius:10px;padding:.22rem;flex-wrap:wrap}
+  border-radius:6px;padding:.22rem;flex-wrap:wrap}
 .seg button{padding:.35rem .75rem;border:none;border-radius:8px;background:transparent;color:var(--muted);
   font:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap}
 .seg button.on{background:var(--accent);color:#fff;font-weight:600}
 
-.btn{padding:.5rem 1rem;border-radius:10px;border:1px solid var(--line);background:var(--panel);
+.btn{padding:.5rem 1rem;border-radius:6px;border:1px solid var(--line);background:var(--panel);
   color:var(--fg);font:inherit;font-size:.87rem;cursor:pointer}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.sm{padding:.3rem .65rem;font-size:.79rem}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 input[type=text],input[type=password],textarea,select{width:100%;padding:.55rem .75rem;
-  border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit;font-size:.9rem}
+  border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit;font-size:.9rem}
 textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical}
 
 /* ───── 지도 ───── */
@@ -829,7 +827,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
   transform:translateX(-50%);transition:transform .15s}
 .tl-ev:hover{transform:translateX(-50%) translateY(-3px);z-index:5}
 .tl-ev .stem{width:1px;background:var(--line)}
-.tl-ev .bub{border:1px solid currentColor;border-radius:10px;padding:.3rem .6rem;background:var(--panel);
+.tl-ev .bub{border:1px solid currentColor;border-radius:6px;padding:.3rem .6rem;background:var(--panel);
   font-size:.78rem;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;box-shadow:var(--shadow)}
 .tl-ev .yr{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.15rem}
 .tl-ev.dim{opacity:.2}
@@ -853,7 +851,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
   border:1px solid var(--line);min-width:230px;box-shadow:0 6px 18px rgba(30,40,38,.08)}
 .gq-sug button{display:flex;gap:.5rem;align-items:baseline;width:100%;border:0;background:none;
   padding:.38rem .7rem;cursor:pointer;font-size:.78rem;color:var(--fg);text-align:left}
-.gq-sug button:hover{background:var(--bg)}
+.gq-sug button:hover{background:var(--accent-soft)}
 .gq-sug button i{width:7px;height:7px;border-radius:50%;align-self:center;flex:none}
 .gq-sug button em{font-style:normal;font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-left:auto}
 .gq-sug[hidden]{display:none}
@@ -865,7 +863,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 .g-insight .no{font-family:var(--mono);font-size:.62rem;color:var(--muted)}
 .g-insight button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:.95rem;padding:0 .2rem}
 .g-insight button:hover{color:var(--accent)}
-.g-insight .gpp{font-size:.62rem;letter-spacing:-1px;margin-left:.2rem}
+.g-insight .gpp{font-family:var(--mono);font-size:.62rem;margin-left:.35rem;color:var(--muted)}
 .g-insight .bar{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.5}
 .g-insight[hidden]{display:none}
 .g-under{display:grid;grid-template-columns:1fr auto;gap:1.2rem;margin-top:.8rem;align-items:start}
@@ -899,7 +897,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 @media (max-width:760px){.g-under{grid-template-columns:1fr}.grank{border-left:0;padding-left:0}}
 
 .g-tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);
-  border-radius:10px;padding:.5rem .7rem;font-size:.82rem;box-shadow:var(--shadow);z-index:20;max-width:260px;display:none}
+  border-radius:6px;padding:.5rem .7rem;font-size:.82rem;box-shadow:var(--shadow);z-index:20;max-width:260px;display:none}
 .g-tip b{display:block;margin-bottom:.15rem}
 .g-tip span{font-size:.75rem;color:var(--muted)}
 .g-legend{display:flex;gap:1rem;flex-wrap:wrap;padding:.65rem 1rem;border-top:1px solid var(--line);
@@ -909,7 +907,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 /* ───── 질의 ───── */
 .q-grid{display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start}
 .q-list{display:flex;flex-direction:column;gap:.5rem}
-.q-card{text-align:left;padding:.75rem .9rem;border:1px solid var(--line);border-radius:12px;
+.q-card{text-align:left;padding:.75rem .9rem;border:1px solid var(--line);border-radius:var(--r-card);
   background:var(--panel);cursor:pointer;font:inherit;transition:all .15s}
 .q-card:hover{border-color:var(--accent-2);transform:translateX(2px)}
 .q-card.on{border-color:var(--accent);background:var(--accent-soft)}
@@ -972,12 +970,12 @@ button.p-frame{padding:0;border:0;background:none;cursor:pointer;font:inherit}
   padding:.75rem .95rem;border-radius:0 10px 10px 0;font-size:.86rem;margin-bottom:.8rem}
 .okbox{border-left:3px solid var(--ok);background:color-mix(in srgb,var(--ok) 8%,transparent);
   padding:.75rem .95rem;border-radius:0 10px 10px 0;font-size:.86rem;margin-bottom:.8rem}
-pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem;
+pre{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.8rem 1rem;
   overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.6;margin:.5rem 0}
 .builder{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin:.8rem 0}
 .builder label{display:block;font-size:.74rem;color:var(--muted);margin-bottom:.25rem}
 .keybar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;padding:.85rem 1rem;
-  border-radius:12px;border:1px solid var(--line);background:var(--panel);margin-bottom:1rem}
+  border-radius:var(--r-card);border:1px solid var(--line);background:var(--panel);margin-bottom:1rem}
 .keystate{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .7rem;border-radius:999px;
   font-size:.79rem;font-weight:600;white-space:nowrap}
 .keystate.off{background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad)}
@@ -1306,7 +1304,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <div class="panel" style="padding:.4rem 1.2rem 1rem;margin-top:1rem"><table>
       <tr><th>단계</th><th>한 일</th><th>산출</th></tr>
       <tr><td>① 수집·전처리</td><td>구술 녹취문 PDF → 텍스트 정제, 쪽 앵커 부여</td><td>정제 텍스트</td></tr>
-      <tr><td>② 온톨로지 정의</td><td>RiC-O 1.1에서 구술기록용 12클래스·30속성 추출</td><td><code>ontology.rdf</code></td></tr>
+      <tr><td>② 온톨로지 정의</td><td>RiC-O 1.1 부분집합에 FOAF·Schema.org·PROV-O·Web Annotation 보강 — 29클래스·72속성</td><td><code>ontology.rdf</code></td></tr>
       <tr><td>③ 추출·그라운딩</td><td>LLM 개체·관계 추출 → 전거 매핑 → 도메인·레인지 검증</td><td><code>graph.ttl</code></td></tr>
       <tr><td>④ 시맨틱 검색</td><td>자연어 → SPARQL → Oxigraph 실행 → 답변 + 출처</td><td>이 페이지</td></tr>
     </table></div>

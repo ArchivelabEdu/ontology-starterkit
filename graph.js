@@ -173,7 +173,7 @@ function paintScene() {
     <div class="row"><span class="no">장면 ${S.si + 1} / ${S.scenes.length}</span>
       <button onclick="gScene(-1)" aria-label="이전 장면">‹</button>
       <button onclick="gScene(1)" aria-label="다음 장면">›</button>
-      <button class="gpp" onclick="gPlay()" aria-label="${S.sceneStop ? '자동 재생' : '자동 재생 멈춤'}">${S.sceneStop ? '▶' : '❚❚'}</button></div><i class="bar"></i>`;
+      <button class="gpp" onclick="gPlay()" aria-label="${S.sceneStop ? '자동 재생' : '자동 재생 멈춤'}">${S.sceneStop ? '재생' : '멈춤'}</button></div><i class="bar"></i>`;
   el.hidden = false;
   /* 자동 플레이 — 문장 길이만큼 머문 뒤 다음 장면으로.
      오버레이에 마우스가 올라와 있으면 쉬고, 멈춤 버튼(S.sceneStop)은 다시 누를 때까지 잠근다. */
