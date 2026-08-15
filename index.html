@@ -987,12 +987,14 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 .p-col{display:flex;flex-direction:column;gap:10px;min-width:0}
 .p-frame{display:block;width:100%;overflow:hidden;position:relative;
   border-radius:var(--r-img);text-decoration:none;color:var(--fg)}
-/* 갤러리 색조 — 명암과 질감은 원본 그대로 두고 **색상만** 사이트 자주로 바꾼다.
-   유로피아나 히어로의 듀오톤 문법에서 온 것: 출처도 시대도 제각각인 사진들이
-   한 화면으로 묶인다. 흑백으로 지우지 않으므로 인물의 표정과 결은 그대로 남는다. */
+/* 갤러리 색조 — 2색 듀오톤(어두운 데는 자주, 밝은 데는 크림).
+   유로피아나 히어로의 문법을 빌린 것: 사진을 흑백으로 만들어 자주 바탕 위에 명암만 얹고
+   (luminosity), 그 위에 크림을 곱해 밝은 부분을 데운다. 출처도 시대도 제각각인 컷들이
+   바랜 인화지 한 장처럼 묶인다. 색은 사진마다 다르지만 톤은 하나가 된다. */
+.p-frame{background:#4a1730}
+.p-frame img{filter:grayscale(1) contrast(1.08);mix-blend-mode:luminosity;opacity:.92}
 .p-frame::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:var(--accent);mix-blend-mode:color}
-.p-frame img{filter:contrast(1.04)}
+  background:#efe3cf;mix-blend-mode:multiply}
 a.p-frame:hover img,button.p-frame:hover img{outline:1px solid var(--accent-2);outline-offset:-1px}
 button.p-frame{padding:0;border:0;background:none;cursor:pointer;font:inherit}
 .p-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
