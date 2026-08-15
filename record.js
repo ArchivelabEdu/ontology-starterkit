@@ -555,16 +555,25 @@ function buildMasonry() {
   const frames = [...track.querySelectorAll('.p-frame')];
   if (!frames.length) return;
   const K = Math.max(2, Math.round((W + GAP) / (IDEAL + GAP)));
-  const colW = (W - GAP * (K - 1)) / K;
-  const items = frames.map(f => {
+  /* 기둥 폭은 왼쪽이 넓고 오른쪽으로 갈수록 좁아진다(유로피아나 갤러리 문법) —
+     첫 컷에 눈이 먼저 가고, 뒤로 갈수록 물러나며 리듬이 생긴다.
+     폭은 1.0 → 0.62 로 고르게 줄고, 합이 늘 가용 폭과 같도록 정규화한다. */
+  const FALL = 0.62;
+  const wts = Array.from({ length: K }, (_, i) => K < 2 ? 1 : 1 - (1 - FALL) * (i / (K - 1)));
+  const sumW = wts.reduce((a, b) => a + b, 0);
+  const avail = W - GAP * (K - 1);
+  const colWs = wts.map(w => avail * w / sumW);
+  const ars = frames.map(f => {
     const img = f.querySelector('img');
-    const ar = (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : .75;
-    return { f, h: colW / ar };
+    return (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : .75;
   });
-  const cols = Array.from({ length: K }, () => ({ h: 0, items: [] }));
+  const cols = colWs.map(w => ({ w, h: 0, items: [] }));
   const total = c => c.h + GAP * Math.max(0, c.items.length - 1);   // 간격까지 넣은 기둥 총높이
-  items.forEach(it => {
+  /* 기둥마다 폭이 다르므로 높이는 **어느 기둥에 넣을지 정한 뒤에** 잰다.
+     넓은 기둥일수록 같은 사진이 높아져, 자연히 컷 수가 적게 들어간다. */
+  frames.forEach((f, i) => {
     const c = cols.reduce((a, b) => (total(b) < total(a) ? b : a));
+    const it = { f, h: c.w / ars[i] };
     c.items.push(it); c.h += it.h;
   });
   const used = cols.filter(c => c.items.length);
@@ -573,7 +582,7 @@ function buildMasonry() {
   used.forEach(c => {
     const d = document.createElement('div');
     d.className = 'p-col';
-    d.style.width = colW.toFixed(2) + 'px';
+    d.style.width = c.w.toFixed(2) + 'px';
     /* 간격은 스케일되지 않으므로 빼고 나눈다 — 이걸 빼먹으면 기둥별 컷 수 차이만큼
        (6px × 개수차) 바닥이 어긋난다(실측 12px). */
     const s = (target - GAP * Math.max(0, c.items.length - 1)) / c.h;
