@@ -990,7 +990,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 /* 갤러리 색조 — 흑백. 색을 조금이라도 남기면 원본이 컬러냐 흑백이냐에 따라 결과가
    갈려 갤러리가 두 무리로 보인다(실측). 색을 완전히 지우면 1970년대 원판과 근래 사진이
    같은 인화지에 놓인다 — 남는 것은 명암과 표정뿐이다. */
-.p-frame img{filter:grayscale(1) contrast(1.03)}
+.p-frame img{filter:grayscale(1) contrast(.88) brightness(1.05)}
 a.p-frame:hover img,button.p-frame:hover img{outline:1px solid var(--accent-2);outline-offset:-1px}
 button.p-frame{padding:0;border:0;background:none;cursor:pointer;font:inherit}
 .p-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
