@@ -5660,6 +5660,7 @@ ric:pos-speaker-20-1 <http://archives.nanet.go.kr/voca#ofTerm> ric:org-national-
     <http://archives.nanet.go.kr/voca#termHalf> "전반기".
 ric:agent-jsk <http://archives.nanet.go.kr/voca#representsConstituency> ric:place-jongno.
 ric:place-jongno <http://archives.nanet.go.kr/voca#activeInTerm> ric:org-national-assembly-20.
+ric:event-20th-general-election rico:beginningDate "2016-04-13".
 ric:auth-0-ec9db4ec rico:name "이승만".
 ric:pos-0 rico:name "제헌국회 전반기 의장".
 ric:auth-1-ec8ba0ec rico:name "신익희".
