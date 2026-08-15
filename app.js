@@ -667,6 +667,10 @@ function updateHomeIndex() {
   $('#ixEvent').textContent = `${G.nodes.filter(n => (n.cls === 'Event' || n.cls === 'Activity') && n.date).length}건`;
   const nCon = G.nodes.filter(n => n.cls === 'Concept').length;
   $('#ixSubject').textContent = nCon ? `${nCon}개념` : '없음';
+  /* 원문 분량은 적재를 따른다 — 손으로 박아 두면(예전 「원문 8단락」) 컬렉션을 갈아끼울 때 거짓말이 된다.
+     쪽 번호가 함께 온 원문이면 쪽으로, 아니면 단락으로 센다(loadCorpus 의 기준과 같다). */
+  $('#ixLang').textContent = !LANG.paras.length ? '원문 없음'
+    : LANG.meta.some(m => m.page) ? `원문 ${LANG.paras.length}쪽` : `원문 ${LANG.paras.length}단락`;
 }
 
 /* 「적재」라는 말이 화면에서만 참이면 곤란하다 — SPARQL 은 스토어에 직접 묻기 때문에,
@@ -1715,6 +1719,7 @@ export async function loadCorpus() {
   }
   const nc = $('#langNone');
   if (nc) nc.hidden = !!paras.length;
+  updateHomeIndex();   // 홈 색인의 「원문 …쪽」은 여기서야 값을 안다 — 원문은 그래프보다 늦게 온다
   const tok = t => (t.match(/[가-힣]{2,}/g) || [])
     .map(stem).filter(w => w.length >= 2 && !STOP.has(w) && !VERB_TAIL.test(w));
   const freq = {};
