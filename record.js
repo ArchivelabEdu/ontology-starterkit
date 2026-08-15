@@ -267,18 +267,27 @@ function personHighlight(n, out, inn) {
      사진은 대개 그 개체가 마지막으로 등장한 무렵의 것이기 때문이다(김근태·국회의사당·
      제20대 총선 → 20XX). 이웃도 말이 없으면 19XX — 구술총서의 옛 컷들이 그렇다. */
   const yr4 = v => (String(v || '').match(/\d{4}/) || [])[0];
+  const nbrs = id => G.edges.filter(e => e.s === id || e.o === id)
+    .map(e => G.byId.get(e.s === id ? e.o : e.s)).filter(Boolean);
   const centuryOf = id => {
-    const ys = G.edges.filter(e => e.s === id || e.o === id)
-      .map(e => G.byId.get(e.s === id ? e.o : e.s))
-      .map(x => +yr4(x?.date)).filter(y => y > 1800).sort((a, b) => a - b);
+    // 인물의 date 는 생년이라 사진의 때를 말해 주지 않는다 — 이웃을 셀 때도 뺀다
+    // (제20대 총선이 19XX 였던 까닭: 이웃 정세균의 생년 1950 이 유일한 날짜였다)
+    const years = ns => ns.filter(x => x.cls !== 'Person').map(x => +yr4(x.date)).filter(y => y > 1800);
+    const one = nbrs(id);
+    let ys = years(one);
+    // 이웃이 말이 없으면 그 이웃의 이웃까지 — 제20대 총선처럼 자기도 이웃도 날짜가 없는 개체가 있다
+    if (!ys.length) ys = years(one.flatMap(x => nbrs(x.id)));
     if (!ys.length) return '19XX';
-    return ys[ys.length - 1] >= 2000 ? '20XX' : '19XX';
+    return Math.max(...ys) >= 2000 ? '20XX' : '19XX';
   };
   const yrTag = (v, id) => { const y = yr4(v);
     return `<b class="p-yr${y ? '' : ' unk'}">${y || (id ? centuryOf(id) : '19XX')}</b>`; };
+  /* 인물의 date 는 생년(rico:beginningDate)이지 사진이 찍힌 해가 아니다 —
+     강재섭 사진에 1948 이 붙어 있었다. 인물은 자기 날짜를 쓰지 않고 세기로만 적는다. */
+  const photoYear = o => (o.cls === 'Person' ? '' : o.date);
   const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
       title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
-      <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(o.date, o.id)}</a>`).join('');
+      <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(photoYear(o), o.id)}</a>`).join('');
   /* 갤러리는 무괘 — 라벨도 선도 없이 어록 다음에 흐른다. 출처는 각 컷의 호버와
      개체 페이지 뷰어가 진다(규율 유지). */
   /* 이미지가 하나 실릴 때마다 비율이 확정되므로 masonry 를 다시 잰다(디바운스). */
