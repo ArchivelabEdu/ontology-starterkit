@@ -1023,15 +1023,13 @@ th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.
 .status{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
 /* 아직 안 골랐을 때의 안내 — 화면마다 같은 자리에 같은 문장으로 선다.
    빈 지도·빈 성좌는 그 자체로는 고장과 구분되지 않는다. 상태줄과 겹치지 않게 **둘 중 하나만** 보인다. */
-#needPick{display:none;align-items:center;gap:.7rem;flex-wrap:wrap;margin:.2rem 0 0;
-  padding:.7rem .9rem;border:1px solid var(--line);border-left:3px solid var(--accent);
-  border-radius:var(--r-card);font-size:.86rem}
-#needPick b{font-weight:700}
-#needPick span{color:var(--muted)}
-#needPick .btn{margin-left:auto}
-:root.no-pick #needPick{display:flex}
-:root.no-pick[data-page="home"] #needPick{display:none}
-:root.no-pick #loadStatus{display:none}
+#needPick{display:none;margin:4.5rem 0 0;padding:2rem 0 0;border-top:1px solid var(--line)}
+#needPick>b{display:block;font-family:var(--serif);font-size:1.5rem;font-weight:800;margin-bottom:.5rem}
+#needPick span{display:block;color:var(--muted);font-size:.92rem;line-height:1.7;max-width:52ch}
+#needPick .btn{margin-top:1.2rem}
+/* 안 골랐을 때는 그 화면을 그리지 않는다('empty') — 빈 지도·빈 성좌는 고장과 구분되지 않는다.
+   계기판(상태줄)은 그대로 서고, 본문 자리에는 이 안내 한 장만 남는다. */
+:root[data-page="empty"] #needPick{display:block}
 /* 표지는 얼굴이고 상태줄은 작업대의 계기판이다 — 홈에서는 감춘다.
    표지 수치(개체·관계·트리플)와 단추가 이미 같은 말을 하고 있고, 「적재」를 누르라는 지시가
    가리키는 버튼은 컬렉션 화면에 있어 이 자리에서는 갈 곳 없는 안내가 된다.

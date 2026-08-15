@@ -188,10 +188,17 @@ function route() {
      표지의 단추가 그리로 데려간다. 홈에 고르개를 겹쳐 두면 같은 일을 하는 자리가 둘이 된다.
      화면을 지목해 온 사람(장소·연표·관계망…)은 그 화면을 제 모습대로 받는다 —
      비어 있는 까닭은 상태줄이 말한다(「적재 0 — … 「적재」를 누르세요」). */
-  if (!hasPick() && !rest && !col) {
-    document.documentElement.dataset.page = 'home';
-    document.body.classList.remove('past-hero');
-    navMark('');
+  /* 아직 안 골랐을 때 — 맨 홈은 표지, 그 밖의 화면은 **아무것도 그리지 않는다**.
+     'empty' 는 어느 섹션도 켜지 않는 페이지 이름이라, 빈 지도·빈 성좌 대신 안내 한 장만 남는다.
+     계기판(상태줄)은 그대로 서서 지금 그래프가 0 이라는 것을 같은 형식으로 말한다.
+     컬렉션·해설은 예외다 — 컬렉션은 **고르는 자리 그 자체**라 여기까지 비우면 「컬렉션 고르기」가
+     막다른 길이 되고, 해설은 데이터가 아니라 이 사이트의 설명이다. */
+  if (!hasPick() && rest !== 'collection' && rest !== 'about') {
+    const bare = !rest && !col;
+    document.documentElement.dataset.page = bare ? 'home' : 'empty';
+    document.body.classList.toggle('past-hero', !bare);
+    navMark(bare ? '' : colHref(rest));
+    drawCrumbs(bare ? 'home' : (rest || 'home'));
     return;
   }
 
@@ -745,16 +752,13 @@ export function applyCollection(ids, redraw = true) {
    고르기 전에는 개체가 0이라 컬렉션을 골라 들어가도 「개체 0 · 관계 0」이 그대로 남았다. */
 function writeStatus() {
   const el = $('#loadStatus');
-  /* 「적재 완료」와 「0개」를 한 줄에 같이 쓰면 모순으로 읽힌다 — 다 됐다면서 0개라니.
-     사실은 둘이 다른 이야기다. Oxigraph 스토어는 트리플 전체(ALL_TRIPLES)를 이미 다 물고
-     있고, 그건 컬렉션을 고르든 안 고르든 안 변한다. 화면에 뜨는 건 **그중 고른 만큼**이라
-     아직 안 골랐으면 0인 게 정상이다 — 「덜 실렸다」가 아니라 「실려는 있는데 안 보여준다」.
-     그래서 안 골랐을 때는 문장 자체를 바꾼다. */
+  /* 예전에는 안 골랐을 때 수치를 들지 않았다 — 스토어가 발행본 전체를 물고 있어서
+     「트리플 0개」가 거짓이었기 때문이다(적재는 화면 모델에만 걸려 있었다).
+     이제 적재가 스토어까지 좁히므로(rescope) **0 은 문자 그대로 참**이다.
+     그래서 계기판은 늘 같은 형식으로 서고, 값만 0 이 된다. */
   const line = hasPick()
     ? `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
-    /* 내린 상태는 「적재 0」을 앞세우고 수치는 더 들지 않는다 — 어떤 수를 곁들여도
-       지금 떠 있는 것처럼 읽혀 「내렸는데 0이 안 된다」로 보였다(실측 두 번). */
-    : `적재 0 — 미적재 컬렉션 ${COLS.length}건 중 지식 그래프에 올릴 대상을 골라 「적재」를 누르세요 · SPARQL 1.1 (Oxigraph WASM)`;
+    : `적재 0 — 트리플 0개 · 개체 0 · 관계 0 · SPARQL 1.1 (Oxigraph WASM)`;
   if (el) el.textContent = line;
   const set = (id, v) => { const n = $(id); if (n) n.textContent = v; };
   /* 표지의 수치는 **지금 적재된 것**을 말한다. 전체 발행본 수치를 박아 두면 아무것도 안 골랐는데도
