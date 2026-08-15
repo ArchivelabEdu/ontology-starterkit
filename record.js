@@ -261,15 +261,18 @@ function personHighlight(n, out, inn) {
     }
     if (!got) break;
   }
+  /* 연도 — 사진마다 언제인지. 생애 컷은 frames.json 의 year, 연결 개체는 그 개체의 날짜다.
+     없으면 아무것도 적지 않는다(지어내지 않는다). */
+  const yrTag = v => { const y = String(v || '').match(/\d{4}/); return y ? `<b class="p-yr">${y[0]}</b>` : ''; };
   const relFrames = rel.map(o => `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(short(o.id)))}"
       title="${esc(o.label)}${o.imgSrc ? ` — ${esc(o.imgSrc)}` : ''}">
-      <img src="${esc(o.img)}" alt="${esc(o.label)}"></a>`).join('');
+      <img src="${esc(o.img)}" alt="${esc(o.label)}">${yrTag(o.date)}</a>`).join('');
   /* 갤러리는 무괘 — 라벨도 선도 없이 어록 다음에 흐른다. 출처는 각 컷의 호버와
      개체 페이지 뷰어가 진다(규율 유지). */
   /* 이미지가 하나 실릴 때마다 비율이 확정되므로 masonry 를 다시 잰다(디바운스). */
   setTimeout(() => document.querySelectorAll('.p-film-track img').forEach(img => {
-    if (img.complete) masonrySoon();
-    else { img.addEventListener('load', masonrySoon, { once: true });
+    if (img.complete) { masonrySoon(); tintYear(img); }
+    else { img.addEventListener('load', () => { masonrySoon(); tintYear(img); }, { once: true });
            img.addEventListener('error', masonrySoon, { once: true }); }
   }), 0);
   const film = (isNarrator && cuts.length) ? `<div class="p-film">
@@ -278,7 +281,7 @@ function personHighlight(n, out, inn) {
         /* 이미지만 — 글자는 없다. 연도·설명·크레딧(출처 규율)은 호버 제목이 지고,
            눌러 들어간 개체 페이지의 뷰어가 같은 정보를 캡션으로 제대로 보여 준다.
            비율도 원본 그대로 — 자르지 않는다. */
-        const inner = `<img src="${esc(f.src)}" alt="${esc(f.label)}">`;
+        const inner = `<img src="${esc(f.src)}" alt="${esc(f.label)}">${yrTag(f.year)}`;
         const tip = `${f.year} · ${f.label} — ${f.credit}`;
         if (ent && ent.id === n.id)
           return `<button class="p-frame" onclick="mvJump('${esc(f.src)}')" title="${esc(tip)} — 뷰어로 보기">${inner}</button>`;
@@ -568,6 +571,29 @@ function buildMasonry() {
     });
     track.appendChild(d);
   });
+}
+/* 연도 글자색을 사진에 맞춘다 — 평소엔 흑백 위에 자주로 서지만, 호버로 원본 색이
+   돌아오면 그 자리가 밝은지 어두운지에 따라 글자가 읽히지 않는다. 글자가 놓이는
+   왼쪽 아래 귀퉁이만 실제로 재서(캔버스 16×16) 밝으면 먹, 어두우면 흰 글자를 준다.
+   사진은 같은 출처(로컬)라 캔버스가 오염되지 않는다. */
+function tintYear(img) {
+  const frame = img.closest('.p-frame');
+  if (!frame || !frame.querySelector('.p-yr')) return;
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 16;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    const w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return;
+    // 왼쪽 아래 1/3 구역 — 글자가 앉는 자리
+    g.drawImage(img, 0, h * 0.66, w * 0.4, h * 0.34, 0, 0, 16, 16);
+    const d = g.getImageData(0, 0, 16, 16).data;
+    let lum = 0;
+    for (let i = 0; i < d.length; i += 4) lum += (d[i] * 0.2126 + d[i + 1] * 0.7152 + d[i + 2] * 0.0722);
+    lum /= (d.length / 4) * 255;
+    const light = lum > 0.55;
+    frame.dataset.tone = light ? 'light' : 'dark';
+    frame.style.setProperty('--yr-hover', light ? '#17151a' : '#ffffff');
+  } catch (e) { /* 캔버스가 막힌 환경 — 기본 흰 글자로 둔다 */ }
 }
 let msT = null;
 const masonrySoon = () => { clearTimeout(msT); msT = setTimeout(buildMasonry, 60); };
