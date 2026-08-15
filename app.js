@@ -1973,6 +1973,18 @@ function mapDraw2d(host) {
       l.setAttribute('opacity', '.5'); s.appendChild(l);
     });
   }
+  /* 겹치면 접는다 — 자주 나온 말부터 이름을 얻고, 이미 놓인 이름과 부딪히면 점만 남긴다.
+     좌표는 PPMI 가 정한 것이라 밀집 구역에서는 글자가 서로 먹었다(실측: 왼쪽 아래 뭉침).
+     관계망 성좌와 같은 규칙이다. 고른 말과 그 이웃은 언제나 이름을 단다 — 지금 보려는 것이므로. */
+  const boxes = [];
+  const fits = d => {
+    const w = d.w.length * 9.5, h = 11;
+    const r = 3.4 + Math.sqrt(d.n) / 2.6;
+    const b = { x: px(d) - w / 2, y: py(d) - r - 3.5 - h, w, h };
+    if (boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y)) return false;
+    boxes.push(b); return true;
+  };
+  [...vis].sort((a, b) => b.n - a.n).forEach(d => { d.lb = (near && near.has(d.w)) || fits(d); });
   vis.forEach(d => {
     const on = !near || near.has(d.w);
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -1988,7 +2000,7 @@ function mapDraw2d(host) {
     tx.setAttribute('fill', css('--fg')); tx.setAttribute('stroke', css('--panel'));
     tx.setAttribute('stroke-width', '3'); tx.setAttribute('paint-order', 'stroke');
     tx.textContent = d.w;
-    g.append(c, tx); s.appendChild(g);
+    g.append(c); if (d.lb) g.append(tx); s.appendChild(g);
   });
   s.querySelectorAll('.lw').forEach(g => g.onclick = () => {
     WMAP.pick = WMAP.pick === g.dataset.w ? null : g.dataset.w;
