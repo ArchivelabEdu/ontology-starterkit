@@ -136,6 +136,30 @@ function navHrefs() {
 const navMark = href => document.querySelectorAll('#nav a')
   .forEach(a => a.classList.toggle('on', a.getAttribute('href') === href));
 
+/* ── 브레드크럼 — 홈 › 컬렉션 › 화면. 홈·고르기 화면에서는 숨긴다 ── */
+const PAGE_KO = { place: '장소', event: '연표', 'graph-sec': '관계망', subject: '주제',
+  query: '질의', lang: '언어', collection: '컬렉션', about: '해설', records: '검색' };
+export function colLabel() {
+  if (!CUR.cols.length) return '';
+  // 컬렉션 개체는 G에서 걷어내므로(buildCollections) 제목은 COLS 목록에서 찾는다
+  const names = CUR.cols.map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
+  return names.join(' · ');
+}
+export const crumbHtml = parts => parts.map((c, i) =>
+  (i ? '<i>›</i>' : '') + (c.href ? `<a href="${c.href}">${esc(c.t)}</a>` : `<b>${esc(c.t)}</b>`)).join('');
+function drawCrumbs(pageId) {
+  const el = $('#crumbs'); if (!el) return;
+  if (pageId === 'home' || pageId === 'pick' || !CUR.cols.length) { el.hidden = true; return; }
+  const parts = [{ t: '홈', href: '#/' }];
+  if (pageId === 'collection') parts.push({ t: colLabel() });
+  else {
+    parts.push({ t: colLabel(), href: colHref('') });
+    parts.push({ t: PAGE_KO[pageId] || pageId });
+  }
+  el.innerHTML = crumbHtml(parts);
+  el.hidden = false;
+}
+
 function route() {
   const { col, rest } = parseHash();
   const want = col ? col.split(',').filter(Boolean) : [];
@@ -157,7 +181,8 @@ function route() {
      빈 지도·빈 연표를 보여 주면 「데이터가 없나」로 읽히지, 「아직 안 골랐다」로 읽히지 않는다. */
   if (!hasPick()) {
     document.documentElement.dataset.page = 'pick';
-    document.body.classList.add('past-hero');
+    // B안: 표지(히어로)를 접지 않는다 — 표지를 넘기면 바로 서가(고르개)다
+    document.body.classList.remove('past-hero');
     navMark('');
     drawPicker();
     return;
@@ -168,6 +193,7 @@ function route() {
     document.documentElement.dataset.page = 'records';
     document.body.classList.add('past-hero');
     navMark(colHref('records'));
+    drawCrumbs('records');
     return;
   }
   // 컬렉션 안에서 화면을 안 고르면 그 컬렉션의 컬렉션 페이지. 맨 홈은 적재 중이어도 홈이다.
@@ -175,6 +201,7 @@ function route() {
   document.documentElement.dataset.page = id;
   document.body.classList.toggle('past-hero', id !== 'home');
   navMark(id === 'home' ? '' : colHref(id));
+  drawCrumbs(id);
   // 적재된 채로 홈에 오면 고르개가 「적재됨」 상태를 입은 채 다시 그려져야 한다.
   if (id === 'home') drawPicker();
   scrollTo({ top: 0 });
@@ -530,14 +557,12 @@ async function boot() {
     writeStatus();
     // 구술이 다루는 범위는 '사건'의 연도다. 인물 생년(위키데이터에서 받아 온)까지
     // 세면 1913 같은 값이 끼어 수록 범위가 아닌 게 된다.
-    const yrs = G.nodes.filter(n => n.cls === 'Event' || n.cls === 'Activity')
+    const yrs = (ALL.nodes.length ? ALL.nodes : G.nodes).filter(n => n.cls === 'Event' || n.cls === 'Activity')
       .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
     $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
 
     // 홈 색인의 숫자는 그래프에서 직접 센다 — 손으로 적으면 데이터를 갈아끼울 때 어긋난다
-    $('#ixRec').textContent = `${G.nodes.length}건`;
-    $('#ixGraph').textContent = `관계 ${G.edges.length}`;
-    $('#ixCollection').textContent = COL.name;
+    updateHomeIndex();
     drawCollection();
 
     initHero(G);
@@ -655,6 +680,19 @@ function buildCollections() {
 
 /** 지금 볼 컬렉션들을 정한다. G 를 갈아끼우므로 이걸 읽는 모든 화면이 따라온다.
     여럿을 고르면 합집합이다 — 두 구술자를 나란히 보고 싶을 때 쓴다. */
+/* 홈 색인 숫자 — 부팅 때 한 번 채우고 끝이라, 적재 후 홈에 오면 0 이 그대로 남았다(실측).
+   적재가 바뀔 때마다 다시 센다. */
+function updateHomeIndex() {
+  const ix = $('#ixRec'); if (!ix) return;
+  ix.textContent = `${G.nodes.length}건`;
+  $('#ixGraph').textContent = `관계 ${G.edges.length}`;
+  $('#ixCollection').textContent = CUR.cols.length ? colLabel() : (COL.name || '—');
+  $('#ixPlace').textContent = `${G.nodes.filter(n => n.lat != null && n.lon != null).length}곳`;
+  $('#ixEvent').textContent = `${G.nodes.filter(n => (n.cls === 'Event' || n.cls === 'Activity') && n.date).length}건`;
+  const nCon = G.nodes.filter(n => n.cls === 'Concept').length;
+  $('#ixSubject').textContent = nCon ? `${nCon}개념` : '없음';
+}
+
 export function applyCollection(ids, redraw = true) {
   const want = (Array.isArray(ids) ? ids : [ids]).filter(Boolean).map(String);
   const picked = COLS.filter(c => want.includes(c.id) || want.includes(short(c.id)));
@@ -676,6 +714,7 @@ export function applyCollection(ids, redraw = true) {
   G.edges = ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o));
   recount();
   writeStatus();
+  updateHomeIndex();
   if (redraw) { drawMap(); drawTimeline(); initGraph(G); drawLang(); rebuildRecord(); }
 }
 
@@ -698,7 +737,11 @@ function writeStatus() {
      그 자리에서 보이도록. 원천이 한 곳이라 두 표시가 어긋날 일이 없다. */
   const rs = $('#recStatus'); if (rs) rs.textContent = line;
   const set = (id, v) => { const n = $(id); if (n) n.textContent = v; };
-  set('#hsNode', G.nodes.length); set('#hsEdge', G.edges.length); set('#hsTriple', TRIPLES);
+  /* 표지(히어로)의 수치는 늘 사이트 전체다 — 표지는 발행본의 얼굴이지 적재 상태가 아니다.
+     적재분 수치는 색인 카드와 이 상태줄이 말한다. */
+  set('#hsNode', ALL.nodes.length || G.nodes.length);
+  set('#hsEdge', ALL.edges.length || G.edges.length);
+  set('#hsTriple', ALL_TRIPLES || TRIPLES);
 }
 
 /** 고른 것이 있는가. 컬렉션이 아예 없는 그래프는 「고를 것이 없으니 열려 있다」로 본다. */

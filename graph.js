@@ -172,11 +172,13 @@ function paintScene() {
   el.innerHTML = `<p>${esc(sc.t)}</p>
     <div class="row"><span class="no">장면 ${S.si + 1} / ${S.scenes.length}</span>
       <button onclick="gScene(-1)" aria-label="이전 장면">‹</button>
-      <button onclick="gScene(1)" aria-label="다음 장면">›</button></div><i class="bar"></i>`;
+      <button onclick="gScene(1)" aria-label="다음 장면">›</button>
+      <button class="gpp" onclick="gPlay()" aria-label="${S.sceneStop ? '자동 재생' : '자동 재생 멈춤'}">${S.sceneStop ? '▶' : '❚❚'}</button></div><i class="bar"></i>`;
   el.hidden = false;
-  /* 자동 플레이 — 문장 길이만큼 머문 뒤 다음 장면으로. 오버레이에 마우스가 올라와 있으면 쉰다. */
+  /* 자동 플레이 — 문장 길이만큼 머문 뒤 다음 장면으로.
+     오버레이에 마우스가 올라와 있으면 쉬고, 멈춤 버튼(S.sceneStop)은 다시 누를 때까지 잠근다. */
   const ms = Math.max(5500, 3200 + sc.t.length * 60);
-  if (!S.scenePaused && S.scenes.length > 1) {
+  if (!S.scenePaused && !S.sceneStop && S.scenes.length > 1) {
     S.sceneT = setTimeout(() => { S.si = (S.si + 1) % S.scenes.length; paintScene(); }, ms);
     if (!REDUCED) {
       const bar = el.querySelector('.bar');
@@ -186,6 +188,7 @@ function paintScene() {
     }
   }
 }
+window.gPlay = () => { S.sceneStop = !S.sceneStop; clearTimeout(S.sceneT); paintScene(); };
 window.gScene = d => {
   if (!S.scenes?.length) return;
   S.si = (S.si + d + S.scenes.length) % S.scenes.length;

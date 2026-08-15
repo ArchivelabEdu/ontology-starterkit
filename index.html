@@ -12,7 +12,8 @@
 :root{
   /* 석조 70 — 의사당 화강암의 세계. 바탕이 연해질 때 명패 백도 같이 올려 단차 4~5%를 지킨다.
      액센트는 국회 자주(무궁화 심벌), 조연은 돔 청록(의사당 지붕) — 호버 테두리·잔글씨에만. */
-  --bg:#eef0ee; --panel:#fafbfa; --fg:#22262a; --muted:#5b6266; --line:#d6dad8;
+  /* AP: 인물 페이지(순백 열람실)의 명패·헤어라인을 사이트 전면으로 — 바탕 화강암은 유지 */
+  --bg:#eef0ee; --panel:#ffffff; --fg:#22262a; --muted:#5b6266; --line:#e0e4e2;
   --accent:#7b2f61; --accent-2:#2a6f66; --accent-soft:#f0e4ec;
   --person:#9b3535; --org:#b08840; --place:#2f6b5c; --event:#5b4b9e;
   --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a;--concept:#3f6f9c; --activity:#8a6d2f;
@@ -43,6 +44,19 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
 a{color:var(--accent)}
 
 /* ───── 헤더 ───── */
+#crumbs{max-width:1120px;margin:0 auto;padding:.5rem 1.4rem 0;font-family:var(--mono);
+  font-size:.66rem;letter-spacing:.04em;color:var(--muted);display:flex;gap:.45rem;align-items:center}
+#crumbs a{color:var(--muted);text-decoration:none}
+#crumbs a:hover{color:var(--accent)}
+#crumbs i{font-style:normal;opacity:.45}
+#crumbs b{font-weight:600;color:var(--fg)}
+#crumbs[hidden]{display:none}
+.item-crumbs{font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;color:var(--muted);
+  display:flex;gap:.45rem;align-items:center;margin-bottom:1.1rem}
+.item-crumbs a{color:var(--muted);text-decoration:none}
+.item-crumbs a:hover{color:var(--accent)}
+.item-crumbs i{font-style:normal;opacity:.45}
+.item-crumbs b{font-weight:600;color:var(--fg)}
 header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .hw{max-width:1240px;margin:0 auto;padding:.65rem 1.4rem;display:flex;gap:1rem;align-items:center}
@@ -249,7 +263,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 .1em;border-radius:2p
 
 /* ───── 아이템 페이지 ───── */
 body.item-open{overflow:hidden}
-#itemView{position:fixed;inset:0;z-index:950;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;
+#itemView{position:fixed;inset:61px 0 0 0;z-index:800;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;
   container-type:inline-size}
 /* 개체 페이지는 순백 열람실 — 홈·목록의 화강암과 층이 갈린다(유로피아나: 목록은 톤, 아이템은 백).
    다크 테마에서는 밤의 화강암 토큰을 그대로 쓴다. */
@@ -314,7 +328,7 @@ main>section{display:none}
 :root[data-page="lang"] #lang,:root[data-page="collection"] #collection,
 :root[data-page="about"] #about,:root[data-page="subject"] #subject,
 :root[data-page="pick"] #pick{display:block}
-:root:not([data-page="home"]) #heroZone{display:none}
+:root:not([data-page="home"]):not([data-page="pick"]) #heroZone{display:none}
 /* 아직 안 골랐으면 히어로도 색인도 아닌 「고르는 자리」가 첫 화면이다 */
 :root[data-page="pick"] #homeIndex{display:none}
 /* ── 적재 완료 배너 ──
@@ -851,6 +865,7 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 .g-insight .no{font-family:var(--mono);font-size:.62rem;color:var(--muted)}
 .g-insight button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:.95rem;padding:0 .2rem}
 .g-insight button:hover{color:var(--accent)}
+.g-insight .gpp{font-size:.62rem;letter-spacing:-1px;margin-left:.2rem}
 .g-insight .bar{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.5}
 .g-insight[hidden]{display:none}
 .g-under{display:grid;grid-template-columns:1fr auto;gap:1.2rem;margin-top:.8rem;align-items:start}
@@ -945,8 +960,8 @@ textarea{font-family:var(--mono);font-size:.8rem;line-height:1.6;resize:vertical
 .p-film{margin-top:.2rem}
 /* 유로피아나 문법 + 바닥 일자 — 같은 폭의 세로 기둥에 원본 비율로 쌓되(JS masonry),
    기둥별로 높이를 몇 % 만 비례 조정해 모든 기둥의 바닥을 정확히 맞춘다. */
-.p-film-track{display:flex;gap:6px;align-items:flex-start}
-.p-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.p-film-track{display:flex;gap:10px;align-items:flex-start}
+.p-col{display:flex;flex-direction:column;gap:10px;min-width:0}
 .p-frame{display:block;width:100%;overflow:hidden;
   border-radius:var(--r-img);text-decoration:none;color:var(--fg)}
 a.p-frame:hover img,button.p-frame:hover img{outline:1px solid var(--accent-2);outline-offset:-1px}
@@ -1023,6 +1038,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
 </div></header>
+<nav id="crumbs" hidden aria-label="현재 위치"></nav>
 
 <!-- ═══════ 히어로 ═══════ -->
 <div id="heroZone">
@@ -1030,9 +1046,9 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <div class="hero-copy">
     <div class="kicker">Oral History · Knowledge Graph</div>
     <h1>한 사람의 기억이<br><em>그래프</em>가 될 때</h1>
-    <p>국회도서관 국회기록보존소가 2018년 채록한 정세균 전 국회의장의 구술기록을
-       RiC-O 국제표준으로 구조화했습니다. 진안에서 여의도까지, 유신에서 탄핵까지 —
-       흩어진 회고가 이어진 관계망이 됩니다.</p>
+    <p>국회도서관 국회기록보존소가 2012년부터 채록해 온 국회의장단 구술기록을
+       RiC-O 국제표준으로 구조화했습니다. 의장단 한 사람 한 사람의 흩어진 회고가
+       인물·직위·단체·사건·장소가 이어진 관계망이 됩니다.</p>
     <div class="hero-stats">
       <div><b id="hsNode">–</b><span>개체</span></div>
       <div><b id="hsEdge">–</b><span>관계</span></div>
@@ -1164,7 +1180,6 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     </div>
     <div class="g-under">
       <div class="g-schema">
-        <div class="g-schema-h">Schema — 클래스에 올리면 성좌에서 발광, 관계를 누르면 그 관계만</div>
         <div class="gchips" id="gSchema"></div>
         <div class="grels" id="gRels"></div>
       </div>
@@ -1311,7 +1326,6 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 <script type="module" src="app.js"></script>
 <div id="recordsPage">
   <section id="record">
-    <a class="rec-back" href="#" onclick="closeRecords();return false">← 아카이브로</a>
     <div class="sec-head">
       <div class="kicker">Search</div>
       <h2>검색</h2>
