@@ -5,8 +5,11 @@
 # (page= → RFC 8118 · t=·xywh= → W3C Media Fragments URI 1.0 — dcterms:conformsTo가 값별로 가리킵니다).
 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#>.
 @prefix ric: <http://archives.nanet.go.kr/id/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix schema: <https://schema.org/>.
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix oa: <http://www.w3.org/ns/oa#>.
@@ -3368,12 +3371,850 @@ ric:activity-3452fb99d4d8 a prov:Activity;
     prov:wasAssociatedWith ric:agent-nak-seed;
     prov:generatedAtTime "2026-08-11T03:40:23.689Z"^^xsd:dateTime.
 ric:inst-jsk-excerpt prov:wasGeneratedBy ric:activity-3452fb99d4d8.
-ric:publication-6d47fa0b24cb a prov:Entity;
-    rdfs:label "미분류";
-    prov:wasGeneratedBy ric:activity-publish-6d47fa0b24cb;
-    prov:wasAttributedTo ric:agent-user-admin.
-ric:activity-publish-6d47fa0b24cb a prov:Activity;
-    prov:generatedAtTime "2026-08-15T04:40:37.851Z"^^xsd:dateTime;
-    prov:wasAssociatedWith ric:agent-user-admin.
-ric:agent-user-admin a prov:Agent;
-    rdfs:label "슈퍼 관리자".
+ric:activity-f8ffda49bf20 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-22878d17f20e;
+    prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_.
+ric:agent-claude-code__claude-fable-5_ a prov:SoftwareAgent;
+    rdfs:label "claude-code (claude-fable-5)".
+ric:activity-f8ffda49bf20 prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:org-korea-university prov:wasGeneratedBy ric:activity-f8ffda49bf20.
+ric:activity-2092a3356016 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-db4b15c366b9;
+    prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:org-theory-law-society prov:wasGeneratedBy ric:activity-2092a3356016.
+ric:stmt-c75bd0eb1932 a rdf:Statement;
+    rdf:subject ric:org-korea-university;
+    rdf:predicate rico:name;
+    rdf:object "고려대학교";
+    prov:wasGeneratedBy ric:activity-f8ffda49bf20.
+ric:stmt-91c7d34461f1 a rdf:Statement;
+    rdf:subject ric:org-korea-university;
+    rdf:predicate rico:identifier;
+    rdf:object "org-korea-university";
+    prov:wasGeneratedBy ric:activity-f8ffda49bf20.
+ric:stmt-46cca22d2bef a rdf:Statement;
+    rdf:subject ric:org-korea-university;
+    rdf:predicate rico:identifier;
+    rdf:object "urn:uuid:3b52142c-585f-5992-a269-62f5b7dcc46d";
+    prov:wasGeneratedBy ric:activity-f8ffda49bf20.
+ric:stmt-be1027b33d45 a rdf:Statement;
+    rdf:subject ric:org-korea-university;
+    rdf:predicate dcterms:source;
+    rdf:object "구술총서 p.12·28 — 구술자 출신 대학";
+    prov:wasGeneratedBy ric:activity-f8ffda49bf20.
+ric:stmt-fef7a2a8e9aa a rdf:Statement;
+    rdf:subject ric:org-theory-law-society;
+    rdf:predicate rico:name;
+    rdf:object "이론법학회";
+    prov:wasGeneratedBy ric:activity-2092a3356016.
+ric:stmt-fadab5880d2e a rdf:Statement;
+    rdf:subject ric:org-theory-law-society;
+    rdf:predicate rico:identifier;
+    rdf:object "org-theory-law-society";
+    prov:wasGeneratedBy ric:activity-2092a3356016.
+ric:stmt-6bcd7d3e15a1 a rdf:Statement;
+    rdf:subject ric:org-theory-law-society;
+    rdf:predicate rico:identifier;
+    rdf:object "urn:uuid:26635d4c-64c4-5f40-96b2-355fb68c4852";
+    prov:wasGeneratedBy ric:activity-2092a3356016.
+ric:stmt-821d8371e6cd a rdf:Statement;
+    rdf:subject ric:org-theory-law-society;
+    rdf:predicate dcterms:source;
+    rdf:object "구술총서 p.36 — 고려대 재학 중 참여한 토론 모임";
+    prov:wasGeneratedBy ric:activity-2092a3356016.
+ric:activity-08d451caded1 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-891f804f3ced.
+ric:selector-891f804f3ced a oa:FragmentSelector;
+    rdf:value "page=8";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-08d451caded1 prov:used ric:selector-quote-15a1c210dba2.
+ric:selector-quote-15a1c210dba2 a oa:TextQuoteSelector;
+    oa:exact "이번 총서를 계기로 치열하게 걸어온 지난 삶을 되돌아보았다. 나는 김대중 대통령께 정치를 배웠고, 노무현 대통령과 함께 꿈을 꾸었다.".
+ric:activity-08d451caded1 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-db1a917a64d9 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-kdj;
+    prov:wasGeneratedBy ric:activity-08d451caded1.
+ric:activity-6ccb39ae507e a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-a01798a94b8a, ric:selector-quote-15c127ae1831.
+ric:selector-quote-15c127ae1831 a oa:TextQuoteSelector;
+    oa:exact "김대중 총재는 그분들이 소개해서 만났어요. 제가 고대 총학생회장을 한 데다가 해외 주재원 출신이잖습니까.".
+ric:activity-6ccb39ae507e prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-c80b9c629ae4 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-kdj;
+    prov:wasGeneratedBy ric:activity-6ccb39ae507e.
+ric:activity-8244091af36d a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-d05cd1017788, ric:selector-quote-8dd5311c5b3d.
+ric:selector-quote-8dd5311c5b3d a oa:TextQuoteSelector;
+    oa:exact "또 김대중 대통령이 당선자 시절에 한광옥韓光玉 당시 부총재하고 저를 일산 자택으로 부른 일이 있었어요. 저희한테 노사정위원회를 만들라고 하셨어요.".
+ric:activity-8244091af36d prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-d2d30edfa917 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-kdj;
+    prov:wasGeneratedBy ric:activity-8244091af36d.
+ric:stmt-dec4461bdca2 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-rmh;
+    prov:wasGeneratedBy ric:activity-08d451caded1.
+ric:activity-92c2a00f4835 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-ea0d4fb307aa, ric:selector-quote-b6eac671145a.
+ric:selector-quote-b6eac671145a a oa:TextQuoteSelector;
+    oa:exact "제가 정치에 입문할 때 노무현 부총재가 제 편을 들어줬습니다. 그때 처음 정치권으로 영입이 되었잖아요.".
+ric:activity-92c2a00f4835 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-160cdc688bd5 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-rmh;
+    prov:wasGeneratedBy ric:activity-92c2a00f4835.
+ric:activity-09d2231286f5 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-94e1418c8ec8, ric:selector-quote-9cf53b48dea7.
+ric:selector-quote-9cf53b48dea7 a oa:TextQuoteSelector;
+    oa:exact "그래서 제가 다시 통합하는 것이 옳다는 판단을 하고 노무현 대통령을 설득해서 통합을 하게 되지요.".
+ric:activity-09d2231286f5 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-855c47346e7d a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-rmh;
+    prov:wasGeneratedBy ric:activity-09d2231286f5.
+ric:activity-6347487b8c70 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-5fb21d6d4d3f, ric:selector-quote-396cd541890b.
+ric:selector-quote-396cd541890b a oa:TextQuoteSelector;
+    oa:exact "선후배나 동료 중에는 전에 법무부 차관을 한 정진호鄭振昊라는 친구가 있고, 행시나 사시에 합격했던 친구들이 있고요.".
+ric:activity-6347487b8c70 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-38c1781caeb4 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-jung-jin-ho;
+    prov:wasGeneratedBy ric:activity-6347487b8c70.
+ric:activity-258bcadad94a a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-5fb21d6d4d3f, ric:selector-quote-24d430985986.
+ric:selector-quote-24d430985986 a oa:TextQuoteSelector;
+    oa:exact "행시나 사시에 합격했던 친구들이 있고요. 윤은기尹恩基라고 공무원연수원 원장을 하고 강사로 유명한 친구도 있지요.".
+ric:activity-258bcadad94a prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-6c844c52c110 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-yoon-eun-gi;
+    prov:wasGeneratedBy ric:activity-258bcadad94a.
+ric:activity-8c5c7955d422 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-e314c0ab4ecc, ric:selector-quote-8766adfc241b.
+ric:selector-quote-8766adfc241b a oa:TextQuoteSelector;
+    oa:exact "그때 우리 헌법 선생님이 한동섭韓東燮이라는 분이셨는데, 그분이 쓴 헌법 책도 있었어요.".
+ric:activity-8c5c7955d422 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-adaf70e40506 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-han-dong-seop;
+    prov:wasGeneratedBy ric:activity-8c5c7955d422.
+ric:activity-fe1a2caf3fea a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-3c7dc807253d, ric:selector-quote-a5a214d29d88.
+ric:selector-quote-a5a214d29d88 a oa:TextQuoteSelector;
+    oa:exact "그렇지요. 같이 식사를 하기도 하고, 술 한잔을 하기도 하고, 또 골프를 치기도 했어요.".
+ric:activity-fe1a2caf3fea prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-bf8a3a6848ae a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-kim-jong-pil;
+    prov:wasGeneratedBy ric:activity-fe1a2caf3fea.
+ric:activity-56f426a8ba77 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-f8248e09e2da, ric:selector-quote-9eb665773d10.
+ric:selector-quote-9eb665773d10 a oa:TextQuoteSelector;
+    oa:exact "두 분은 제가 존경하는 선배들이고, 그분들도 저를 인정해 주셔서 경제사회발전노사정위원회 일을 할 때 아주 보람이 있었어요.".
+ric:activity-56f426a8ba77 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-4c594ace0ebb a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-han-gwang-ok;
+    prov:wasGeneratedBy ric:activity-56f426a8ba77.
+ric:stmt-e6110737d6a2 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:agent-kwk;
+    prov:wasGeneratedBy ric:activity-56f426a8ba77.
+ric:activity-98540d374c63 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-6390dacee198, ric:selector-quote-a62f8d48ddac.
+ric:selector-quote-a62f8d48ddac a oa:TextQuoteSelector;
+    oa:exact "그래서 올라와서 노무현 후보의 대선기획단 정책실장을 맡았어요. 그리고 문희상文喜相 기획단 단장과 같이 일했는데, 60% 이상 올라갔던 노무현 후보의 지지율이 계속 떨어지는 겁니다.".
+ric:activity-98540d374c63 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7ababe8963aa a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-moon-hee-sang;
+    prov:wasGeneratedBy ric:activity-98540d374c63.
+ric:activity-1b468cc0a587 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-58cb5cf412c4, ric:selector-quote-501e98573c74.
+ric:selector-quote-501e98573c74 a oa:TextQuoteSelector;
+    oa:exact "사모님 함자가 최, 혜 자, 경 자이시죠? 사모님께서 하신 인터뷰 끝부분을 보면 의장님께서 가정에서 너무 무뚝뚝하시다는 말씀을 하셨던데, 댁에서는 간혹 그런 푸념을 안 들으세요?".
+ric:activity-1b468cc0a587 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-574cab6341f1 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-choi-hye-kyung;
+    prov:wasGeneratedBy ric:activity-1b468cc0a587.
+ric:activity-13dd9ba4aa05 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-ea2d2d58d9f5, ric:selector-quote-097ab5c80364.
+ric:selector-quote-097ab5c80364 a oa:TextQuoteSelector;
+    oa:exact "박주선 부의장하고는 호흡이 잘 맞았지요. 옛날에 제가 정책위 의장 할 때 정조위원장으로 같이 일한 적도 있고, 개인적 신뢰 관계도 있고 해서요.".
+ric:activity-13dd9ba4aa05 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-077ec0e919d3 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-park-ju-seon;
+    prov:wasGeneratedBy ric:activity-13dd9ba4aa05.
+ric:activity-69b2e7180260 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-d05cd1017788, ric:selector-quote-9f9bbcebc04b.
+ric:selector-quote-9f9bbcebc04b a oa:TextQuoteSelector;
+    oa:exact "김창성 회장이 경총회장이니까 그분하고 얘기를 많이 했지요. 노사정 본위원회가 있는데, 제가 거기 간사이고 그 밑에 실무위원회라는 게 있었어요.".
+ric:activity-69b2e7180260 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-53d511869dd0 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-kim-chang-seong;
+    prov:wasGeneratedBy ric:activity-69b2e7180260.
+ric:activity-06971d97554d a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-a01798a94b8a, ric:selector-quote-24e3905b40c9.
+ric:selector-quote-24e3905b40c9 a oa:TextQuoteSelector;
+    oa:exact "그랬더니 그분이 “뜻이 그렇다면 좋다. 그러면 우리도 적극적으로 도와주겠다.”라고 했는데, 정말로 많이 도와줬지요.".
+ric:activity-06971d97554d prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-33637b838ea2 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-kim-seok-won;
+    prov:wasGeneratedBy ric:activity-06971d97554d.
+ric:activity-904d19515b61 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-0acd6ed7d9e2, ric:selector-quote-1257a84e9e7e.
+ric:selector-quote-1257a84e9e7e a oa:TextQuoteSelector;
+    oa:exact "제가 들어갔을 때는 안 계셨지만 김성곤 회장하고도 잘 아셨어요. 그전에 제가 뉴욕에서 일할 때도 먼발치에서 뵌 적이 있는데, 당시 김대중 총재의 정치 활동이 금지돼 있던 시기였어요.".
+ric:activity-904d19515b61 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-655492a59103 a rdf:Statement;
+    rdf:subject ric:agent-kdj;
+    rdf:predicate foaf:knows;
+    rdf:object ric:person-kim-seong-gon;
+    prov:wasGeneratedBy ric:activity-904d19515b61.
+ric:activity-81943c34e834 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-c1586f0c68d3, ric:selector-quote-2ee341569bf9.
+ric:selector-quote-2ee341569bf9 a oa:TextQuoteSelector;
+    oa:exact "한나라당 강재섭姜在涉 대표하고 협상을 해서 과거사법을 통과시키기로 합의했는데, 우리 당 지도부에서 반대를 하는 거예요.".
+ric:activity-81943c34e834 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-65f997939c2a a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kang-jae-sup;
+    prov:wasGeneratedBy ric:activity-81943c34e834.
+ric:activity-97d6a73d420e a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-04eacb3832ea, ric:selector-quote-2881b45cd087.
+ric:selector-quote-2881b45cd087 a oa:TextQuoteSelector;
+    oa:exact "등원한 지 약 2년밖에 안 됐는데, 한화갑韓和甲 총무 밑에서 제가 수석부총무를 했어요. 그러니까 수석부총무도 굉장히 일찍 된 거예요.".
+ric:activity-97d6a73d420e prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-b48fb3b1f6c9 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-han-hwa-gap;
+    prov:wasGeneratedBy ric:activity-97d6a73d420e.
+ric:activity-670f0fcabfc1 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-72c3b15e7119, ric:selector-quote-ac5f9336171b.
+ric:selector-quote-ac5f9336171b a oa:TextQuoteSelector;
+    oa:exact "박근혜 대표가 홍사덕洪思德 의원을 차출해서 보냈어요. 그 사람도 처음에는 일전을 했지만 결국에는 제가 5100표 차이로 이겼습니다.".
+ric:activity-670f0fcabfc1 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7f87620b1552 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-hong-sa-duk;
+    prov:wasGeneratedBy ric:activity-670f0fcabfc1.
+ric:activity-4dd3611ccfae a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-1faa2532c605.
+ric:selector-1faa2532c605 a oa:FragmentSelector;
+    rdf:value "page=159";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-4dd3611ccfae prov:used ric:selector-quote-05e9ddc5eb6b.
+ric:selector-quote-05e9ddc5eb6b a oa:TextQuoteSelector;
+    oa:exact "저는 선거를 7, 8개월 앞두고 그렇게 했는데, 홍사덕 후보는 선거를 3개월인가 남겨 놓고 왔으면서도 그렇게 열심히 하지도 않더라고요. 그러니까 게임이 안 되고 제가 이겼지요.".
+ric:activity-4dd3611ccfae prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-d0e4b403afd6 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-hong-sa-duk;
+    prov:wasGeneratedBy ric:activity-4dd3611ccfae.
+ric:activity-7707c3357f96 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-6b0e1c38d91b, ric:selector-quote-1888f997ae57.
+ric:selector-quote-1888f997ae57 a oa:TextQuoteSelector;
+    oa:exact "저는 야대 상황에서 박근혜 대통령과 맞서는 형편이어서 그분들과는 기본적으로 입장이 좀 달랐지요.".
+ric:activity-7707c3357f96 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7431eae8bfd1 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-pgh;
+    prov:wasGeneratedBy ric:activity-7707c3357f96.
+ric:activity-a2880d6c3fbd a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-aad3099653d9, ric:selector-quote-c406f9108591.
+ric:selector-quote-c406f9108591 a oa:TextQuoteSelector;
+    oa:exact "박근혜 대통령 탄핵소추안을 가결하는 정세균 국회의장(2016. 12. 9.) 국회사무처 소장".
+ric:activity-a2880d6c3fbd prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7cf1c686fbe1 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-pgh;
+    prov:wasGeneratedBy ric:activity-a2880d6c3fbd.
+ric:activity-5bef10e1b506 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-ea2d2d58d9f5, ric:selector-quote-ba776c45273b.
+ric:selector-quote-ba776c45273b a oa:TextQuoteSelector;
+    oa:exact "그렇지만 심재철 부의장하고는 영 아니었지요. 소속 당의 의견을 대변하는 정도면 괜찮은데, 정도를 넘어 지나치다고 보았기 때문에 아주 힘들었습니다.".
+ric:activity-5bef10e1b506 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-153f2c658d54 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-sim-jae-cheol;
+    prov:wasGeneratedBy ric:activity-5bef10e1b506.
+ric:activity-065e50a8e67f a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-8bfc0d4379f1.
+ric:selector-8bfc0d4379f1 a oa:FragmentSelector;
+    rdf:value "page=215";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-065e50a8e67f prov:used ric:selector-quote-86cf7b820865.
+ric:selector-quote-86cf7b820865 a oa:TextQuoteSelector;
+    oa:exact "처음에는 정례 회동을 하다가 김재수 장관 해임안 처리 건 이후에 깨졌지요. 그때 심 부의장이 정세균 물러나라고 시위를 하고 그래서 그 이후부터는 안 했지요.".
+ric:activity-065e50a8e67f prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7b536bf1c1b0 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-sim-jae-cheol;
+    prov:wasGeneratedBy ric:activity-065e50a8e67f.
+ric:activity-e65cd63b3c80 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-66f5724e634d, ric:selector-quote-e580dc61feeb.
+ric:selector-quote-e580dc61feeb a oa:TextQuoteSelector;
+    oa:exact "그때 우리 정치권이나 언론 쪽에서도 우병우 씨가 아주 공적으로 드러나 있는 상태였기 때문에 제가 우병우를 언급했습니다.".
+ric:activity-e65cd63b3c80 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-36d7c13e89d7 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-woo-byeong-u;
+    prov:wasGeneratedBy ric:activity-e65cd63b3c80.
+ric:activity-7f1caa216e65 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-2033963c5e2f, ric:selector-quote-fd68442fe8b4.
+ric:selector-quote-fd68442fe8b4 a oa:TextQuoteSelector;
+    oa:exact "그래서 제가 예산실장도 부르고, 부총리도 부르고, 차관도 부르고 했는데도 안 돼서 황교안黃敎安 총리를 만나서도 얘기를 하고, 또 청와대 정책수석이나 비서실장한테도 얘기를 했는데도 그게 안 되는 거예요.".
+ric:activity-7f1caa216e65 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-217a86fc7445 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-hwang-gyo-an;
+    prov:wasGeneratedBy ric:activity-7f1caa216e65.
+ric:activity-24e5e402cc43 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-cc5dd3da6dbd, ric:selector-quote-8aea66e222b1.
+ric:selector-quote-8aea66e222b1 a oa:TextQuoteSelector;
+    oa:exact "12월 2일인가 보네요. 제가 유일호柳一鎬 부총리와 예산실장을 의장실로 불렀어요. 딱 11시에 불렀어요.".
+ric:activity-24e5e402cc43 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-c2dc7957966f a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-yu-il-ho;
+    prov:wasGeneratedBy ric:activity-24e5e402cc43.
+ric:activity-8cc670f5771f a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-329491847ac5, ric:selector-quote-a33a3304b067.
+ric:selector-quote-a33a3304b067 a oa:TextQuoteSelector;
+    oa:exact "당시 국민의당 정동영 의원한테 “내가 이런 구성을 했는데, 당신이 통일부 장관도 했고 그쪽에 전문성이 있으니 좀 해보겠냐.”라고 의향을 물었더니 좋다고 했어요.".
+ric:activity-8cc670f5771f prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-597e609935e0 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-jeong-dong-yeong;
+    prov:wasGeneratedBy ric:activity-8cc670f5771f.
+ric:activity-23bd8c3ab232 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-0291df27ad5a, ric:selector-quote-fc02f2a1ba10.
+ric:selector-quote-fc02f2a1ba10 a oa:TextQuoteSelector;
+    oa:exact "그래서 특권 내려놓기 추진위원회를 만들어 위원장으로는 신인령辛仁羚 전 이화여대 총장을 임명했고요.".
+ric:activity-23bd8c3ab232 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-8b720d50cc0a a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-shin-in-ryeong;
+    prov:wasGeneratedBy ric:activity-23bd8c3ab232.
+ric:activity-e333fcd8d65d a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-94e1418c8ec8, ric:selector-quote-3e44c07216e1.
+ric:selector-quote-3e44c07216e1 a oa:TextQuoteSelector;
+    oa:exact "통합을 하면서 손학규孫鶴圭 대표를 영입했어요. 그때 제가 젊은 의원들, 우리 쪽 정대철, 이미경 등 몇 명과 저쪽 정균환 등 몇 명한테 손학규 대표를 가서 업어 오라고 하고 저는 백의종군을 했어요.".
+ric:activity-e333fcd8d65d prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-f88464b50124 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-son-hak-kyu;
+    prov:wasGeneratedBy ric:activity-e333fcd8d65d.
+ric:activity-bb2ef2b2a2a8 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-0d48a8b5e711, ric:selector-quote-4a410d1f59ad.
+ric:selector-quote-4a410d1f59ad a oa:TextQuoteSelector;
+    oa:exact "그리고 당시 어떤 언론에서는 이명박李明博 전 대통령과 같은 대학 출신이고, 똑같이 기업에 있다가 국회에 오신 경우여서 비교하기도 했던데요.".
+ric:activity-bb2ef2b2a2a8 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-e65eecf5bc2a a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-lee-myung-bak;
+    prov:wasGeneratedBy ric:activity-bb2ef2b2a2a8.
+ric:activity-fc8a23409ffb a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-1fda37958ddf, ric:selector-quote-be97f42c4188.
+ric:selector-quote-be97f42c4188 a oa:TextQuoteSelector;
+    oa:exact "온전히 남아 있던 게 저였기 때문에 저하고 정대철, 추미애 이렇게 삼파전으로 전당대회를 치렀지요. 1차 투표에서 제가 57.5%의 지지를 얻어 낙승을 했습니다.".
+ric:activity-fc8a23409ffb prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-8c3e08263757 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-choo-mi-ae;
+    prov:wasGeneratedBy ric:activity-fc8a23409ffb.
+ric:activity-3c07756bd0e4 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-4c8f906c053d, ric:selector-quote-a30453f6053f.
+ric:selector-quote-a30453f6053f a oa:TextQuoteSelector;
+    oa:exact "그때 김성조金晟祚 의원이라고 구미인가 경북 어디 의원이 있는데, 사람이 아주 괜찮아요. 그 사람하고 나하고 몸싸움을 하는데, 그 사람이 유도를 했나 봐요.".
+ric:activity-3c07756bd0e4 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-50ab215ede68 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-seong-jo;
+    prov:wasGeneratedBy ric:activity-3c07756bd0e4.
+ric:activity-3d2d41446cb1 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-5a4a253bae3f, ric:selector-quote-a8c53725c91e.
+ric:selector-quote-a8c53725c91e a oa:TextQuoteSelector;
+    oa:exact "김근태 원내대표가 어떻게 해야 하는지 물어서 제가 “의총에서 표결합시다. 제 문제 때문에 선거 준비를 더 이상 미룰 수 없지 않습니까? 지면 할 수 없지 어떻게 하겠습니까?”라고 답했어요.".
+ric:activity-3d2d41446cb1 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-85e6ada08b24 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-kkt;
+    prov:wasGeneratedBy ric:activity-3d2d41446cb1.
+ric:activity-3598a4c01315 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-418f5da8e370, ric:selector-quote-6ef23414d834.
+ric:selector-quote-6ef23414d834 a oa:TextQuoteSelector;
+    oa:exact "헌법개정특별위원회 참석 전 의견을 나누는 대선 후보들과 정세균 국회의장(2017. 4. 12.) 왼쪽부터 심상정 후보, 문재인 후보, 정세균 국회의장, 안철수 후보, 이주영 개헌특위 위원장.".
+ric:activity-3598a4c01315 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-d416056c0dba a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-an-cheol-su;
+    prov:wasGeneratedBy ric:activity-3598a4c01315.
+ric:activity-a70aaf4b52a7 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-5de8828ba386, ric:selector-quote-8ca9d1f266de.
+ric:selector-quote-8ca9d1f266de a oa:TextQuoteSelector;
+    oa:exact "그분이 하신다고 해놓고는 정장현丁璋鉉 씨라고 하는 국민당 출신을 영입해서 저하고 붙였지요.".
+ric:activity-a70aaf4b52a7 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-af6f2e1b127a a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-jeong-jang-hyeon;
+    prov:wasGeneratedBy ric:activity-a70aaf4b52a7.
+ric:activity-6b87f9ec8327 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-88046a7bfe12, ric:selector-quote-9f3b137bae3c.
+ric:selector-quote-9f3b137bae3c a oa:TextQuoteSelector;
+    oa:exact "그다음 제16대에는 한나라당 후보가 아예 없다시피 했어요. 그런데 자민련에 김광수金光洙 부총재가 거기에 나왔지요.".
+ric:activity-6b87f9ec8327 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-d8457287ea26 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-gwang-su;
+    prov:wasGeneratedBy ric:activity-6b87f9ec8327.
+ric:activity-c8e78b878cbc a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-b093d90cc49a, ric:selector-quote-0cefb2ca2cbf.
+ric:selector-quote-0cefb2ca2cbf a oa:TextQuoteSelector;
+    oa:exact "당시 이수성李壽成 총리가 거기에 오셨는데 저하고 악수를 하더니 “정 의원, 크게 감명 받았습니다. 아주 훌륭한 질문을 해줘서 고맙습니다.”라고 하셔서 제 입이 딱 벌어졌지요.".
+ric:activity-c8e78b878cbc prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-afb46b2b5074 a rdf:Statement;
+    rdf:subject ric:person-lee-soo-sung;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-jsk;
+    prov:wasGeneratedBy ric:activity-c8e78b878cbc.
+ric:activity-696846acf128 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-d7e538cf1a1b, ric:selector-quote-738cf0b15048.
+ric:selector-quote-738cf0b15048 a oa:TextQuoteSelector;
+    oa:exact "김문수 의원이 어떻게 애를 많이 먹이는지 위원회가 돌아가지를 않는 거예요.".
+ric:activity-696846acf128 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-4825acdf1b7e a rdf:Statement;
+    rdf:subject ric:person-kim-moon-soo;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-jsk;
+    prov:wasGeneratedBy ric:activity-696846acf128.
+ric:activity-97487c205b58 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-e1e09079f700, ric:selector-quote-d56e8936fcd4.
+ric:selector-quote-d56e8936fcd4 a oa:TextQuoteSelector;
+    oa:exact "그때 정태수 회장이 그렇게 답변하고 나서 “그런데 우리가 제공한 불법 정치자금을 거부한 사람이 하나 있었다.”라고 하니까 “그게 누구냐?”라고 물었겠지요. 그래서 정 회장이 “새정치국민회의의 정세균이다.”라고".
+ric:activity-97487c205b58 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-19663982133e a rdf:Statement;
+    rdf:subject ric:person-jeong-tae-su;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-jsk;
+    prov:wasGeneratedBy ric:activity-97487c205b58.
+ric:activity-5a175f183995 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-1cf51d2cfcb8.
+ric:selector-1cf51d2cfcb8 a oa:FragmentSelector;
+    rdf:value "page=195";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-5a175f183995 prov:used ric:selector-quote-d812d98d625d.
+ric:selector-quote-d812d98d625d a oa:TextQuoteSelector;
+    oa:exact "제가 그걸 본회의 의사 일정으로 잡은 것을 가지고 시비를 걸어서 또 한판 했지요. 공관까지 와서 행패를 부리기도 했고요.".
+ric:activity-5a175f183995 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-58ed30e9585f a rdf:Statement;
+    rdf:subject ric:org-saenuri;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:agent-jsk;
+    prov:wasGeneratedBy ric:activity-5a175f183995.
+ric:activity-febeb3fe5c3a a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-980a5b88898e, ric:selector-quote-f785e90e6f9b.
+ric:selector-quote-f785e90e6f9b a oa:TextQuoteSelector;
+    oa:exact "하여튼 저는 이긴다는 확신은 없었지만 그렇게 헌신적으로 했지요. 나중에 정몽준鄭夢準 후보와 단일화되고 나서는 이길지도 모르겠다는 생각을 하긴 했지요.".
+ric:activity-febeb3fe5c3a prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-c29028687c89 a rdf:Statement;
+    rdf:subject ric:agent-rmh;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-jung-mong-jun;
+    prov:wasGeneratedBy ric:activity-febeb3fe5c3a.
+ric:activity-5ad516f74b1e a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-e70e6249c289.
+ric:selector-e70e6249c289 a oa:FragmentSelector;
+    rdf:value "page=108";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-5ad516f74b1e prov:used ric:selector-quote-613b041d266c.
+ric:selector-quote-613b041d266c a oa:TextQuoteSelector;
+    oa:exact "그래서 그날 개표할 때까지 우리가 이긴다는 확신이 없었어요. 정몽준이 지지를 철회했기 때문에. 그랬는데 우리가 이겼어요.".
+ric:activity-5ad516f74b1e prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-16fb2652d790 a rdf:Statement;
+    rdf:subject ric:agent-rmh;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-jung-mong-jun;
+    prov:wasGeneratedBy ric:activity-5ad516f74b1e.
+ric:activity-ddd995c24c4b a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-e70e6249c289, ric:selector-quote-9ff1b91eb767.
+ric:selector-quote-9ff1b91eb767 a oa:TextQuoteSelector;
+    oa:exact "노무현 대통령 후보가 48.91%의 지지를 얻어 46.58%를 획득한 이회창 후보와 2.33% 차이로 제16대 대통령으로 당선되었다.".
+ric:activity-ddd995c24c4b prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-9b976f0dfe2c a rdf:Statement;
+    rdf:subject ric:agent-rmh;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-lee-hoi-chang;
+    prov:wasGeneratedBy ric:activity-ddd995c24c4b.
+ric:activity-eb94dfb85d9e a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-937d0f0a82f4.
+ric:selector-937d0f0a82f4 a oa:FragmentSelector;
+    rdf:value "page=75";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-eb94dfb85d9e prov:used ric:selector-quote-3333d74b3c02.
+ric:selector-quote-3333d74b3c02 a oa:TextQuoteSelector;
+    oa:exact "그렇지만 DJP연합을 해서 정권 교체를 이루었고, 그렇지 않았으면 정권 교체에 실패했을 가능성도 있었기 때문에 김종필 총재나 자민련의 여러 분들을 우리가 잘 대해야 한다는 생각을 했어요.".
+ric:activity-eb94dfb85d9e prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-3995cd016a2f a rdf:Statement;
+    rdf:subject ric:agent-kdj;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-jong-pil;
+    prov:wasGeneratedBy ric:activity-eb94dfb85d9e.
+ric:activity-dbacd72d2592 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-f3f6fa01f6d0, ric:selector-quote-a99395e8983c.
+ric:selector-quote-a99395e8983c a oa:TextQuoteSelector;
+    oa:exact "그래서 그때 지구당 위원장이 됐는데, 좀 있으니까 DJ하고 KT하고 나눠지면서 새정치국민회의가 만들어진 거예요.".
+ric:activity-dbacd72d2592 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-cec95a57c577 a rdf:Statement;
+    rdf:subject ric:agent-kdj;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-lee-ki-taek;
+    prov:wasGeneratedBy ric:activity-dbacd72d2592.
+ric:activity-a39f2710e3fc a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-0acd6ed7d9e2, ric:selector-quote-9a1bd165ece3.
+ric:selector-quote-9a1bd165ece3 a oa:TextQuoteSelector;
+    oa:exact "그때 ‘나이트라인’ 앵커가 그 유명한 테드 코펠Ted Koppel이었는데, 김대중 총재가 그 앵커하고 통역 없이 영어로 대화를 하셨어요.".
+ric:activity-a39f2710e3fc prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-c026183577e7 a rdf:Statement;
+    rdf:subject ric:agent-kdj;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-ted-koppel;
+    prov:wasGeneratedBy ric:activity-a39f2710e3fc.
+ric:stmt-e6b0278c6aa4 a rdf:Statement;
+    rdf:subject ric:agent-pgh;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-hong-sa-duk;
+    prov:wasGeneratedBy ric:activity-670f0fcabfc1.
+ric:activity-905abd4b7e11 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-89f7be60d1f3, ric:selector-quote-25349ced29e4.
+ric:selector-quote-25349ced29e4 a oa:TextQuoteSelector;
+    oa:exact "제18대 시기 김형오金炯旿 의장이 김종인金鍾仁 박사를 자문위원장으로 자문위원회를 만들어서 ‘헌법개정안’을 만든 바 있었어요.".
+ric:activity-905abd4b7e11 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-38ef78f1ca67 a rdf:Statement;
+    rdf:subject ric:person-kim-hyeong-o;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-jong-in;
+    prov:wasGeneratedBy ric:activity-905abd4b7e11.
+ric:activity-08561b205aa6 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-89f7be60d1f3, ric:selector-quote-2fc94733b493.
+ric:selector-quote-2fc94733b493 a oa:TextQuoteSelector;
+    oa:exact "그다음 제19대 시기에는 강창희姜昌熙 의장이 김철수金哲洙 교수를 위원장으로 해서 보고서를 만든 적도 있었고요.".
+ric:activity-08561b205aa6 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-a8b9a2cb1fff a rdf:Statement;
+    rdf:subject ric:person-kang-chang-hee;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-chul-soo;
+    prov:wasGeneratedBy ric:activity-08561b205aa6.
+ric:activity-f6e842ff2849 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-f8248e09e2da, ric:selector-quote-fd4fee53de18.
+ric:selector-quote-fd4fee53de18 a oa:TextQuoteSelector;
+    oa:exact "그리고 김원기 의장님은 제13대 국회 시절 아주 유능한 원내총무셨어요. 김윤환金潤煥 총무하고 같이.".
+ric:activity-f6e842ff2849 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-a1f2ae00153e a rdf:Statement;
+    rdf:subject ric:agent-kwk;
+    rdf:predicate rico:isAgentAssociatedWithAgent;
+    rdf:object ric:person-kim-yun-hwan;
+    prov:wasGeneratedBy ric:activity-f6e842ff2849.
+ric:activity-c217c52d27e0 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-18e0b27b2f47, ric:selector-quote-a9260179988c.
+ric:selector-quote-a9260179988c a oa:TextQuoteSelector;
+    oa:exact "이제 본격적으로 의장님의 어린 시절에 대한 질문부터 드릴까 합니다. 1950년 전북 진안에서 출생하신 뒤, 진안에서는 언제까지 성장하셨습니까?".
+ric:activity-c217c52d27e0 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-67dc1eb9cad2 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:birthPlace;
+    rdf:object ric:place-jinan;
+    prov:wasGeneratedBy ric:activity-c217c52d27e0.
+ric:activity-e4ce6144b41e a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-22878d17f20e, ric:selector-quote-372c71c4d1f2.
+ric:selector-quote-372c71c4d1f2 a oa:TextQuoteSelector;
+    oa:exact "정세균 | 丁世均, 1950~ 1950 전라북도 진안 출생 1969 전주 신흥고등학교 졸업".
+ric:activity-e4ce6144b41e prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-558e146be964 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:birthPlace;
+    rdf:object ric:place-jinan;
+    prov:wasGeneratedBy ric:activity-e4ce6144b41e.
+ric:activity-fe628146b304 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-1d9f9020244b, ric:selector-quote-551c4a0ed550.
+ric:selector-quote-551c4a0ed550 a oa:TextQuoteSelector;
+    oa:exact "그런 과정을 거치면서 그 학교 문과 1등으로 졸업을 했는데, 서울에 와서 대학을 두 번이나 떨어졌어요.".
+ric:activity-fe628146b304 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-5220dac94583 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:alumniOf;
+    rdf:object ric:org-sinheung-high-school;
+    prov:wasGeneratedBy ric:activity-fe628146b304.
+ric:stmt-4a0d01363b45 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:alumniOf;
+    rdf:object ric:org-sinheung-high-school;
+    prov:wasGeneratedBy ric:activity-e4ce6144b41e.
+ric:activity-cd6c4f92dbf5 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-dff98d07d656, ric:selector-quote-7210b427e7eb.
+ric:selector-quote-7210b427e7eb a oa:TextQuoteSelector;
+    oa:exact "그러고 나서 다시 입학 준비를 해서 그다음 해에 전주공업고등학교에 입학했는데, 왜 거기를 갔냐면 그때는 농공병진農工竝進, 또 경제개발 5개년 계획 이런 걸 추진하던 시절이라 공업학교를 나오면 100프로 취직이 됐거든요.".
+ric:activity-cd6c4f92dbf5 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-ec4008539288 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:alumniOf;
+    rdf:object ric:org-jeonju-technical-high-school;
+    prov:wasGeneratedBy ric:activity-cd6c4f92dbf5.
+ric:activity-962cd591557b a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-22878d17f20e, ric:selector-quote-ee96aed57a9e.
+ric:selector-quote-ee96aed57a9e a oa:TextQuoteSelector;
+    oa:exact "1973 고려대학교 총학생회장 당선 1975 고려대학교 법학과 졸업".
+ric:activity-962cd591557b prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-430e3b8bd514 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:alumniOf;
+    rdf:object ric:org-korea-university;
+    prov:wasGeneratedBy ric:activity-962cd591557b.
+ric:activity-26e59dd4c47d a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-c16c5e83d6ac, ric:selector-quote-112726842f3f.
+ric:selector-quote-112726842f3f a oa:TextQuoteSelector;
+    oa:exact "세 번째 시험에서 또 떨어지면 군대를 가야 했으니까 학교를 바꾸자 해서 제가 희망하는 학교를 못 가고 고려대학을 가게 된 것이지요.".
+ric:activity-26e59dd4c47d prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7e97b0f7c7c6 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate schema:alumniOf;
+    rdf:object ric:org-korea-university;
+    prov:wasGeneratedBy ric:activity-26e59dd4c47d.
+ric:activity-788494a027e6 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-e314c0ab4ecc, ric:selector-quote-4e0c374c952e.
+ric:selector-quote-4e0c374c952e a oa:TextQuoteSelector;
+    oa:exact "제가 1학년 때 고대신문 기자를 하다가 수습이 끝나고 정식 기자가 됐는데, 항명을 했어요.".
+ric:activity-788494a027e6 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-d50bb65c8b36 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isOrWasMemberOf;
+    rdf:object ric:org-godae-sinmun;
+    prov:wasGeneratedBy ric:activity-788494a027e6.
+ric:activity-bf0f3ca7835c a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-7bbd0b712edf.
+ric:selector-7bbd0b712edf a oa:FragmentSelector;
+    rdf:value "page=26";
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc8118>.
+ric:activity-bf0f3ca7835c prov:used ric:selector-quote-a8468a2aa7c3.
+ric:selector-quote-a8468a2aa7c3 a oa:TextQuoteSelector;
+    oa:exact "전주에 신흥고등학교라는 인문계 학교가 있는데, 제가 그 학교 교장실을 찾아가서 노크를 했어요.".
+ric:activity-bf0f3ca7835c prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-bc8bb6d37a55 a rdf:Statement;
+    rdf:subject ric:org-sinheung-high-school;
+    rdf:predicate rico:isAssociatedWithPlace;
+    rdf:object ric:place-jeonju;
+    prov:wasGeneratedBy ric:activity-bf0f3ca7835c.
+ric:activity-54c2d87a6337 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-ee6a3e045fb2, ric:selector-quote-0aebc76d5a3d.
+ric:selector-quote-0aebc76d5a3d a oa:TextQuoteSelector;
+    oa:exact "그분은 경상북도 영일군, 지금은 포항이죠. 그곳 출신인데, 그 지역에서 세 번 출마했고 3위, 2위, 2위를 했어요.".
+ric:activity-54c2d87a6337 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-eb447e34ada8 a rdf:Statement;
+    rdf:subject ric:place-yeongil;
+    rdf:predicate schema:containedInPlace;
+    rdf:object ric:place-gyeongsangbuk-do;
+    prov:wasGeneratedBy ric:activity-54c2d87a6337.
+ric:activity-a46e55e11d9f a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-f3f6fa01f6d0, ric:selector-quote-bb6a6e5d6a16.
+ric:selector-quote-bb6a6e5d6a16 a oa:TextQuoteSelector;
+    oa:exact "전라북도 동부 지방의 무주군, 진안군, 장수군을 합쳐서 부르는 말이다.(출처: 한국 향토문화전자대전, www.grandculture.net)".
+ric:activity-a46e55e11d9f prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-29b246ef292e a rdf:Statement;
+    rdf:subject ric:place-mujinjang;
+    rdf:predicate schema:containsPlace;
+    rdf:object ric:place-muju;
+    prov:wasGeneratedBy ric:activity-a46e55e11d9f.
+ric:stmt-c17f25a1cbe9 a rdf:Statement;
+    rdf:subject ric:place-mujinjang;
+    rdf:predicate schema:containsPlace;
+    rdf:object ric:place-jinan;
+    prov:wasGeneratedBy ric:activity-a46e55e11d9f.
+ric:stmt-e68356bdeef1 a rdf:Statement;
+    rdf:subject ric:place-mujinjang;
+    rdf:predicate schema:containsPlace;
+    rdf:object ric:place-jangsu;
+    prov:wasGeneratedBy ric:activity-a46e55e11d9f.
+ric:activity-0c9e093084ec a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-30cac116ad5b, ric:selector-quote-d47715847a5a.
+ric:selector-quote-d47715847a5a a oa:TextQuoteSelector;
+    oa:exact "중구 영락교회 앞에 있었지요. 지금도 쌍용빌딩이 있지요. 그때는 그 빌딩이 서울에서 삼일빌딩 다음으로 좋았어요.".
+ric:activity-0c9e093084ec prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-0ca013be03b8 a rdf:Statement;
+    rdf:subject ric:place-ssangyong-building;
+    rdf:predicate schema:containedInPlace;
+    rdf:object ric:place-jung-gu;
+    prov:wasGeneratedBy ric:activity-0c9e093084ec.
+ric:activity-3d884bd35292 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-d2009443d02a, ric:selector-quote-9a0cb0fa2dcf.
+ric:selector-quote-9a0cb0fa2dcf a oa:TextQuoteSelector;
+    oa:exact "또 우리가 호남에서 참패를 했잖아요. 광주·전남에서 1석, 전북에서 2석 이렇게 호남에서 3석밖에 못 얻었어요.".
+ric:activity-3d884bd35292 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-5a1bd4034638 a rdf:Statement;
+    rdf:subject ric:place-gwangju-jeonnam;
+    rdf:predicate schema:containedInPlace;
+    rdf:object ric:place-honam;
+    prov:wasGeneratedBy ric:activity-3d884bd35292.
+ric:activity-9e51f95c67ba a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-db4b15c366b9, ric:selector-quote-c5319f10e093.
+ric:selector-quote-c5319f10e093 a oa:TextQuoteSelector;
+    oa:exact "고등학교 다닐 때도 별도의 모임이 있었고, 대학교 들어와서도 ‘이론법학회’라는 데서 지역주의 뭐 이런 것에 대해서 토론을 했어요.".
+ric:activity-9e51f95c67ba prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-4fc61f985802 a rdf:Statement;
+    rdf:subject ric:agent-jsk;
+    rdf:predicate rico:isOrWasMemberOf;
+    rdf:object ric:org-theory-law-society;
+    prov:wasGeneratedBy ric:activity-9e51f95c67ba.
+ric:activity-391ba27a0908 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-429c6088b499.
+ric:selector-429c6088b499 a oa:FragmentSelector;
+    rdf:value "전거: 대한민국 국회 소재지 — 서울특별시 영등포구 의사당대로 1(여의도동)".
+ric:activity-391ba27a0908 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-6b053125ebf5 a rdf:Statement;
+    rdf:subject ric:place-assembly;
+    rdf:predicate schema:containedInPlace;
+    rdf:object ric:place-yeouido;
+    prov:wasGeneratedBy ric:activity-391ba27a0908.
+ric:activity-9686bc9bc2fd a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-9993ab8187cd.
+ric:selector-9993ab8187cd a oa:FragmentSelector;
+    rdf:value "전거: 행정구역 — 여의도동은 서울특별시 영등포구 소속".
+ric:activity-9686bc9bc2fd prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-42f3909dcf09 a rdf:Statement;
+    rdf:subject ric:place-yeouido;
+    rdf:predicate schema:containedInPlace;
+    rdf:object ric:place-seoul;
+    prov:wasGeneratedBy ric:activity-9686bc9bc2fd.
+ric:activity-e61d5375929f a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-d12dcb5d1928.
+ric:selector-d12dcb5d1928 a oa:FragmentSelector;
+    rdf:value "전거: 같은 대상의 기관(단체)·캠퍼스(장소) 표현을 잇는다".
+ric:activity-e61d5375929f prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-db82b7796316 a rdf:Statement;
+    rdf:subject ric:org-korea-university;
+    rdf:predicate rico:isAssociatedWithPlace;
+    rdf:object ric:place-korea-univ;
+    prov:wasGeneratedBy ric:activity-e61d5375929f.
+ric:activity-ca41c01fa910 a prov:Activity;
+    prov:used ric:inst-jsk-full, ric:selector-01c97702b76e, ric:selector-quote-ed83cd8b5e1e.
+ric:selector-quote-ed83cd8b5e1e a oa:TextQuoteSelector;
+    oa:exact "‘이거 안 되겠구나.’라는 생각을 했는데, 그 사건이 있고 나서 김원기 의장을 중심으로 친노무현파들이 여의도호텔에 모여서 탈당계를 썼어요.".
+ric:activity-ca41c01fa910 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
+    prov:generatedAtTime "2026-08-15T22:13:35+09:00"^^xsd:dateTime.
+ric:stmt-7653050f7fcb a rdf:Statement;
+    rdf:subject ric:org-chinnohmuhyun-pa;
+    rdf:predicate rico:isAssociatedWithPlace;
+    rdf:object ric:place-yeouido-hotel;
+    prov:wasGeneratedBy ric:activity-ca41c01fa910.
