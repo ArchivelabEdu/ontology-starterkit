@@ -1353,8 +1353,19 @@ function drawMarkers(ps) {
   fitMap();
 }
 const isKR = p => p.lat > 33 && p.lat < 39.5 && p.lon > 124 && p.lon < 132;
+/** 해외 표지 — 지금 걸러진 것 중 화면 밖(해외)이 몇 곳인지 지도 위에서 바로 말한다. */
+function paintAbroad() {
+  const el = $('#mapAbroad'); if (!el) return;
+  const ov = placeNodes().filter(p => MAP.filter.has(p.kind) && !isKR(p));
+  if (!ov.length) { el.hidden = true; return; }
+  el.innerHTML = MAP.world ? `국내만 보기 <i>←</i>` : `해외 ${ov.length}곳 더 <i>→</i>`;
+  el.hidden = false;
+}
+window.mapAbroadToggle = () => mapScope(!MAP.world);
+
 function fitMap() {
   let vis = placeNodes().filter(p => MAP.filter.has(p.kind));
+  paintAbroad();
   if (!vis.length) return;
   /* 컨테이너가 아직 0 이면 맞추지 않는다. 장소 화면은 열리기 전까지 display:none 이라
      이 함수가 그때 돌면 Leaflet 이 0×0 을 기준으로 잡아 **세계 축척**으로 물러난다 —
