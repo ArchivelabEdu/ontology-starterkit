@@ -10,19 +10,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#faf7f0; --panel:#fffdf8; --fg:#1e1b18; --muted:#7a736a; --line:#e6ded0;
-  --accent:#8f3a24; --accent-2:#b8703f; --accent-soft:#f3e7de;
+  /* 석조 70 — 의사당 화강암의 세계. 바탕이 연해질 때 명패 백도 같이 올려 단차 4~5%를 지킨다.
+     액센트는 국회 자주(무궁화 심벌), 조연은 돔 청록(의사당 지붕) — 호버 테두리·잔글씨에만. */
+  --bg:#eef0ee; --panel:#fafbfa; --fg:#22262a; --muted:#5b6266; --line:#d6dad8;
+  --accent:#7b2f61; --accent-2:#2a6f66; --accent-soft:#f0e4ec;
   --person:#9b3535; --org:#b08840; --place:#2f6b5c; --event:#5b4b9e;
   --position:#a8611f; --record:#7a4a86; --rule:#4a6b7a;--concept:#3f6f9c; --activity:#8a6d2f;
   --ok:#2f6b46; --bad:#a5322b;
   --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --serif:"Nanum Myeongjo","Apple SD Gothic Neo",serif;
   --mono:ui-monospace,"SF Mono",Menlo,monospace;
-  --shadow:0 1px 2px rgba(30,27,24,.04),0 8px 24px rgba(30,27,24,.06);
+  --shadow:0 1px 2px rgba(30,40,38,.08),0 8px 24px rgba(30,40,38,.07);
 }
 :root[data-theme=dark]{
-  --bg:#14130f; --panel:#1c1a16; --fg:#eee9df; --muted:#9b948a; --line:#2f2b24;
-  --accent:#dd8a5f; --accent-2:#c9743f; --accent-soft:#2a211a;
+  /* 다크 = 밤의 화강암 — 한지 먹이 아니라 찬 돌빛. 자주·청록은 밝은 단계로. */
+  --bg:#17191a; --panel:#1f2223; --fg:#e8eaea; --muted:#9aa0a2; --line:#2e3234;
+  --accent:#cf8ab5; --accent-2:#5fb3a6; --accent-soft:#2c2229;
   --person:#dd7a7a; --org:#dcb264; --place:#6fc0aa; --event:#a294e0;
   --position:#dfa05c; --record:#c49bd0; --rule:#84b0c4;--concept:#7fadd8; --activity:#c9ab63;
   --ok:#7cc39a; --bad:#e08a80;
@@ -76,6 +79,12 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
   color:var(--accent)}
 .hero-stats span{font-size:.78rem;color:var(--muted)}
 .hero-cta{display:flex;gap:.6rem;flex-wrap:wrap}
+/* 오늘의 목소리 — 감성 축을 호버 뒤에 숨기지 않고 상시 노출한다(터치 기기 대응). */
+.voice{margin:1.3rem 0 0;max-width:54ch}
+.voice blockquote{margin:0;font-family:var(--serif);font-size:1.04rem;line-height:1.75;
+  border-left:2px solid var(--accent);padding:.15rem 0 .15rem .95rem;word-break:keep-all}
+.voice cite{display:block;margin-top:.45rem;font-style:normal;font-family:var(--mono);
+  font-size:.7rem;color:var(--muted)}
 
 .hero-vis{position:relative;height:min(74vh,660px);z-index:1;display:flex;flex-direction:column}
 /* 캔버스에 크기를 직접 주면 자기 intrinsic 크기로 플렉스 레이아웃을 흔든다.
@@ -296,22 +305,267 @@ main>section{display:none}
 :root:not([data-page="home"]) #heroZone{display:none}
 /* 아직 안 골랐으면 히어로도 색인도 아닌 「고르는 자리」가 첫 화면이다 */
 :root[data-page="pick"] #homeIndex{display:none}
+/* ── 적재 완료 배너 ──
+   컬렉션을 고른 직후 본문 맨 위에 크게 낸다. 상단의 작은 상태줄과 같은 숫자를 다시 쓰지만,
+   여기서는 "적재됐다"가 아니라 "적재되고 있다"로 보이게 한다 — 트리플→개체→관계 순서로
+   200ms 씩 밀려 세어 올라가고, 다 세면 구성비 막대가 폭을 채운다.
+   .on 이 붙기 전에는 전부 투명 + 8px 아래에 있다 — JS 가 다음 프레임에 붙여 준다
+   (같은 프레임에 붙이면 브라우저가 시작 상태를 건너뛰고 전환이 생략된다). */
+.lb{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+  padding:1.4rem 1.5rem 1.5rem;margin-bottom:1.2rem;overflow:hidden}
+.lb-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem}
+.lb-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent);
+  animation:lbPulse 2s ease-out infinite}
+.lb-kick{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted)}
+.lb-stats{display:flex;align-items:baseline;gap:.9rem;flex-wrap:wrap}
+.lb-stat{display:flex;flex-direction:column;gap:.15rem}
+.lb-stat b{font-family:var(--serif);font-weight:800;font-size:clamp(1.9rem,5vw,2.7rem);
+  letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;color:var(--fg)}
+.lb-stat span{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--muted)}
+.lb-op{align-self:center;color:var(--line);font-size:1.3rem;opacity:0;transform:translateY(4px);
+  transition:opacity .4s ease .7s,transform .4s ease .7s}
+.lb.on .lb-op{opacity:1;transform:none}
+.lb-bar{display:flex;width:100%;height:10px;border-radius:999px;overflow:hidden;background:var(--line);
+  margin-top:1.15rem}
+.lb-seg{height:100%;flex:0 0 auto;width:0;transition:width .8s cubic-bezier(.16,1,.3,1) .85s}
+.lb.on .lb-seg{width:var(--w,0)}
+.lb-legend{display:flex;flex-wrap:wrap;gap:.15rem .9rem;margin-top:.65rem}
+.lb-leg{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--muted);
+  opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease}
+.lb.on .lb-leg{opacity:1;transform:none}
+.lb.on .lb-leg:nth-child(1){transition-delay:.95s} .lb.on .lb-leg:nth-child(2){transition-delay:1s}
+.lb.on .lb-leg:nth-child(3){transition-delay:1.05s} .lb.on .lb-leg:nth-child(4){transition-delay:1.1s}
+.lb.on .lb-leg:nth-child(5){transition-delay:1.15s} .lb.on .lb-leg:nth-child(6){transition-delay:1.2s}
+.lb.on .lb-leg:nth-child(7){transition-delay:1.25s} .lb.on .lb-leg:nth-child(8){transition-delay:1.3s}
+.lb-leg i{width:8px;height:8px;border-radius:50%;flex:none}
+.lb-leg b{color:var(--fg);font-weight:650;font-variant-numeric:tabular-nums}
+@keyframes lbPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 45%,transparent)}
+  70%{box-shadow:0 0 0 9px color-mix(in srgb,var(--ok) 0%,transparent)}
+  100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 0%,transparent)}}
+@media (prefers-reduced-motion:reduce){
+  .lb-op,.lb-leg{transition:none;opacity:1;transform:none}
+  .lb-seg{transition:none} .lb.on .lb-seg{width:var(--w,0)}
+  .lb-dot{animation:none}
+}
+
+/* ── 인물 하이라이트 ── record.js 의 personHighlight() 가 만든다.
+   배지 → 인용문 → 수치 띠 → 생애 장면 → 카드 순. 미니 지도·관계망은 안 만든다(record.js 주석). */
+.p-hl{margin:1.5rem 0 2.2rem;display:flex;flex-direction:column;gap:1.25rem}
+.p-badges{display:flex;flex-wrap:wrap;gap:.4rem}
+.p-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;
+  border:1px solid var(--line);background:var(--panel);font-size:.78rem;text-decoration:none;color:var(--fg)}
+.p-badge:hover{border-color:var(--accent-2)}
+.p-badge em{font-style:normal;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.p-badge.more{border-style:dashed;color:var(--muted);background:transparent}
+
+/* 인용문 — 이 화면의 목소리. 큰 세리프에 따옴표 장식 하나만. */
+/* 속기록 문법 — 인용은 국회 회의록 조판(◯발언자명 굵게 + 발언)을 따른다.
+   장식 따옴표 대신 화자가 인용의 얼굴이다. */
+.p-quote{position:relative;margin:0;padding:1.3rem 1.6rem 1.2rem;
+  background:var(--accent-soft);border-radius:16px;
+  border:1px solid color-mix(in srgb,var(--accent) 20%,transparent)}
+.p-quote p{margin:0;font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.1rem,2.2vw,1.45rem);line-height:1.62;word-break:keep-all}
+.p-quote cite{display:block;margin-top:.6rem;font-style:normal;font-family:var(--mono);
+  font-size:.68rem;letter-spacing:.04em;color:var(--muted)}
+.p-quote .sp,.act-quote .sp,.voice .sp{font-family:var(--sans);font-weight:800;
+  font-size:.78em;color:var(--accent);margin-right:.5rem}
+
+/* 수치 띠 — 적재 배너와 같은 문법(세리프 큰 숫자). */
+.p-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.p-stats>div{padding:.85rem 1.1rem .8rem;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:.1rem}
+.p-stats>div:last-child{border-right:0}
+.p-stats b{font-family:var(--serif);font-weight:800;font-size:1.85rem;letter-spacing:-.02em;
+  line-height:1.1;font-variant-numeric:tabular-nums}
+.p-stats span{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--muted)}
+
+/* 생애 장면 — 가로 스크롤 필름 스트립. 컷마다 연도·설명·출처. */
+.p-film-head{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.6rem}
+.p-film-head h4{margin:0;font-size:.8rem;font-weight:700;color:var(--muted)}
+.p-film-head span{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.p-film-track{display:flex;gap:.7rem;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:.5rem;scrollbar-width:thin}
+.p-frame{flex:0 0 230px;scroll-snap-align:start;text-decoration:none;color:var(--fg);margin:0;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  transition:border-color .12s}
+a.p-frame:hover{border-color:var(--accent-2)}
+.p-frame img{width:100%;height:138px;object-fit:cover;display:block}
+.p-frame figcaption{padding:.55rem .7rem .65rem;display:flex;flex-direction:column;gap:.12rem}
+.p-frame b{font-family:var(--mono);font-size:.7rem;color:var(--accent-2)}
+.p-frame span{font-size:.78rem;font-weight:600;line-height:1.4;word-break:keep-all}
+.p-frame em{font-style:normal;font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+
+.p-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem}
+.p-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;
+  display:flex;flex-direction:column;gap:.55rem}
+.p-card h4{margin:0;font-size:.78rem;font-weight:700;color:var(--muted);
+  display:flex;align-items:baseline;gap:.35rem}
+.p-card h4 span{font-family:var(--mono);font-weight:400;color:var(--accent-2)}
+.p-card .btn{align-self:flex-start;margin-top:auto}
+.p-cardnote{margin:0;font-size:.7rem;color:var(--muted);line-height:1.5}
+.p-kw{display:flex;flex-wrap:wrap;gap:.35rem;align-items:baseline}
+.p-kwc{padding:.2rem .55rem;border-radius:999px;border:1px solid var(--line);background:var(--bg);
+  color:var(--fg);cursor:pointer;font-size:calc(.68rem + var(--k,.3) * .5rem);
+  font-weight:calc(400 + var(--k,.3) * 300)}
+.p-kwc:hover{border-color:var(--accent-2)}
+.p-kwc.on{border-color:var(--accent);color:var(--accent)}
+.p-kw-out{font-size:.78rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:.5rem}
+.p-kw-out p{margin:.25rem 0}
+.p-tl{list-style:none;margin:0;padding:0 0 0 .2rem;display:flex;flex-direction:column;gap:.42rem;
+  border-left:2px solid var(--line)}
+.p-tl li{display:flex;align-items:baseline;gap:.5rem;font-size:.82rem;padding-left:.7rem}
+.p-tl-date{font-family:var(--mono);font-size:.68rem;color:var(--muted);flex:0 0 4.4rem}
+.p-tl a{display:inline-flex;align-items:center;gap:.35rem;color:var(--fg);text-decoration:none;
+  word-break:keep-all}
+.p-tl a:hover{color:var(--accent-2)}
+.p-tl .dot{width:7px;height:7px;border-radius:50%;flex:none}
+
+/* ── 지도 마커 ──
+   기본은 핀, **호버할 때만** 사진이 툴팁으로 뜬다. 목록의 .mi-thumb 과 같은 결
+   (둥근 모서리·장소색 테두리)로 두어 지도와 목록이 같은 것을 같은 모양으로 부르게 한다. */
+.mk{width:26px;height:34px}
+.mk svg path{transition:fill .12s}
+.mk.on svg path{fill:var(--accent);opacity:1}
+.leaflet-marker-icon:hover{z-index:1000 !important}
+.leaflet-marker-icon:has(.mk.on){z-index:900 !important}
+.leaflet-marker-icon:hover .mk{transform:translateY(-2px) scale(1.1)}
+.leaflet-marker-icon .mk{transition:transform .12s}
+
+.leaflet-tooltip.mk-tt{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:5px;box-shadow:0 2px 4px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.14);
+  color:var(--fg);font:inherit;white-space:normal;width:auto}
+.mk-tt img{display:block;width:132px;height:88px;object-fit:cover;border-radius:6px;
+  border:1px solid var(--line)}
+.mk-tt b{display:block;font-size:.8rem;font-weight:600;padding:.32rem .15rem .1rem;
+  max-width:132px;line-height:1.3}
+/* 화살표는 카드 색을 따라간다 — 기본 검정으로 두면 종이색 위에서 튄다. */
+.leaflet-tooltip.mk-tt:before{border-top-color:var(--line)}
 /* ── 주제(시소러스) ── */
-.scheme{border:1px solid var(--line);border-radius:12px;background:var(--panel);
-  padding:.9rem 1rem 1rem;margin-bottom:.9rem}
-.shead{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
-.shead b{font-family:var(--serif);font-size:1.05rem}
-.shead span{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-.ctree{display:flex;flex-direction:column;gap:2px}
-button.cnode{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;font:inherit;
-  cursor:pointer;background:none;border:1px solid transparent;border-radius:8px;
-  padding:.32rem .55rem;margin-left:calc(var(--d) * 1.15rem);color:var(--fg)}
-button.cnode:hover{border-color:var(--line);background:var(--bg)}
-button.cnode.on{border-color:var(--concept);background:var(--accent-soft)}
-button.cnode b{font-weight:650;font-size:.92rem}
-button.cnode em{font-style:normal;font-family:var(--mono);font-size:.7rem;color:var(--muted)}
-button.cnode i{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.76rem;
-  color:var(--concept);font-weight:700}
+/* ── 주제 화면 구역 머리 ── 시소러스(체계)와 전시(이야기)를 가르는 표지판. */
+.zone-head{margin:2.4rem 0 1rem;padding-top:1.6rem;border-top:2px solid var(--accent)}
+.zone-head h3{margin:.15rem 0 .4rem;font-family:var(--serif);font-weight:800;
+  font-size:clamp(1.2rem,2.4vw,1.6rem);letter-spacing:-.02em;word-break:keep-all}
+.zone-head p{margin:0;font-size:.88rem;color:var(--muted);max-width:62ch;line-height:1.7;word-break:keep-all}
+.subj-sum{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-bottom:.9rem}
+.subj-sum b{color:var(--accent);font-weight:700}
+.subj-search{display:flex;gap:.5rem;align-items:center;margin-bottom:1.1rem}
+.subj-search input{flex:1;min-width:0;padding:.62rem .95rem;border-radius:12px;
+  border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit;font-size:.9rem}
+.subj-search input:focus{outline:none;border-color:var(--accent)}
+
+/* ── 시소러스 목록 ── 참고: 수원학 아카이브 주제 페이지.
+   상위 주제는 카드 단위, 하위는 왼쪽 괘선 들여쓰기, 자료가 달린 주제는 썸네일 칩을 바로 보여준다. */
+.th-scheme{border:1px solid var(--line);border-radius:16px;background:var(--panel);
+  padding:1.15rem 1.25rem 1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.th-scheme>header{display:flex;align-items:baseline;gap:.6rem}
+.th-scheme>header b{font-family:var(--serif);font-size:1.12rem;font-weight:800}
+.th-scheme>header span{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+.th-c.top{border-top:1px solid var(--line);padding-top:.7rem;margin-top:.8rem}
+.th-head{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;font:inherit;
+  cursor:pointer;background:none;border:none;padding:.3rem .5rem;border-radius:8px;color:var(--fg)}
+.th-head:hover{background:var(--accent-soft)}
+.th-c.on>.th-head{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.th-head b{font-weight:700;font-size:.92rem;word-break:keep-all}
+.th-c.top>.th-head b{font-size:1rem}
+.th-head em{font-style:normal;font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.th-head .th-n{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.78rem;
+  color:var(--accent);font-weight:700}
+.th-items{display:flex;flex-wrap:wrap;gap:.35rem;padding:.15rem .5rem .35rem}
+.th-chip{display:inline-flex;align-items:center;gap:.42rem;max-width:15.5rem;
+  border:1px solid var(--line);border-radius:999px;background:var(--bg);
+  padding:.16rem .62rem .16rem .2rem;text-decoration:none;color:var(--fg);font-size:.76rem}
+.th-chip:hover{border-color:var(--accent-2)}
+.th-chip img{width:22px;height:22px;border-radius:50%;object-fit:cover;flex:none;
+  border:1px solid var(--line);background:var(--panel)}
+.th-chip i{width:9px;height:9px;border-radius:50%;flex:none;margin-left:.42rem}
+.th-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.th-chip em{font-style:normal;font-family:var(--mono);font-size:.6rem;color:var(--muted);flex:none}
+.th-more{padding:.16rem .62rem;border-radius:999px;border:1px dashed var(--line);
+  background:none;color:var(--muted);font:inherit;font-size:.72rem;cursor:pointer}
+.th-more:hover{border-color:var(--accent-2);color:var(--fg)}
+.th-kids{margin:.2rem 0 0 .6rem;padding-left:.8rem;border-left:2px solid var(--line)}
+
+/* ── 전시 갤러리 ── */
+/* 카드 폭을 440px 로 상한 — 전시가 하나뿐일 때 카드가 전폭으로 늘어나
+   저해상도 히어로가 크게 확대되어 흐려 보였다. 절반 폭이면 썸네일 해상도로 충분하다. */
+.expo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,440px));
+  justify-content:start;gap:1rem;margin-bottom:1.2rem}
+.expo-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;
+  overflow:hidden;background:var(--panel);box-shadow:var(--shadow);cursor:pointer;
+  transition:border-color .12s,transform .12s}
+.expo-card:hover{border-color:var(--accent-2);transform:translateY(-2px)}
+.expo-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow)}
+.expo-card img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+/* 사진이 없는 전시의 문 — 국회 자주 색 블록(이미지와 같은 비율). */
+.expo-tint{width:100%;aspect-ratio:21/9;display:block}
+.expo-card-body{padding:1rem 1.2rem 1.1rem;display:flex;flex-direction:column;gap:.4rem}
+.expo-kicker{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent)}
+.expo-card h4{margin:0;font-family:var(--serif);font-weight:800;font-size:1.15rem;
+  letter-spacing:-.015em;word-break:keep-all}
+.expo-card p{margin:0;font-size:.82rem;color:var(--muted);line-height:1.65;word-break:keep-all;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.expo-open{margin-top:.3rem;font-size:.8rem;font-weight:650;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.expo-card{transition:none}.expo-card:hover{transform:none}}
+
+.story-tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;padding:.1rem .4rem;
+  border-radius:4px;background:var(--accent);color:#fff;flex:none}
+/* ── 큐레이션 전시 ── 참고: 양화진기록관 디지털 전시.
+   전폭 히어로(이미지 위 제목) → 연도 레일 + 교차 배치(이미지·본문) → 인용 블록 → 맺음말.
+   이미지에는 반드시 캡션·출처가 딸린다 — 1차 자료임을 표기하는 것이 전시의 신뢰다. */
+.story{margin-top:1.8rem}
+.story-hero{position:relative;border-radius:16px;overflow:hidden;background:#141210;margin-bottom:.35rem}
+.story-hero img{width:100%;aspect-ratio:21/10;object-fit:cover;display:block;opacity:.94}
+.story-hero-text{position:absolute;inset:auto 0 0 0;padding:3rem 1.9rem 1.5rem;
+  background:linear-gradient(180deg,transparent,rgba(12,9,7,.55) 35%,rgba(12,9,7,.88));color:#fff}
+.story-kicker{font-family:var(--mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;
+  color:#e5b294;margin-bottom:.55rem}
+.story-hero-text h3{margin:0 0 .6rem;font-family:var(--serif);font-weight:800;
+  font-size:clamp(1.5rem,3.2vw,2.3rem);letter-spacing:-.025em;line-height:1.25;word-break:keep-all}
+.story-lead{margin:0 0 .5rem;max-width:60ch;font-size:.92rem;line-height:1.7;opacity:.92;word-break:keep-all}
+.story-by{margin:0;font-family:var(--mono);font-size:.66rem;opacity:.7}
+.story-hero.no-img{background:var(--panel);border:1px solid var(--line)}
+.story-hero.no-img .story-hero-text{position:static;background:none;color:var(--fg);padding:1.6rem 1.7rem}
+.story-hero.no-img .story-kicker{color:var(--accent)}
+.story-hero-cap{text-align:right;font-family:var(--mono);font-size:.64rem;color:var(--muted);
+  padding:.4rem .2rem 1rem}
+
+.act{display:grid;grid-template-columns:4.2rem 1fr;gap:1.1rem;padding:1.8rem 0;
+  border-top:1px solid var(--line)}
+.act-rail{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
+.act-year{font-family:var(--mono);font-size:.82rem;color:var(--accent);font-weight:700}
+.act-rail i{flex:1;width:2px;background:var(--line);margin-left:2px;border-radius:2px}
+.act-main{display:grid;grid-template-columns:minmax(190px,300px) 1fr;gap:1.4rem;align-items:start}
+.act.alt .act-main{grid-template-columns:1fr minmax(190px,300px)}
+.act.noimg .act-main{grid-template-columns:1fr}
+.act-media{margin:0}
+.act-media img{width:100%;border-radius:12px;border:1px solid var(--line);display:block;
+  background:var(--panel)}
+.act-media a{display:block}
+.act-media figcaption{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin-top:.45rem;
+  line-height:1.55;display:flex;flex-direction:column;gap:.05rem}
+.act-media em{font-style:normal;opacity:.72}
+.act-body h4{margin:0 0 .45rem;font-family:var(--serif);font-weight:800;font-size:1.15rem;
+  letter-spacing:-.015em;word-break:keep-all}
+.act-body>p{margin:0 0 .7rem;font-size:.9rem;line-height:1.8;color:var(--fg);
+  max-width:60ch;word-break:keep-all}
+.act-quote{position:relative;margin:.7rem 0 .9rem;padding:1rem 1.2rem .9rem;
+  background:var(--accent-soft);border-radius:12px;
+  font-family:var(--serif);font-size:1.02rem;line-height:1.68;word-break:keep-all}
+.act-quote cite{display:block;margin-top:.45rem;font-style:normal;font-family:var(--mono);
+  font-size:.64rem;color:var(--muted)}
+
+.story-end{border-top:2px solid var(--accent);margin-top:.3rem;padding:1.2rem .2rem 0}
+.story-end p{margin:0 0 .5rem;font-size:.9rem;line-height:1.75;max-width:64ch;word-break:keep-all}
+@media(max-width:700px){
+  .act{grid-template-columns:1fr;gap:.4rem}
+  .act-rail i{display:none}
+  .act-main,.act.alt .act-main{grid-template-columns:1fr}
+}
 .spane{border:1px solid var(--concept);border-radius:12px;background:var(--panel);padding:1rem 1.1rem}
 .spane h3{margin:0 0 .3rem;font-family:var(--serif);font-size:1.15rem}
 .slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.4rem;margin-top:.7rem}
@@ -319,9 +573,25 @@ a.sitem{display:flex;align-items:center;gap:.45rem;text-decoration:none;color:va
   border:1px solid var(--line);border-radius:8px;padding:.42rem .6rem;font-size:.86rem}
 a.sitem:hover{border-color:var(--accent)}
 a.sitem .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+a.sitem .sthumb{width:26px;height:26px;border-radius:6px;object-fit:cover;flex:none;border:1px solid var(--line);background:var(--panel)}
 a.sitem b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 a.sitem em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+/* 지도 범위 전환 — 종류 칩들과 같은 줄, 오른쪽 끝. */
+.map-scope{margin-left:auto;display:flex;gap:.3rem}
 .pick-bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:1rem 0 .4rem}
+/* 카드를 고르는 순간 '선택' 버튼이 활성화되는데, 색만 바뀌면 눈에 잘 안 띈다 —
+   "이제 눌러야 한다"는 신호로 세 번 반짝인다. 카드를 누를 때마다 .picker 통째가
+   다시 그려지므로(outerHTML) 매번 새 엘리먼트가 생겨 애니메이션이 그때마다 처음부터 다시 논다 —
+   따로 트리거를 붙일 필요가 없다. 다 반짝이면 멈추고 평소 primary 버튼 모습으로 가라앉는다. */
+.pick-bar .btn.primary:not(:disabled){animation:ctaFlicker 1s ease-in-out 1}
+@keyframes ctaFlicker{
+  0%, 100% {box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent)}
+  16%, 50%, 84% {box-shadow:0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent)}
+  33%, 67% {box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent)}
+}
+@media (prefers-reduced-motion:reduce){
+  .pick-bar .btn.primary:not(:disabled){animation:none}
+}
 button.col-card{text-align:left;font:inherit;cursor:pointer}
 .col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 #homeIndex{display:none}
@@ -339,6 +609,14 @@ button.col-card{text-align:left;font:inherit;cursor:pointer}
 .col-card b{font-family:var(--serif);font-size:1.02rem}
 .col-card span{font-size:.8rem;color:var(--muted);line-height:1.5}
 .col-card i{font-style:normal;font-family:var(--mono);font-size:.74rem;color:var(--accent);margin-top:.2rem}
+/* 초상 그리드 — 이미지 없는 컬렉션도 얼굴을 가진다: 화강암 듀오톤 + 이름 첫 글자.
+   평소 흑백, 고르거나 올리면 색이 돌아온다(시안 A의 「호버하면 색이 돌아오고」). */
+.col-card{box-shadow:0 1px 2px rgba(30,40,38,.07)}
+.col-face{display:flex;align-items:center;justify-content:center;aspect-ratio:8/3;
+  border-radius:8px;color:#fff;font-family:var(--serif);font-weight:800;font-size:1.5rem;
+  filter:grayscale(1);transition:filter .25s;margin-bottom:.3rem}
+.col-card:hover .col-face,.col-card.on .col-face{filter:none}
+@media (prefers-reduced-motion:reduce){.col-face{transition:none}}
 #homeIndex b{font-family:var(--serif);font-size:1.05rem}
 #homeIndex span{font-size:.83rem;color:var(--muted);line-height:1.55}
 #homeIndex i{font-style:normal;font-family:var(--mono);font-size:.74rem;color:var(--accent);margin-top:.25rem}
@@ -603,7 +881,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
     <span class="tt">국회의장단 구술기록 아카이브<small id="brandSub">구술총서 · 지식그래프</small></span>
   </a>
   <nav id="nav">
-    <a data-page="/records" href="#/records">기록</a><a data-page="place" href="#place">장소</a><a data-page="event" href="#event">연표</a><a data-page="graph-sec" href="#graph-sec">관계망</a>
+    <a data-page="/records" href="#/records">검색</a><a data-page="place" href="#place">장소</a><a data-page="event" href="#event">연표</a><a data-page="graph-sec" href="#graph-sec">관계망</a>
     <a data-page="subject" href="#subject">주제</a><a data-page="query" href="#query">질의</a><a data-page="lang" href="#lang">언어</a><a data-page="collection" href="#collection">컬렉션</a><a data-page="about" href="#about">해설</a>
     <button class="ico" onclick="toggleTheme()" title="라이트/다크">◐</button>
   </nav>
@@ -628,6 +906,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <a class="btn primary" href="#query">지식그래프에게 묻기 →</a>
       <a class="btn" href="#graph-sec">관계망 보기</a>
     </div>
+    <div class="voice" id="todayVoice" hidden></div>
   </div>
   <div class="hero-vis">
     <div class="hero-stage">
@@ -673,7 +952,7 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 
   <!-- ═══════ 홈 색인 ═══════ -->
   <nav id="homeIndex" aria-label="섹션 바로가기">
-    <a data-page="/records" href="#/records"><b>기록</b><span>인물·단체·직위·사건·장소를 찾아보고 한 건씩 펼쳐 봅니다</span><i id="ixRec">–</i></a>
+    <a data-page="/records" href="#/records"><b>검색</b><span>기록·인물·단체·직위·사건·장소를 찾아보고 한 건씩 펼쳐 봅니다</span><i id="ixRec">–</i></a>
     <a data-page="place" href="#place"><b>장소</b><span>구술이 지나간 자리를 지도 위에서 따라갑니다</span><i id="ixPlace">–</i></a>
     <a data-page="event" href="#event"><b>연표</b><span>사건을 시간 위에 놓고 봅니다</span><i id="ixEvent">–</i></a>
     <a data-page="graph-sec" href="#graph-sec"><b>관계망</b><span>인물·직위·단체·사건이 이어진 그물</span><i id="ixGraph">–</i></a>
@@ -690,7 +969,8 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <div class="kicker">Archive Map</div>
       <h2>구술이 지나간 자리</h2>
       <p>구술에 등장하는 장소 <b id="nPlace">–</b>곳을 지도에 펼쳤습니다.
-         유형으로 걸러 보고, ‘생애 따라가기’로 진안에서 여의도까지 여섯 장면을 따라가 보세요.</p>
+         유형으로 걸러 보고, ‘생애 따라가기’로 진안에서 여의도까지 여섯 장면을 따라가 보세요.
+         워싱턴·로스앤젤레스 같은 해외 장소는 <b>세계 전체</b>로 넓혀 보세요.</p>
     </div>
     <div class="chips" id="mapChips"></div>
     <div class="chips" style="margin-top:-.4rem">
@@ -820,10 +1100,10 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <section id="subject">
     <div class="sec-head">
       <div class="kicker">Subjects</div>
-      <h2>주제 — 시소러스</h2>
+      <h2>주제</h2>
       <p>인물·사건·장소는 <b>실재하는 것</b>이고, 주제는 <b>그것들이 무엇에 관한 것인가</b>입니다.
-        아래 개념을 누르면 그 개념과 <b>그 아래 개념들</b>에 달린 기록·사건·활동이 함께 모입니다 —
-        상위 개념일수록 결과가 늘어나는 것이 시소러스가 하는 일입니다.</p>
+        이 화면은 두 구역입니다 — 위는 주제의 <b>체계</b>(시소러스), 아래는 주제를 읽는
+        <b>이야기</b>(큐레이션 전시). 개념을 누르면 그 개념과 아래 개념들에 달린 자료가 모입니다.</p>
     </div>
     <div id="subjBody"></div>
   </section>
@@ -885,11 +1165,12 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
   <section id="record">
     <a class="rec-back" href="#" onclick="closeRecords();return false">← 아카이브로</a>
     <div class="sec-head">
-      <div class="kicker">Records</div>
-      <h2>기록 찾아보기</h2>
+      <div class="kicker">Search</div>
+      <h2>검색</h2>
       <p>구술총서에서 뽑아낸 기록·인물·단체·직위·사건·장소를 한자리에 모았습니다.
          검색은 이름뿐 아니라 <b>연결된 개체의 이름</b>까지 훑습니다 —
          “한보”로 찾으면 한보사태에 연결된 인물과 기록도 함께 나옵니다.</p>
+      <p class="status" id="recStatus"></p>
     </div>
     <div class="rec-bar">
       <input id="recQ" type="search" placeholder="이름·설명·연결된 개체로 검색…"

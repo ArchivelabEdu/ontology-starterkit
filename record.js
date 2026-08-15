@@ -5,7 +5,7 @@
 
    아이템 페이지의 핵심은 '연결된 개체'다. 무엇과 이어져 있는지가 아니라
    **어떤 관계로** 이어져 있는지를 보여야 한다. 그게 표와 그래프의 차이다. */
-import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref } from './app.js';
+import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref, LANG, LIFE, topTfidf, sentencesWith, repImgOf } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
 // 개념·개념체계도 개체다. 빼 두면 「전체」 수가 그래프와 어긋난다(실측 791 vs 810).
@@ -171,11 +171,152 @@ function close() {
   el.innerHTML = '';
 }
 
+/** 인물 전용 하이라이트 — 초상 아래, 사실표 위.
+ *
+ *  구성(위에서 아래로): 재임 배지 → 핵심 인용문 → 수치 띠 → 생애 장면(사진 스트립) → 카드 4장.
+ *  카드는 전부 **이미 있는 화면**(연표·관계망·주제)의 요약이다. 미니 지도·미니 관계망 캔버스를
+ *  여기 또 띄우지 않는다 — Leaflet 인스턴스를 두 개 만들면 예전에 겪은
+ *  "Map container is already initialized" 가 재발할 위험이 있기 때문이다.
+ *
+ *  지어내지 않는다:
+ *    · 인용문·키워드는 corpus.txt 원문에서 tf-idf 로 고른 말이 실제로 나오는 문장(sentencesWith).
+ *      코퍼스에 화자 구분이 없으므로 **hasCreator(구술자)로 걸린 인물에게만** 붙인다 —
+ *      면담자나 그저 언급된 인물에게 붙이면 안 한 말을 한 것처럼 보인다.
+ *    · 생애 장면은 frames.json 의 큐레이션 8컷 — 연도·설명·출처가 다 딸려 있고, 같은 이유로
+ *      구술자 본인에게만 보인다.
+ *    · 수치는 전부 지금 그래프에서 직접 센다. */
+function personHighlight(n, out, inn) {
+  const isNarrator = (inn['hasCreator'] || []).some(Boolean);
+  const top = (isNarrator && LANG.paras.length) ? topTfidf(12) : [];
+  const quote = top[0] ? sentencesWith(top[0].w, top[0].pi)[0] : null;
+
+  const positionsAll = (out['occupiesOrOccupied'] || []).filter(Boolean)
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  // 실측 154건 — 다 늘어놓으면 하이라이트가 아니라 그 자체로 페이지가 된다.
+  // 최근 것 위주로 자르고, 나머지는 숨기지 않고 "+N건"으로 있다는 사실만 알린다.
+  const POS_CAP = 6;
+  const positions = positionsAll.slice(-POS_CAP).reverse();
+  const posMore = positionsAll.length - positions.length;
+
+  const events = (out['isOrWasParticipantIn'] || []).filter(Boolean);
+  // 연표는 흐름을 보는 자리 — 자르기 전 전체에서 만든다.
+  const timeline = [
+    ...positionsAll.map(p => ({ date: p.date, label: p.label, cls: p.cls, id: p.id })),
+    ...events.map(e => ({ date: e.date, label: e.label, cls: e.cls, id: e.id })),
+  ].filter(x => x.date).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+  const places = (out['isAssociatedWithPlace'] || []).filter(Boolean);
+
+  // 다룬 주제 — 이 인물이 구술자·면담자인 기록들의 주제 가운데 **개념만**(시소러스 층).
+  // 고유명사 개체까지 섞으면 "주제" 라는 말이 흐려진다 — 그건 아래 연결 목록에 다 있다.
+  const myRecords = [...(inn['hasCreator'] || []), ...(inn['hasAuthor'] || [])].filter(Boolean);
+  const recIds = new Set(myRecords.map(r => r.id));
+  const subjectIds = new Set();
+  G.edges.forEach(e => {
+    if (recIds.has(e.s) && e.p === 'hasOrHadSubject' && G.byId.get(e.o)?.cls === 'Concept') subjectIds.add(e.o);
+  });
+  const subjects = [...subjectIds].map(id => G.byId.get(id)).filter(Boolean);
+
+  const totalLinks = Object.values(out).reduce((s, l) => s + l.length, 0)
+    + Object.values(inn).reduce((s, l) => s + l.length, 0);
+
+  if (!quote && !positionsAll.length && !timeline.length && !places.length && !subjects.length) return '';
+
+  const lnk = o => colHref('item/' + encodeURIComponent(short(o.id)));
+  /* 주제 화면과 같은 톤 — 원형 썸네일 칩. 자기 사진이 없으면 연결된 개체의 대표 이미지를
+     빌려 오고(repImgOf), 그 사실을 title 로 밝힌다. */
+  const entChip = o => {
+    const r = repImgOf(o, n.id);
+    const tip = r && r.from ? `${o.label} — 대표 이미지: 연결된 개체 「${r.from}」` : o.label;
+    return `<a class="th-chip" href="${lnk(o)}" title="${esc(tip)}">
+      ${r ? `<img src="${esc(r.src)}" alt="" loading="lazy">`
+          : `<i style="background:${clsColor(o.cls)}"></i>`}
+      <span>${esc(o.label)}</span></a>`;
+  };
+  const maxS = top.length ? Math.max(...top.map(x => x.s)) : 1;
+
+  // 생애 장면 — 사진마다 연도·설명·출처. 개체가 그래프에 있으면 그 개체로 링크된다.
+  const film = (isNarrator && LIFE.length) ? `<div class="p-film">
+      <div class="p-film-head"><h4>생애 장면</h4><span>${LIFE.length}컷 · 출처는 각 장면에</span></div>
+      <div class="p-film-track">${LIFE.map(f => {
+        const ent = f.entity && G.byId.get(long(f.entity));
+        const inner = `<img src="${esc(f.src)}" alt="${esc(f.label)}" loading="lazy">
+          <figcaption><b>${esc(f.year)}</b><span>${esc(f.label)}</span><em>${esc(f.credit)}</em></figcaption>`;
+        return ent
+          ? `<a class="p-frame" href="${colHref('item/' + encodeURIComponent(f.entity))}">${inner}</a>`
+          : `<figure class="p-frame">${inner}</figure>`;
+      }).join('')}</div>
+    </div>` : '';
+
+  return `<div class="p-hl">
+    ${positions.length ? `<div class="p-badges">${positions.map(p =>
+      `<a class="p-badge" href="${lnk(p)}">${esc(p.label)}${p.date ? ` <em>${esc(p.date)}~</em>` : ''}</a>`).join('')}
+      ${posMore > 0 ? `<span class="p-badge more">+${posMore}건 — 아래 연결된 개체에 전체</span>` : ''}</div>` : ''}
+
+    ${quote ? `<blockquote class="p-quote"><p><b class="sp">◯${esc(n.label)}</b>${esc(quote.sent)}</p>
+      <cite>구술 원문 · ${quote.i + 1}단락 — 원문에서 가장 특징적인 대목(tf-idf)에서 그대로 가져왔습니다</cite></blockquote>` : ''}
+
+    <div class="p-stats">
+      <div><b>${totalLinks.toLocaleString('ko-KR')}</b><span>연결</span></div>
+      <div><b>${positionsAll.length.toLocaleString('ko-KR')}</b><span>재임·직위</span></div>
+      <div><b>${events.length.toLocaleString('ko-KR')}</b><span>참여 사건</span></div>
+      <div><b>${subjects.length.toLocaleString('ko-KR')}</b><span>다룬 주제</span></div>
+    </div>
+
+    ${film}
+
+    <div class="p-cards">
+      ${top.length ? `<div class="p-card">
+        <h4>핵심 키워드</h4>
+        <div class="p-kw">${top.map(x => `<button class="p-kwc" style="--k:${(x.s / maxS).toFixed(3)}"
+          onclick="personKeyword(this,'${esc(x.w)}')">${esc(x.w)}</button>`).join('')}</div>
+        <div class="p-kw-out" hidden></div>
+        <p class="p-cardnote">글자가 클수록 원문 한 대목에 유난히 몰린 말입니다(tf-idf). 눌러 보세요 —
+          그 말이 나온 문장이 그대로 열립니다.</p>
+      </div>` : ''}
+
+      ${timeline.length ? `<div class="p-card">
+        <h4>연표 <span>${timeline.length}</span></h4>
+        <ul class="p-tl">${timeline.slice(0, 7).map(x => `<li>
+          <span class="p-tl-date">${esc(x.date)}</span>
+          <a href="${lnk(x)}"><i class="dot" style="background:${clsColor(x.cls)}"></i>${esc(x.label)}</a></li>`).join('')}</ul>
+        ${timeline.length > 7 ? `<span class="p-cardnote">…외 ${timeline.length - 7}건</span>` : ''}
+        <a class="btn sm" href="${colHref('event')}">연표에서 보기 →</a>
+      </div>` : ''}
+
+      ${places.length ? `<div class="p-card">
+        <h4>관련 장소 <span>${places.length}</span></h4>
+        <div class="chips-l">${places.slice(0, 14).map(entChip).join('')}</div>
+        ${places.length > 14 ? `<span class="p-cardnote">…외 ${places.length - 14}곳</span>` : ''}
+      </div>` : ''}
+
+      ${subjects.length ? `<div class="p-card">
+        <h4>다룬 주제 <span>${subjects.length}</span></h4>
+        <div class="chips-l">${subjects.map(entChip).join('')}</div>
+        <a class="btn sm" href="${colHref('subject')}">주제에서 보기 →</a>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+/** 핵심 키워드 칩을 누르면 그 말이 나온 문장을 카드 안에 바로 편다 — 언어 화면(showWordSource)과
+ *  같은 재료(sentencesWith)를 쓰지만, 여기는 #langNote 가 없는 화면이라 카드 안에 직접 그린다. */
+window.personKeyword = (btn, w) => {
+  const card = btn.closest('.p-card');
+  const out = card.querySelector('.p-kw-out');
+  const sents = sentencesWith(w, null).slice(0, 3);
+  out.hidden = false;
+  out.innerHTML = sents.length
+    ? sents.map(s => `<p>${s.i + 1}단락 — ${esc(s.sent)}</p>`).join('')
+    : `<p>원문에서 이 말이 나온 문장을 못 찾았습니다.</p>`;
+  card.querySelectorAll('.p-kwc').forEach(b => b.classList.toggle('on', b === btn));
+};
+
 function item(sid) {
   const n = G.byId.get(long(sid));
   const el = $('#itemView');
   if (!n) {
-    el.innerHTML = `<div class="item-wrap"><a class="back" href="${colHref('records')}">← 기록 찾아보기</a>
+    el.innerHTML = `<div class="item-wrap"><a class="back" href="${colHref('records')}">← 검색으로</a>
       <div class="warnbox">그런 개체가 없습니다: <code>${esc(sid)}</code></div></div>`;
     el.classList.add('on'); document.body.classList.add('item-open');
     return;
@@ -215,7 +356,7 @@ function item(sid) {
   ].filter(Boolean);
 
   el.innerHTML = `<div class="item-wrap">
-    <a class="back" href="${colHref('records')}">← 기록 찾아보기</a>
+    <a class="back" href="${colHref('records')}">← 검색으로</a>
 
     <div class="item-head${n.img ? ' with-img' : ''}">
       ${n.img ? `<figure class="portrait"><img src="${esc(n.img)}" alt="${esc(n.label)}">
@@ -227,6 +368,8 @@ function item(sid) {
       </div>
     </div>
 
+    ${n.cls === 'Person' ? personHighlight(n, out, inn) : ''}
+
     <table class="item-facts">${facts.map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>
 
     <h3>연결된 개체 <span>${total}</span></h3>
@@ -234,10 +377,13 @@ function item(sid) {
       <div class="link-row">
         <div class="rel">${r.dir} ${esc(r.ko)}
           <code>rico:${esc(r.p)}</code></div>
-        <div class="chips-l">${r.list.map(o => `
-          <a class="ent" href="${colHref('item/' + encodeURIComponent(short(o.id)))}">
-            <i class="dot" style="background:${clsColor(o.cls)}"></i>${esc(o.label)}
-            <span>${CLS[o.cls].ko}</span></a>`).join('')}</div>
+        <div class="chips-l">${r.list.map(o => { const ri = repImgOf(o, n.id);
+          const tip = ri && ri.from ? `${o.label} — 대표 이미지: 연결된 개체 「${ri.from}」` : o.label;
+          return `
+          <a class="th-chip" href="${colHref('item/' + encodeURIComponent(short(o.id)))}" title="${esc(tip)}">
+            ${ri ? `<img src="${esc(ri.src)}" alt="" loading="lazy">`
+                 : `<i style="background:${clsColor(o.cls)}"></i>`}
+            <span>${esc(o.label)}</span><em>${CLS[o.cls].ko}</em></a>`; }).join('')}</div>
       </div>`).join('')
       : `<div class="warnbox">이 개체에는 아직 연결이 없습니다.
            관계를 더 넣으면 여기에 쌓입니다 — 그게 이 실습의 목표입니다.</div>`}
