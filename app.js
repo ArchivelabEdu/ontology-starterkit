@@ -452,7 +452,7 @@ function loadedBanner() {
         <div class="lb-go-grid">
         ${[['records', '검색', '이름·연결로 개체 찾기'], ['place', '장소', '지도 위 구술의 자리'],
            ['event', '연표', '사건의 시간축'], ['graph-sec', '관계망', '전체 그래프 한눈에'],
-           ['subject', '주제', '시소러스와 전시'], ['query', '질문', 'SPARQL로 물어보기']]
+           ['subject', '주제', '시소러스와 전시'], ['query', '질의', 'SPARQL로 물어보기']]
           .map(([p, t, d]) => `<a class="lb-go-a" href="${colHref(p)}"><b>${t} →</b><span>${esc(d)}</span></a>`).join('')}
         </div>
       </div>

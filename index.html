@@ -1064,6 +1064,9 @@ th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.
 :root[data-page="home"] #loadStatus.err{display:block;color:var(--bad)}
 footer{border-top:1px solid var(--line);margin-top:3rem}
 footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(--muted);font-size:.82rem}
+footer .fw p{margin:.3rem 0}
+footer .fw a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+footer .fw a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 @media(max-width:1000px){
   .hero{grid-template-columns:1fr;min-height:auto}
   .hero-vis{height:420px;order:-1}
@@ -1357,8 +1360,6 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
       <tr><td>③ 추출·그라운딩</td><td>LLM 개체·관계 추출 → 전거 매핑 → 도메인·레인지 검증</td><td><code>graph.ttl</code></td></tr>
       <tr><td>④ 시맨틱 검색</td><td>자연어 → SPARQL → Oxigraph 실행 → 답변 + 출처</td><td>이 페이지</td></tr>
     </table></div>
-    <p class="note">어휘는 RiC-O 1.1 원본과 대조 검증한 부분집합입니다. 네임스페이스·지역명이 원본과 같아
-      이 데이터는 완전한 RiC-O 데이터로 유효합니다.</p>
   </section>
 
   <!-- ═══════ 검색 ═══════ -->
@@ -1382,9 +1383,9 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
 </main>
 
 <footer><div class="fw">
-  <p><b>출처</b> · 국회도서관 국회기록보존소, 『대한민국 국회를 말하다 08 정세균』, 2021 (면담자 손동유) ·
-     ICA EGAD, <i>Records in Contexts-Ontology 1.1</i>, 2025.</p>
-  <p>2026 국회기록원 온톨로지-지식그래프 실습교육 스타터킷 · 지도 © OpenStreetMap 기여자 · SPARQL 엔진 Oxigraph (WASM)</p>
+  <p><b>출처</b> · 국회도서관 국회기록보존소, 『대한민국 국회를 말하다 08 정세균』, 2021</p>
+  <p>2026 국회기록원 온톨로지·지식그래프 실습교육 스타터킷 · 지도 OpenStreetMap · SPARQL 엔진 Oxigraph (WASM)</p>
+  <p>© 2026 <a href="https://www.archivelab.co.kr" target="_blank" rel="noopener">아카이브랩</a></p>
   <p id="portraitCredit" style="display:none"></p>
 </div></footer>
 
