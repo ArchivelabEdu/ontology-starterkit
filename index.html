@@ -192,6 +192,12 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .h2-copy h1 em::after{display:none}
 .h2-copy p{color:#d8cfc2;font-size:.98rem;margin:0 0 1.7rem;word-break:keep-all}
 .h2-copy .btn.ghost{background:transparent;border-color:rgba(255,255,255,.4);color:#f6f1e8}
+/* 1안과 같은 것들(수치·오늘의 목소리)이 이 자리에도 선다 — 다만 여기는 사진 위 오버레이라
+   1안의 크기 그대로 두면 넘쳐 캡션과 포갠다. 어두운 바탕에 맞게 색을 바꾸고 폭을 줄인다. */
+.h2-copy .hero-stats{gap:1.4rem;margin-bottom:1.2rem;flex-wrap:nowrap}
+.h2-copy .hero-stats b{font-size:1.35rem;color:#e8b08c}
+.h2-copy .hero-stats span{color:#c9bfb2;font-size:.72rem}
+.h2-copy .btn:not(.primary){border-color:rgba(255,255,255,.4);color:#f6f1e8;background:transparent}
 .h2-copy .btn.ghost:hover{background:rgba(255,255,255,.1)}
 
 .h2-cap{position:absolute;z-index:6;left:max(1.4rem,calc(50vw - 610px));bottom:2.6rem;
@@ -635,8 +641,28 @@ a.sitem em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:
   16%, 50%, 84% {box-shadow:0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent)}
   33%, 67% {box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent)}
 }
+/* 표지의 단추 — 적재 버튼의 짧은 반짝임(ctaFlicker)은 「방금 활성화됐다」는 알림이라 이 자리에는
+   경망스럽다. 표지는 오래 머무는 화면이므로 **느린 호흡**으로 바꾼다: 4초에 한 번, 자주색 후광이
+   아주 옅게 번졌다 잦아든다. 시선은 끌되 읽기를 방해하지 않는 진폭이다. */
+@keyframes ctaBreath{
+  /* 물결은 두 겹이다 — 앞선 것이 사라질 때 뒤엣것이 퍼져 나가 끊기지 않는다.
+     버튼 자체도 2% 만 부풀었다 가라앉는다: 눈에 띄는 것은 이 숨이고, 링은 그 여운이다. */
+  0%   {transform:scale(1);
+        box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent),
+                   0 0 0 0 color-mix(in srgb,var(--accent) 26%,transparent)}
+  45%  {transform:scale(1.02);
+        box-shadow:0 0 0 13px color-mix(in srgb,var(--accent) 0%,transparent),
+                   0 0 0 5px color-mix(in srgb,var(--accent) 20%,transparent)}
+  75%  {transform:scale(1);
+        box-shadow:0 0 0 22px color-mix(in srgb,var(--accent) 0%,transparent),
+                   0 0 0 18px color-mix(in srgb,var(--accent) 0%,transparent)}
+  100% {transform:scale(1);
+        box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 0%,transparent),
+                   0 0 0 0 color-mix(in srgb,var(--accent) 0%,transparent)}
+}
+:root.no-pick .cta-main{animation:ctaBreath 2.8s cubic-bezier(.33,0,.2,1) infinite}
 @media (prefers-reduced-motion:reduce){
-  .pick-bar .btn.primary:not(:disabled){animation:none}
+  .pick-bar .btn.primary:not(:disabled),:root.no-pick .cta-main{animation:none}
 }
 button.col-card{text-align:left;font:inherit;cursor:pointer}
 .col-card.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -1075,16 +1101,16 @@ footer .fw{max-width:1240px;margin:0 auto;padding:2rem 1.4rem 3.5rem;color:var(-
        RiC-O 국제표준으로 구조화했습니다. 의장단 한 사람 한 사람의 흩어진 회고가
        인물·직위·단체·사건·장소가 이어진 관계망이 됩니다.</p>
     <div class="hero-stats">
-      <div><b id="hsNode">–</b><span>개체</span></div>
-      <div><b id="hsEdge">–</b><span>관계</span></div>
-      <div><b id="hsTriple">–</b><span>트리플</span></div>
-      <div><b id="hsSpan">–</b><span>수록 연도</span></div>
+      <div><b class="hs-node">–</b><span>개체</span></div>
+      <div><b class="hs-edge">–</b><span>관계</span></div>
+      <div><b class="hs-triple">–</b><span>트리플</span></div>
+      <div><b class="hs-span">–</b><span>수록 연도</span></div>
     </div>
     <div class="hero-cta">
-      <a class="btn primary" id="ctaMain" href="#query">지식그래프에게 묻기 →</a>
-      <a class="btn" id="ctaSub" href="#graph-sec">관계망 보기</a>
+      <a class="btn primary cta-main" href="#query">지식그래프에게 묻기 →</a>
+      <a class="btn cta-sub" href="#graph-sec">관계망 보기</a>
     </div>
-    <div class="voice" id="todayVoice" hidden></div>
+    <div class="voice today-voice" hidden></div>
   </div>
   <div class="hero-vis">
     <div class="hero-stage">

@@ -750,6 +750,9 @@ export function applyCollection(ids, redraw = true) {
 
 /* 상태줄·히어로 수치는 **지금 고른 것**을 센다. 예전에는 적재 직후 한 번만 썼는데,
    고르기 전에는 개체가 0이라 컬렉션을 골라 들어가도 「개체 0 · 관계 0」이 그대로 남았다. */
+/** 표지를 다시 그린 뒤(2안 전환 등) 수치·단추·목소리를 채운다 — hero2.js 가 부른다. */
+export function repaintHero() { writeStatus(); paintTodayVoice(); }
+
 function writeStatus() {
   const el = $('#loadStatus');
   /* 예전에는 안 골랐을 때 수치를 들지 않았다 — 스토어가 발행본 전체를 물고 있어서
@@ -760,22 +763,28 @@ function writeStatus() {
     ? `그래프 적재 완료 — 트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length} · SPARQL 1.1 (Oxigraph WASM)`
     : `적재 0 — 트리플 0개 · 개체 0 · 관계 0 · SPARQL 1.1 (Oxigraph WASM)`;
   if (el) el.textContent = line;
-  const set = (id, v) => { const n = $(id); if (n) n.textContent = v; };
+  const setAll = (sel, v) => document.querySelectorAll(sel).forEach(n => { n.textContent = v; });
   /* 표지의 수치는 **지금 적재된 것**을 말한다. 전체 발행본 수치를 박아 두면 아무것도 안 골랐는데도
      1,033개가 있는 것처럼 보여, 바로 아래 「적재 0」과 어긋난다(실측 지적).
      수록 연도도 같은 기준이라 여기서 함께 갱신한다 — 부팅 때 한 번만 재면 적재를 따라가지 못한다. */
   /* 표지의 두 단추도 지금 할 수 있는 일을 말한다 — 아무것도 안 골랐는데 「묻기」라고 하면
      눌러도 질의 화면이 열리지 않아 오동작으로 읽힌다. */
+  /* 표지는 두 안(1안 입자·2안 전면)이 같은 자리에 있고 하나만 보인다 — 그래서 id 가 아니라
+     **클래스로 둘 다** 채운다. 한쪽만 채우면 안을 바꾸는 순간 옛 수치가 남는다. */
   const picked = hasPick();
-  const c1 = $('#ctaMain'), c2 = $('#ctaSub');
-  if (c1) { c1.textContent = picked ? '지식그래프에게 묻기 →' : '먼저 컬렉션 고르기 →'; c1.setAttribute('href', picked ? colHref('query') : '#collection'); }
-  if (c2) { c2.hidden = !picked; c2.setAttribute('href', colHref('graph-sec')); }
-  set('#hsNode', G.nodes.length);
-  set('#hsEdge', G.edges.length);
-  set('#hsTriple', TRIPLES);
+  document.querySelectorAll('.cta-main').forEach(a => {
+    a.textContent = picked ? '지식그래프에게 묻기 →' : '먼저 컬렉션 고르기 →';
+    a.setAttribute('href', picked ? colHref('query') : '#collection');
+  });
+  document.querySelectorAll('.cta-sub').forEach(a => {
+    a.hidden = !picked; a.setAttribute('href', colHref('graph-sec'));
+  });
   const yrs = G.nodes.filter(n => n.cls === 'Event' || n.cls === 'Activity')
     .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
-  set('#hsSpan', yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–');
+  setAll('.hs-node', G.nodes.length);
+  setAll('.hs-edge', G.edges.length);
+  setAll('.hs-triple', TRIPLES);
+  setAll('.hs-span', yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–');
 }
 
 /** 고른 것이 있는가. 컬렉션이 아예 없는 그래프는 「고를 것이 없으니 열려 있다」로 본다. */
@@ -1918,8 +1927,10 @@ export function narratorLabel() {
    구간(quoteX/quotes)에서 날짜로 돌려 고른다. 렌더 시점에 원문에서 다시 꺼내므로
    코퍼스를 갈아끼우면 자동으로 사라지거나 새 문장이 된다 — 문자열로 박아 두지 않는다. */
 function paintTodayVoice() {
-  const el = document.getElementById('todayVoice');
-  if (!el) return;
+  const els = [...document.querySelectorAll('.today-voice')];
+  if (!els.length) return;
+  const el = { set hidden(v) { els.forEach(e => { e.hidden = v; }); },
+               set innerHTML(v) { els.forEach(e => { e.innerHTML = v; }); } };
   const qs = Object.values(SUBJ_STORY)
     .flatMap(s => s.acts.flatMap(a => a.quotes || (a.quoteX ? [a.quoteX] : [])));
   if (!qs.length || !LANG.paras.length) { el.hidden = true; return; }

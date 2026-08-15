@@ -12,7 +12,7 @@
 
    ※ 1안과 같은 규칙: 정지 이미지에 카메라 움직임만 준다.
      인물이 하지 않은 행동을 만들어내지 않는다. */
-import { $, esc } from './app.js';
+import { $, esc, repaintHero } from './app.js';
 
 const HOLD = 5600, WIPE = 1500, SLICES = 6;
 let H = null;
@@ -21,7 +21,10 @@ export async function initHero2() {
   const root = $('#hero2');
   if (!root || H) return;
 
-  const meta = await fetch('assets/life/frames.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
+  /* 2안은 화면을 꽉 채우는 사진이 주인공이다 — 명함처럼 가까이서 읽어야 하는 컷은
+     전면으로 키우면 글자만 커질 뿐 장면이 되지 않는다. 1안(입자)에는 그대로 남는다. */
+  const all = await fetch('assets/life/frames.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
+  const meta = all.filter(m => !/명함/.test(m.label || ''));
   if (!meta.length) { root.innerHTML = '<p class="status">장면을 찾지 못했습니다</p>'; return; }
 
   H = { meta, i: 0, timer: 0, busy: false, root };
@@ -45,11 +48,21 @@ export async function initHero2() {
     <div class="h2-copy">
       <div class="kicker">Oral History · Knowledge Graph</div>
       <h1>한 사람의 기억이<br><em>그래프</em>가 될 때</h1>
-      <p>국회도서관 국회기록보존소가 2018년 채록한 정세균 전 국회의장의 구술기록을
-         RiC-O 국제표준으로 구조화했습니다.</p>
+      <p>국회도서관 국회기록보존소가 2012년부터 채록해 온 국회의장단 구술기록을
+         RiC-O 국제표준으로 구조화했습니다. 의장단 한 사람 한 사람의 흩어진 회고가
+         인물·직위·단체·사건·장소가 이어진 관계망이 됩니다.</p>
+      <div class="hero-stats">
+        <div><b class="hs-node">–</b><span>개체</span></div>
+        <div><b class="hs-edge">–</b><span>관계</span></div>
+        <div><b class="hs-triple">–</b><span>트리플</span></div>
+        <div><b class="hs-span">–</b><span>수록 연도</span></div>
+      </div>
+      <!-- 오늘의 목소리는 2안에 두지 않는다 — 이 화면 아래쪽은 사진 캡션의 자리이고,
+           copy 는 세로 중앙 정렬이라 글이 길어질수록 하단이 캡션 쪽으로 밀려 포갠다(실측).
+           2안은 사진이 주인공이라 텍스트를 리드·수치·단추까지로 줄인다. 1안에는 그대로 있다. -->
       <div class="hero-cta">
-        <a class="btn primary" href="#query">지식그래프에게 묻기 →</a>
-        <a class="btn ghost" href="#record">기록 찾아보기</a>
+        <a class="btn primary cta-main" href="#query">지식그래프에게 묻기 →</a>
+        <a class="btn cta-sub" href="#graph-sec">관계망 보기</a>
       </div>
     </div>
 
@@ -67,6 +80,7 @@ export async function initHero2() {
         </button>`).join('')}
     </div>`;
 
+  repaintHero();               // 방금 그린 2안의 수치·단추·목소리를 채운다
   H.shots = [...root.querySelectorAll('.h2-shot')];
   root.querySelectorAll('#h2Rail button').forEach(b =>
     b.onclick = () => go(+b.dataset.i));
@@ -137,4 +151,5 @@ window.setHeroVariant = v => {
   document.querySelectorAll('#heroSwap button')
     .forEach(b => b.classList.toggle('on', b.dataset.v === v));
   if (v === '2') initHero2();
+  else repaintHero();          // 1안으로 돌아올 때도 값이 비어 있지 않게
 };
