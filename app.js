@@ -707,6 +707,21 @@ export function applyCollection(ids, redraw = true) {
   } else {
     const keep = new Set();
     picked.forEach(c => c.members.forEach(m => keep.add(m)));
+    /* 시소러스는 **공용 통제어휘**다 — 어느 구술자의 소유물이 아니라 전거처럼 같이 쓰는 자원이라,
+       개념만 따로 발행돼 다른 컬렉션에 들어 있다. 그래서 「정세균 구술」만 적재하면 그 자료 24건이
+       가리키는 개념 17개가 통째로 빠져 주제 화면이 빈 채로 뜬다(실측: 개념 0건 안내만 남았다).
+       고른 자료가 주제로 가리키는 개념과, 그 개념의 상위·소속 체계까지 함께 싣는다.
+       하위 개념(narrower)은 따라가지 않는다 — 고른 자료와 무관한 가지까지 딸려 오면
+       「고른 것만 본다」는 약속이 깨진다. */
+    const byId = new Map(ALL.nodes.map(n => [n.id, n]));
+    const isCon = id => { const n = byId.get(id); return !!n && (n.cls === 'Concept' || n.cls === 'ConceptScheme'); };
+    for (const e of ALL.edges) if (keep.has(e.s) && isCon(e.o)) keep.add(e.o);
+    const UP = new Set(['broader', 'inScheme', 'topConceptOf']);
+    for (let grew = true; grew;) {
+      grew = false;
+      for (const e of ALL.edges)
+        if (keep.has(e.s) && UP.has(e.p) && !keep.has(e.o)) { keep.add(e.o); grew = true; }
+    }
     G.nodes = ALL.nodes.filter(n => keep.has(n.id));
     TRIPLES = countTriplesFor([...keep]);
   }
@@ -1274,7 +1289,10 @@ function drawMap() {
   const seed = placeNodes().filter(isKR);
   const box = seed.length ? L.latLngBounds(seed.map(p => [p.lat, p.lon])) : null;
   // minZoom 2 — 서울~워싱턴·LA 를 한 화면에 담으려면 경도 247° 가 들어가야 한다(줌 3 은 153° 가 한계).
-  MAP.map = L.map('map', { scrollWheelZoom: false, minZoom: 2, worldCopyJump: true })
+  /* zoomSnap 0.25 — 기본값 1 은 fitBounds 결과를 정수 줌으로 내림하므로 마커가 화면의 절반만
+     쓰고 나머지가 빈 바다가 된다(실측: 국내 36곳이 세로 56%·가로 26%, 줌 7 에서 멈춤).
+     0.25 단위를 허용하면 한 단계 더 당겨 붙는다 — 0 은 타일이 임의 배율로 늘어나 흐려진다. */
+  MAP.map = L.map('map', { scrollWheelZoom: false, minZoom: 2, worldCopyJump: true, zoomSnap: .25 })
     .setView(box ? box.getCenter() : [36.5, 127.8], 7);
   const dark = document.documentElement.getAttribute('data-theme') === 'dark'
     || (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
@@ -1355,7 +1373,7 @@ function fitMap() {
   /* animate:false — 두 가지 이유. ① 배경 탭에서는 rAF 가 멈춰 애니메이션 fitBounds 가
      끝까지 못 가고 이전 화면에 걸린다(실측: 세계 전환이 줌 7에 멈춤). ② 범위 전환은
      이동이 아니라 갈아끼우기라, 태평양을 가로지르는 비행 애니메이션이 오히려 어지럽다. */
-  MAP.map.fitBounds(L.latLngBounds(vis.map(p => [p.lat, p.lon])), { maxZoom: 11, padding: [30, 24], animate: false });
+  MAP.map.fitBounds(L.latLngBounds(vis.map(p => [p.lat, p.lon])), { maxZoom: 11, padding: [26, 18], animate: false });
 }
 /** 지도 범위 전환 — 명시적 선택이므로 자동 맞춤을 다시 켠다(touched 해제). */
 window.mapScope = w => {

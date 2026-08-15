@@ -58,7 +58,9 @@ a{color:var(--accent)}
 .item-crumbs a:hover{color:var(--accent)}
 .item-crumbs i{font-style:normal;opacity:.45}
 .item-crumbs b{font-weight:600;color:var(--fg)}
-header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
+/* 사이트 헤더만 붙인다 — 태그 선택자로 두면 화면 안의 다른 <header>(시소러스 체계 제목 등)까지
+   꼭대기에 달라붙어 사이트 헤더와 겹친다(실측: 주제 화면에서 체계 제목이 메뉴 위에 포개짐). */
+body > header{position:sticky;top:0;z-index:900;background:color-mix(in srgb,var(--bg) 88%,transparent);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .hw{max-width:1240px;margin:0 auto;padding:.65rem 1.4rem;display:flex;gap:1rem;align-items:center}
 /* 로고 — 이 사이트의 주장을 그대로 그린 마크: 인물 ● — 직위 ◆ — 단체 ■ */
