@@ -273,9 +273,11 @@ function starCompute() {
   S.layout = 'network';
   lNetwork();
   /* 라벨 — 작은 그래프(이야기·관계·에고)는 전부, 성좌는 상위 10만. 소리를 하나로 줄인다. */
-  const all = S.nodes.length <= 42;
-  const top = new Set([...S.nodes].sort((a, b) => b.d - a.d).slice(0, 10));
-  S.nodes.forEach(n => n.lb = all || top.has(n));
+  /* 이름 없는 별은 별이 아니다 — 예전에는 상위 10개에만 이름을 붙여 60개 중 50개가 빈 원으로 떴다.
+     라벨은 서로 겹칠 때만 접는다: 자리를 잡은 뒤 큰 별부터 놓아 보고, 이미 놓인 이름과
+     부딪히는 것만 접는다(호버·장면 강조에서는 그때 다시 뜬다). */
+  S.nodes.forEach(n => n.lb = true);
+  S.labelPass = true;
   /* 정착 — 중심 근처에서 제자리로 1.2초 한 번. 그 뒤로는 움직이지 않는다. */
   if (!REDUCED) {
     const { W, H } = { W: $('#graph').width, H: $('#graph').height };
@@ -497,8 +499,9 @@ function loop() {
   });
   ctx.globalAlpha = 1;
 
-  // 노드
-  S.nodes.forEach(n => {
+  // 노드 — 라벨 자리를 다투므로 큰 별(연결이 많은 쪽)이 먼저 이름을 차지한다
+  S.labelBoxes = [];
+  [...S.nodes].sort((a, b) => (b.d || 0) - (a.d || 0)).forEach(n => {
     const r = nodeR(n);
     const hi = n === S.hover || (S.search && matches(n));
     const nh = shi && S.hiIds.has(n.id);
@@ -524,6 +527,13 @@ function loop() {
     }
     ctx.shadowBlur = 0;
     const showLb = star ? (n.lb || hi || nh) : (r > 7 * devicePixelRatio || hi || S.nodes.length < 46);
+    if (star && showLb && !hi && !nh && S.labelBoxes) {
+      const w = n.label.length * 6.2 * devicePixelRatio, h = 13 * devicePixelRatio;
+      const bx = d.x - w / 2, by = d.y + r + 3 * devicePixelRatio;
+      const hit = S.labelBoxes.some(b => bx < b.x + b.w && bx + w > b.x && by < b.y + b.h && by + h > b.y);
+      if (hit) { ctx.globalAlpha = 1; ctx.shadowBlur = 0; return; }
+      S.labelBoxes.push({ x: bx, y: by, w, h });
+    }
     if (showLb) {
       ctx.fillStyle = hi || nh ? fg : muted;
       ctx.font = `${star ? 600 : ''} ${(hi ? 12.5 : 11) * devicePixelRatio}px "Nanum Myeongjo", serif`.trim();
