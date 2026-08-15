@@ -30,7 +30,8 @@ export const $ = s => document.querySelector(s);
 export const esc = s => String(s ?? '').replace(/[&<>"]/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-export let store = null;
+export let store = null;      // 화면·질의가 보는 그래프 — **적재된 컬렉션만** 담는다
+let fullStore = null;         // 발행본 전체 — 적재 범위를 다시 뽑아낼 원본
 export const G = { nodes: [], edges: [], byId: new Map() };
 
 /* 클래스 표시 규칙 — 색 변수 · 도형 · 한글명 */
@@ -101,7 +102,7 @@ window.toggleTheme = () => {
    개체가 792개가 되면서 한 장이 너무 길어졌다. 이제 해시가 페이지를 고른다.
    기록(#/records)과 아이템(#/item/…)은 record.js 가 이미 제 페이지를 갖고 있으므로
    여기서는 손대지 않고 자리만 비켜 준다. */
-const PAGES = ['place', 'event', 'graph-sec', 'subject', 'query', 'lang', 'collection', 'about', 'pick'];
+const PAGES = ['place', 'event', 'graph-sec', 'subject', 'query', 'lang', 'collection', 'about'];
 /* ── 주소 한 곳에서 읽기 ──
    주소가 두 겹이다. 앞은 어느 컬렉션 안인가, 뒤는 어느 화면인가.
      전체:      #place            #/records         #/item/<id>
@@ -176,17 +177,24 @@ function route() {
   const bareHome = !col && !rest;
   if (!bareItem && !bareHome && want.join(',') !== now.join(',')) applyCollection(want);
   navHrefs();
+  document.documentElement.classList.toggle('no-pick', !hasPick());
 
   /* 아직 안 골랐으면 어느 화면으로 가든 고르는 자리로 돌린다.
      빈 지도·빈 연표를 보여 주면 「데이터가 없나」로 읽히지, 「아직 안 골랐다」로 읽히지 않는다. */
-  if (!hasPick()) {
-    document.documentElement.dataset.page = 'pick';
-    // B안: 표지(히어로)를 접지 않는다 — 표지를 넘기면 바로 서가(고르개)다
+  /* 아직 안 골랐을 때 — 맨 홈만 고르개를 내놓는다.
+     화면을 지목해 온 사람(장소·연표·관계망…)에게 고르개를 들이밀면 「눌렀는데 딴 데로 갔다」가 된다.
+     그 화면을 제 모습대로 열고, 비어 있는 까닭은 상태줄이 말한다 — 검색이 이미 그렇게 하고 있었다. */
+  /* 아직 안 골랐을 때 — 홈은 **표지만** 보여준다. 고르는 자리는 컬렉션 화면 하나뿐이고
+     표지의 단추가 그리로 데려간다. 홈에 고르개를 겹쳐 두면 같은 일을 하는 자리가 둘이 된다.
+     화면을 지목해 온 사람(장소·연표·관계망…)은 그 화면을 제 모습대로 받는다 —
+     비어 있는 까닭은 상태줄이 말한다(「적재 0 — … 「적재」를 누르세요」). */
+  if (!hasPick() && !rest && !col) {
+    document.documentElement.dataset.page = 'home';
     document.body.classList.remove('past-hero');
     navMark('');
-    drawPicker();
     return;
   }
+
 
   // 기록·아이템은 record.js 가 자기 페이지를 갖고 있다 — 자리만 비켜 준다
   if (rest === 'records' || rest.startsWith('item/')) {
@@ -202,8 +210,6 @@ function route() {
   document.body.classList.toggle('past-hero', id !== 'home');
   navMark(id === 'home' ? '' : colHref(id));
   drawCrumbs(id);
-  // 적재된 채로 홈에 오면 고르개가 「적재됨」 상태를 입은 채 다시 그려져야 한다.
-  if (id === 'home') drawPicker();
   scrollTo({ top: 0 });
   /* 숨어 있는 동안 컨테이너 크기가 0이라 지도·캔버스·연표가 제대로 안 그려진다.
      보이게 된 뒤 다시 재라고 알려 준다 — 전체화면 전환 때와 같은 이유다.
@@ -251,7 +257,6 @@ window.goHome = () => {
   document.querySelectorAll('section.fs').forEach(x => window.fullscreen(x.id));
   // 해시만 지우면 hashchange 가 안 뜨는 경우가 있어 상태도 직접 되돌린다
   history.replaceState('', '', location.pathname + location.search);
-  document.documentElement.classList.remove('records-on');
   document.body.classList.remove('records-open', 'item-open');
   document.getElementById('itemView')?.classList.remove('on');
   route();
@@ -379,21 +384,13 @@ window.goPicked = () => {
   if (PICK.size) location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}`;
   else window.pickNone();   // 다 꺼 두고 「적재」 — 모두 내리기와 같은 뜻
 };
-/* 같은 고르개가 두 자리에 있다 — 첫 화면(#pickBody)과 컬렉션 페이지(#colBody).
-   예전에는 `$('#pickBody') || $('#colBody')` 로 한 곳만 골랐는데, #pickBody 는 숨어 있어도
-   늘 DOM 에 남아 있어 **컬렉션 페이지에서는 안 보이는 쪽만 다시 그렸다** —
-   화면에서는 「해제가 안 먹는다」로 나타났다. 있는 것을 전부 제자리에서 갈아끼운다. */
+/* 고르개는 이제 컬렉션 페이지 한 곳이지만, 있는 것을 전부 제자리에서 갈아끼운다 —
+   예전에 한 곳만 골라 그리다가 「해제가 안 먹는다」로 나타난 자리다. */
 function repaintPicker() {
   document.querySelectorAll('.picker')
     .forEach(el => { el.outerHTML = pickerHtml(el.dataset.inpage === '1'); });
 }
 
-/** 첫 화면 — 안내와 고르기. 아직 아무것도 안 고른 상태에서 뜬다. */
-function drawPicker() {
-  PICK.clear();
-  CUR.cols.forEach(c => PICK.add(short(c)));
-  $('#pickBody').innerHTML = pickerHtml(false);
-}
 
 /** 컬렉션 페이지 — 지금 보는 조합을 바꾸는 자리. */
 /** 숫자를 0→목표까지 세어 올린다. 그래프가 실제로 쌓이는 순서(트리플→개체→관계)를
@@ -494,11 +491,6 @@ let TRIPLES = 0;
 let ALL_TRIPLES = 0;
 /** 고른 개체들이 주어로 나오는 트리플만 센다 — VALUES 로 주어를 한정한다.
  *  개체 0개면 쿼리를 돌릴 것도 없이 0이다(해제 직후가 이 경로다). */
-function countTriplesFor(ids) {
-  if (!ids.length) return 0;
-  const values = ids.map(id => `<${id}>`).join(' ');
-  return Number(q(`SELECT (COUNT(*) AS ?n) WHERE { VALUES ?s { ${values} } ?s ?p ?o }`)[0]?.get('n')?.value ?? 0);
-}
 function drawCollection() {
   // 컬렉션이 여럿이면 목록을 낸다 — 여기서 하나를 골라 들어간다.
   if (COLS.length) { drawCollectionList(); return; }
@@ -535,7 +527,7 @@ function drawCollection() {
 async function boot() {
   try {
     await init();
-    store = new Store();
+    store = fullStore = new Store();
     // 팀이 graph.ttl 을 고치고 새로고침해도 옛것이 뜨지 않게 매번 서버에 확인한다.
     // (ETag 로 검증만 하므로 안 바뀌었으면 304 — 실제 전송은 없다)
     store.load(await (await fetch('data/graph.ttl', { cache: 'no-cache' })).text(),
@@ -555,11 +547,6 @@ async function boot() {
     // 생애 장면 메타 — 실패해도 화면은 성립한다(그 절이 조용히 빠질 뿐).
     try { LIFE.push(...await fetch('assets/life/frames.json', { cache: 'no-cache' }).then(r => r.json())); } catch (e) { }
     writeStatus();
-    // 구술이 다루는 범위는 '사건'의 연도다. 인물 생년(위키데이터에서 받아 온)까지
-    // 세면 1913 같은 값이 끼어 수록 범위가 아닌 게 된다.
-    const yrs = (ALL.nodes.length ? ALL.nodes : G.nodes).filter(n => n.cls === 'Event' || n.cls === 'Activity')
-      .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
-    $('#hsSpan').textContent = yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–';
 
     // 홈 색인의 숫자는 그래프에서 직접 센다 — 손으로 적으면 데이터를 갈아끼울 때 어긋난다
     updateHomeIndex();
@@ -585,7 +572,9 @@ async function boot() {
        `KIT.G.nodes` · `KIT.COLS` 를 직접 찍어 보는 편이 훨씬 빠르다. */
     window.KIT = { G, ALL, COLS, CUR, MAP, short, applyCollection, q, rows };
   } catch (e) {
-    $('#loadStatus').textContent = '적재 실패: ' + e.message;
+    const ls = $('#loadStatus');
+    ls.textContent = '적재 실패: ' + e.message;
+    ls.classList.add('err');        // 홈에서도 보이게 — 실패는 감추지 않는다
     console.error(e);
   }
 }
@@ -693,6 +682,21 @@ function updateHomeIndex() {
   $('#ixSubject').textContent = nCon ? `${nCon}개념` : '없음';
 }
 
+/* 「적재」라는 말이 화면에서만 참이면 곤란하다 — SPARQL 은 스토어에 직접 묻기 때문에,
+   전체를 물고 있는 스토어를 그대로 두면 「적재 0」인데 질의가 84건을 답한다(실측).
+   고른 개체가 주어인 트리플만 뽑아 스토어를 다시 짓는다. 그러면 적재·화면·질의가 한 뜻이 된다.
+   컬렉션 개념이 없는 그래프(팀이 갈아끼운 단일 발행본)는 예전처럼 전체가 곧 범위다. */
+function rescope() {
+  if (!fullStore) return;
+  if (!COLS.length) { store = fullStore; return; }
+  const ids = G.nodes.map(n => `<${n.id}>`).join(' ');
+  if (!ids) { store = new Store(); return; }          // 아무것도 안 골랐으면 빈 그래프가 정직하다
+  const quads = fullStore.query(`CONSTRUCT { ?s ?p ?o } WHERE { VALUES ?s { ${ids} } ?s ?p ?o }`);
+  const s = new Store();
+  for (const qd of quads) s.add(qd);
+  store = s;
+}
+
 export function applyCollection(ids, redraw = true) {
   const want = (Array.isArray(ids) ? ids : [ids]).filter(Boolean).map(String);
   const picked = COLS.filter(c => want.includes(c.id) || want.includes(short(c.id)));
@@ -723,10 +727,14 @@ export function applyCollection(ids, redraw = true) {
         if (keep.has(e.s) && UP.has(e.p) && !keep.has(e.o)) { keep.add(e.o); grew = true; }
     }
     G.nodes = ALL.nodes.filter(n => keep.has(n.id));
-    TRIPLES = countTriplesFor([...keep]);
   }
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
   G.edges = ALL.edges.filter(e => G.byId.has(e.s) && G.byId.has(e.o));
+  rescope();
+  /* 트리플 수는 다시 지은 스토어에서 직접 센다 — 화면·질의가 보는 것과 같은 그래프여야
+     「적재 7,986개」가 말 그대로 참이 된다(예전에는 개체 목록으로 세어 스토어와 따로 놀았다). */
+  if (COLS.length) TRIPLES = CUR.cols.length
+    ? Number(q(`SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }`)[0]?.get('n')?.value ?? 0) : 0;
   recount();
   writeStatus();
   updateHomeIndex();
@@ -748,15 +756,22 @@ function writeStatus() {
        지금 떠 있는 것처럼 읽혀 「내렸는데 0이 안 된다」로 보였다(실측 두 번). */
     : `적재 0 — 미적재 컬렉션 ${COLS.length}건 중 지식 그래프에 올릴 대상을 골라 「적재」를 누르세요 · SPARQL 1.1 (Oxigraph WASM)`;
   if (el) el.textContent = line;
-  /* 같은 문장을 검색 페이지 머리에도 쓴다 — 검색이 도는 그래프가 지금 몇 개짜리인지
-     그 자리에서 보이도록. 원천이 한 곳이라 두 표시가 어긋날 일이 없다. */
-  const rs = $('#recStatus'); if (rs) rs.textContent = line;
   const set = (id, v) => { const n = $(id); if (n) n.textContent = v; };
-  /* 표지(히어로)의 수치는 늘 사이트 전체다 — 표지는 발행본의 얼굴이지 적재 상태가 아니다.
-     적재분 수치는 색인 카드와 이 상태줄이 말한다. */
-  set('#hsNode', ALL.nodes.length || G.nodes.length);
-  set('#hsEdge', ALL.edges.length || G.edges.length);
-  set('#hsTriple', ALL_TRIPLES || TRIPLES);
+  /* 표지의 수치는 **지금 적재된 것**을 말한다. 전체 발행본 수치를 박아 두면 아무것도 안 골랐는데도
+     1,033개가 있는 것처럼 보여, 바로 아래 「적재 0」과 어긋난다(실측 지적).
+     수록 연도도 같은 기준이라 여기서 함께 갱신한다 — 부팅 때 한 번만 재면 적재를 따라가지 못한다. */
+  /* 표지의 두 단추도 지금 할 수 있는 일을 말한다 — 아무것도 안 골랐는데 「묻기」라고 하면
+     눌러도 질의 화면이 열리지 않아 오동작으로 읽힌다. */
+  const picked = hasPick();
+  const c1 = $('#ctaMain'), c2 = $('#ctaSub');
+  if (c1) { c1.textContent = picked ? '지식그래프에게 묻기 →' : '먼저 컬렉션 고르기 →'; c1.setAttribute('href', picked ? colHref('query') : '#collection'); }
+  if (c2) { c2.hidden = !picked; c2.setAttribute('href', colHref('graph-sec')); }
+  set('#hsNode', G.nodes.length);
+  set('#hsEdge', G.edges.length);
+  set('#hsTriple', TRIPLES);
+  const yrs = G.nodes.filter(n => n.cls === 'Event' || n.cls === 'Activity')
+    .map(n => +String(n.date || '').slice(0, 4)).filter(y => y > 1900);
+  set('#hsSpan', yrs.length ? `${Math.min(...yrs)}–${Math.max(...yrs)}` : '–');
 }
 
 /** 고른 것이 있는가. 컬렉션이 아예 없는 그래프는 「고를 것이 없으니 열려 있다」로 본다. */

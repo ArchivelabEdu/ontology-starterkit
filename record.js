@@ -152,10 +152,10 @@ function route() {
   const { rest } = parseHash();
   if (rest.startsWith('item/')) { item(decodeURIComponent(rest.slice(5))); return; }
   close();
-  // 기록은 스크롤 중간의 한 토막이 아니라 **따로 선 페이지**다.
-  // 800건을 훑는 일과 한 장면을 보는 일은 성격이 다르기 때문이다.
+  /* 검색은 이제 다른 여덟 화면과 같은 층위의 <section>이다(app.js 의 route 가 data-page 로 켠다).
+     예전에는 main·footer 를 통째로 감추고 그 자리를 차지하는 별도 블록이라, 상태줄이 두 벌로
+     갈리고 검색 화면에만 출처 표기가 없었다. 여기서는 검색으로 들어올 때의 채비만 한다. */
   const rec = rest === 'records';
-  document.documentElement.classList.toggle('records-on', rec);
   document.body.classList.toggle('records-open', rec);
   if (rec) { $('#recQ')?.focus({ preventScroll: true }); scrollTo({ top: 0 }); }
 }
