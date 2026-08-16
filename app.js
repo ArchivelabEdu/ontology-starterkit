@@ -838,6 +838,11 @@ export function repImgOf(o, excludeId) {
     /* excludeId: 개체 상세 페이지에서 그 개체 자신을 후보에서 뺀다 — 정세균 페이지의 사건
        칩 298개가 전부 정세균 얼굴이 되는 순환을 막는다. 자기 얼굴은 정보가 아니다. */
     if (other && other.id === excludeId) return;
+    /* 인물 초상은 남을 대신하지 못한다. 이웃 가운데 연결이 가장 많은 것을 빌려 오는데,
+       구술자는 거의 모든 개체와 이어져 있어 언제나 그가 뽑힌다 — 주제 화면에서 이미지가 붙은
+       칩 19개 중 16개가 정세균 얼굴이었다(실측). 「10월유신 선포」에 그의 얼굴이 붙으면
+       그 사건의 사진으로 읽히는데 사실이 아니다. 장소·단체·기록의 사진만 빌린다. */
+    if (other && other.cls === 'Person') return;
     if (other && other.img && (!best || (other.deg || 0) > (best.deg || 0))) best = other;
   });
   return best ? { src: best.img, from: best.label } : null;
