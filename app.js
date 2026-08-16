@@ -760,8 +760,9 @@ function writeStatus() {
   /* 계기판은 **무엇을** 적재했는지부터 말한다 — 수치만 있으면 어느 컬렉션의 수치인지
      화면을 옮길 때마다 다시 헤아려야 한다. 컬렉션 이름은 콜라벨(브레드크럼과 같은 규칙)로 든다. */
   const colPart = CUR.cols.length ? `컬렉션 ${CUR.cols.length}건(${colLabel()}) · ` : '';
+  const n = v => Number(v).toLocaleString('ko-KR');   // 8225 는 한눈에 안 들어온다 — 8,225
   const line = hasPick()
-    ? `그래프 적재 완료 — ${colPart}트리플 ${TRIPLES}개 · 개체 ${G.nodes.length} · 관계 ${G.edges.length}`
+    ? `그래프 적재 완료 — ${colPart}트리플 ${n(TRIPLES)}개 · 개체 ${n(G.nodes.length)} · 관계 ${n(G.edges.length)}`
     : `적재 0 — 컬렉션 0건 · 트리플 0개 · 개체 0 · 관계 0`;
   if (el) el.textContent = line;
   const setAll = (sel, v) => document.querySelectorAll(sel).forEach(n => { n.textContent = v; });
