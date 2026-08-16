@@ -226,9 +226,8 @@ function personHighlight(n, out, inn) {
     const r = repImgOf(o, n.id);
     const tip = r && r.from ? `${o.label} — 대표 이미지: 연결된 개체 「${r.from}」` : o.label;
     return `<a class="th-chip" href="${lnk(o)}" title="${esc(tip)}">
-      ${r ? `<img src="${esc(r.src)}" alt="" loading="lazy">`
-          : `<i style="background:${clsColor(o.cls)}"></i>`}
-      <span>${esc(o.label)}</span></a>`;
+      ${r ? `<img src="${esc(r.src)}" alt="" loading="lazy">` : clsGlyph(o.cls)}
+      <span>${esc(o.label)}</span><em>${CLS[o.cls].ko}</em></a>`;
   };
   const maxS = top.length ? Math.max(...top.map(x => x.s)) : 1;
 
@@ -535,8 +534,7 @@ function item(sid) {
           const tip = ri && ri.from ? `${o.label} — 대표 이미지: 연결된 개체 「${ri.from}」` : o.label;
           return `
           <a class="th-chip" href="${colHref('item/' + encodeURIComponent(short(o.id)))}" title="${esc(tip)}">
-            ${ri ? `<img src="${esc(ri.src)}" alt="" loading="lazy">`
-                 : `<i style="background:${clsColor(o.cls)}"></i>`}
+            ${ri ? `<img src="${esc(ri.src)}" alt="" loading="lazy">` : clsGlyph(o.cls)}
             <span>${esc(o.label)}</span><em>${CLS[o.cls].ko}</em></a>`; }).join('')}</div>
       </div>`).join('')
       : `<div class="warnbox">이 개체에는 아직 연결이 없습니다.
