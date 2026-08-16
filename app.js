@@ -468,6 +468,125 @@ function animateLoadedBanner() {
   requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('on')));
 }
 
+/* ══════════ TTL 올려 컬렉션 더하기 ══════════
+   관리 시스템·그라운더·LLM이 만든 AP 그라운딩 TTL을 이 자리에서 바로 얹는다.
+   서버가 없으므로(정적 사이트) 파일은 **이 브라우저에만** 머문다 — localStorage 에 원문을
+   두고 부팅 때 발행본 위에 다시 얹는다. 발행본 자체는 건드리지 않으므로, 다른 사람이 같은
+   주소를 열면 발행본만 보인다. 실습에서 「내가 만든 그래프를 이 사이트로 읽는다」까지 가는 길이다. */
+const UP_KEY = 'kit.ttl.uploads';
+let UP_MSG = null;                       // 마지막 올리기 결과 — 화면을 다시 그려도 남아 있어야 읽힌다
+const upList = () => { try { return JSON.parse(localStorage.getItem(UP_KEY) || '[]'); } catch { return []; } };
+const upSave = list => { try { localStorage.setItem(UP_KEY, JSON.stringify(list)); return true; } catch { return false; } };
+/** 07-system 의 collectionLocalId 와 같은 규칙 — 같은 이름이면 같은 지역명이어야 한다. */
+const colLocalId = name => 'col-' + ((name || '미분류').trim()
+  .replace(/[\s/\\.,()[\]{}'"`~!@#$%^&*+=|;:<>?]+/g, '-')
+  .replace(/-+/g, '-').replace(/^-|-$/g, '') || 'default');
+
+/** AP(ontology.rdf)에 등재된 술어·클래스 URI. 한 번만 읽어 둔다. */
+let AP_TERMS = null;
+async function apTerms() {
+  if (AP_TERMS) return AP_TERMS;
+  AP_TERMS = new Set();
+  try {
+    const x = await (await fetch('data/ontology.rdf', { cache: 'no-cache' })).text();
+    for (const m of x.matchAll(/rdf:about="([^"]+)"/g)) AP_TERMS.add(m[1]);
+  } catch { /* 프로파일을 못 읽으면 검증만 건너뛴다 — 적재는 막지 않는다 */ }
+  return AP_TERMS;
+}
+
+/** TTL 한 장을 그래프에 얹는다. 반환: 사람이 읽을 결과 문장(HTML). */
+async function addTtl(text, fileName) {
+  const base = 'http://archives.nanet.go.kr/id/';
+  let probe;
+  try {                                   // 먼저 따로 파싱해 본다 — 깨진 파일이 본 그래프를 더럽히지 않도록
+    probe = new Store();
+    probe.load(text, { format: 'text/turtle', base_iri: base });
+  } catch (e) {
+    return { ok: false, html: `<b>Turtle 문법 오류</b> — 이 파일은 얹지 않았습니다.<br><code>${esc(String(e).slice(0, 200))}</code>` };
+  }
+  const nT = probe.query('SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }')[0]?.get('n')?.value ?? '0';
+  if (+nT === 0) return { ok: false, html: '<b>트리플이 없습니다</b> — 빈 파일입니다.' };
+
+  /* 컬렉션 개체가 들어 있으면 그대로 쓰고, 없으면 파일 이름으로 하나 만들어 이 파일의 주어들을
+     그 컬렉션에 잇는다. 이름표를 붙이는 일이지 데이터를 지어내는 일이 아니다 —
+     그래도 화면에 그 사실을 밝힌다. */
+  const cols = probe.query(`PREFIX rico: <${RICO}> SELECT ?s WHERE { ?s a rico:RecordSet }`)
+    .map(b => b.get('s').value);
+  let made = '';
+  if (!cols.length) {
+    const name = fileName.replace(/\.ttl$/i, '').trim() || '올린 그래프';
+    const id = colLocalId(name);
+    const subs = probe.query('SELECT DISTINCT ?s WHERE { ?s a ?c }').map(b => b.get('s').value)
+      .filter(u => u.startsWith(base));
+    const recs = new Set(probe.query(`PREFIX rico: <${RICO}> SELECT ?s WHERE { ?s a rico:Record }`)
+      .map(b => b.get('s').value));
+    made = `@prefix rico: <${RICO}> .\n<${base}${id}> a rico:RecordSet ; rico:name ${JSON.stringify(name)} .\n`
+      + subs.map(u => `<${u}> rico:${recs.has(u) ? 'isOrWasIncludedIn' : 'isOrWasSubjectOf'} <${base}${id}> .`).join('\n');
+    cols.push(base + id);
+  }
+
+  // AP 대조 — 등재되지 않은 술어가 있으면 이름을 대고 알린다(적재는 막지 않는다)
+  const preds = probe.query('SELECT DISTINCT ?p WHERE { ?s ?p ?o }').map(b => b.get('p').value);
+  const ap = await apTerms();
+  const off = ap.size ? preds.filter(p => !ap.has(p) && !p.startsWith('http://www.w3.org/1999/02/22-rdf-syntax-ns#')) : [];
+
+  fullStore.load(text, { format: 'text/turtle', base_iri: base });
+  if (made) fullStore.load(made, { format: 'text/turtle', base_iri: base });
+  /* 모델은 **전체 스토어**에서 다시 짓는다. 적재가 걸려 있으면 store 는 그 범위로 좁혀진
+     사본이라(rescope), 그대로 두고 buildModel 을 부르면 새 컬렉션의 RecordSet 개체가 보이지 않아
+     COLS 가 통째로 비었다(실측: 올린 뒤 컬렉션 목록이 사라지고 단일 발행본 화면이 떴다). */
+  store = fullStore;
+  ALL_TRIPLES = TRIPLES = Number(fullStore.query('SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }')[0]?.get('n')?.value ?? 0);
+  buildModel();                                   // COLS·G 를 다시 짓는다(끝에서 applyCollection 이 돈다)
+
+  const titles = cols.map(u => COLS.find(c => c.id === u)?.title || short(u)).join(' · ');
+  const kept = upSave([...upList(), { name: fileName, ttl: text, made }]);
+  return {
+    ok: true, cols,
+    html: `<b>컬렉션 ${cols.length}건 추가</b> — ${esc(titles)} · 트리플 ${(+nT).toLocaleString('ko-KR')}개`
+      + (made ? '<br>파일에 컬렉션 개체가 없어 <b>파일 이름으로 컬렉션을 만들어</b> 개체들을 이었습니다.' : '')
+      + (off.length ? `<br>AP에 등재되지 않은 술어 ${off.length}종이 있습니다 — <code>${off.slice(0, 3).map(esc).join('</code> <code>')}</code>${off.length > 3 ? ' 외' : ''}. 화면에는 실리지만 프로파일 밖입니다.` : '')
+      + (kept ? '<br>이 브라우저에 저장했습니다 — 새로고침해도 남아 있습니다.'
+        : '<br>브라우저 저장 공간을 넘겨 <b>이번 세션에만</b> 남습니다.'),
+  };
+}
+window.ttlPick = async input => {
+  const f = input.files?.[0]; if (!f) return;
+  const box = $('#ttlMsg');
+  box.className = 'okbox'; box.innerHTML = `${esc(f.name)} 읽는 중…`;
+  const r = await addTtl(await f.text(), f.name);
+  UP_MSG = r;
+  box.className = r.ok ? 'okbox' : 'warnbox';
+  box.innerHTML = r.html;
+  input.value = '';
+  if (!r.ok) return;
+  /* 올린 컬렉션을 바로 적재하되 **컬렉션 화면에 머문다** — 홈으로 튕기면 방금 무슨 일이
+     일어났는지(어떤 컬렉션이 늘었고 AP 밖 술어가 있었는지) 읽을 새가 없다(실측). */
+  r.cols.forEach(id => PICK.add(short(id)));
+  location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}/collection`;
+};
+window.ttlDrop = async i => {
+  const list = upList(); const gone = list.splice(i, 1)[0];
+  upSave(list);
+  location.reload();                      // 얹은 것을 빼려면 발행본부터 다시 읽는 편이 정직하다
+  return gone;
+};
+
+/** 올리기 칸 — 컬렉션 고르개 아래. 지금 이 브라우저에 얹혀 있는 파일도 함께 보인다. */
+function uploadHtml() {
+  const ups = upList();
+  return `<div class="up-card">
+    <b>TTL 올려 컬렉션 더하기</b>
+    <p class="note">관리 시스템·온톨로지 그라운더·LLM이 만든 <b>AP 그라운딩 TTL</b>을 올리면 컬렉션이 늘어납니다.
+      파일은 <b>이 브라우저에만</b> 머물고 발행본은 그대로입니다 — 다른 사람이 같은 주소를 열면 발행본만 봅니다.</p>
+    <input type="file" id="ttlFile" accept=".ttl,text/turtle" onchange="ttlPick(this)">
+    <div id="ttlMsg"${UP_MSG ? ` class="${UP_MSG.ok ? 'okbox' : 'warnbox'}"` : ''}>${UP_MSG ? UP_MSG.html : ''}</div>
+    ${ups.length ? `<p class="note" style="margin-top:.5rem">이 브라우저에 얹은 파일 —
+      ${ups.map((u, i) => `<code>${esc(u.name)}</code>
+        <button class="btn sm" onclick="ttlDrop(${i})">빼기</button>`).join(' · ')}</p>` : ''}
+  </div>`;
+}
+
 function drawCollectionList() {
   PICK.clear();
   CUR.cols.forEach(c => PICK.add(short(c)));
@@ -478,6 +597,7 @@ function drawCollectionList() {
       고른 것만 지도·연표·관계망·기록에 들어갑니다. 여럿을 고르면 <b>합쳐서</b> 봅니다 —
       두 구술자를 나란히 놓고 볼 때 씁니다.</p>
     ${pickerHtml(true)}
+    ${uploadHtml()}
     <p class="note">컬렉션은 관리 시스템이 발행할 때 <code>rico:RecordSet</code> 개체로 그래프에 함께 실립니다.
       기록은 <code>rico:isOrWasIncludedIn</code> 으로 컬렉션에 <b>들어 있고</b>, 인물·사건·장소는
       <code>rico:isOrWasSubjectOf</code> 로 컬렉션의 <b>주제</b>가 됩니다 —
@@ -541,6 +661,14 @@ async function boot() {
     /* 트리플 수는 SPARQL 로 센다. store.size 는 판에 따라 없거나 0 을 돌려주고(실측: 관리
        시스템이 발행한 그래프에서 0), `?? ` 는 0 을 갈아끼우지 못해 화면에 「트리플 0개」가 떴다.
        COUNT 는 어느 판에서나 같은 답을 준다. */
+    /* 이 브라우저에 얹어 둔 TTL 을 발행본 위에 다시 올린다 — 새로고침해도 내 컬렉션이 남는다.
+       깨진 것이 섞여 있어도 그 한 장만 건너뛰고 나머지는 뜬다. */
+    for (const u of upList()) {
+      try {
+        store.load(u.ttl, { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
+        if (u.made) store.load(u.made, { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
+      } catch (e) { console.warn('올린 TTL 을 건너뜁니다:', u.name, e); }
+    }
     const nT = Number(q(`SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }`)[0]?.get('n')?.value ?? 0);
     ALL_TRIPLES = TRIPLES = nT;        // 화면 여러 곳이 읽으므로 바로 담아 둔다. 고른 것에 맞춘 값은 applyCollection 이 뒤이어 다시 잰다
 

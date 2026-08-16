@@ -1037,6 +1037,7 @@ ric:inst-jsk-full a rico:Instantiation.
 ric:inst-jsk-excerpt a rico:Instantiation.
 ric:org-korea-university a rico:CorporateBody.
 ric:org-theory-law-society a rico:CorporateBody.
+ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 a rico:Instantiation.
 ric:auth-0-ec9db4ec rico:occupiesOrOccupied ric:pos-0.
 ric:pos-0 rico:beginningDate "1948-05-31";
     rico:endDate "1948-07-24".
@@ -5664,6 +5665,22 @@ ric:pos-speaker-20-1 nara:ofTerm ric:org-national-assembly-20;
 ric:agent-jsk nara:representsConstituency ric:place-jongno.
 ric:place-jongno nara:activeInTerm ric:org-national-assembly-20.
 ric:event-20th-general-election rico:beginningDate "2016-04-13".
+ric:recset-jsk rico:hasOrHadInstantiation ric:65e0d20e-2254-4dbb-9599-fc7466e52b32.
+ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 rico:isOrWasInstantiationOf ric:recset-jsk;
+    rico:name "Part 1 PDF";
+    rico:instantiationExtent "1 파일 · 52쪽";
+    rico:carrierExtent "12482346 bytes";
+    rico:productionTechnique "Acrobat PDF 1.3".
+ric:inst-jsk-full rico:name "대한민국 국회를 말하다 08 정세균 (원본 PDF)";
+    rico:isOrWasInstantiationOf ric:recset-jsk;
+    rico:instantiationExtent "1 파일 · 276쪽";
+    rico:carrierExtent "65044936 bytes";
+    rico:productionTechnique "Acrobat PDF 1.5".
+ric:inst-jsk-excerpt rico:name "정세균 구술총서 발췌";
+    rico:isOrWasInstantiationOf ric:recset-jsk;
+    rico:instantiationExtent "1 파일 · 10쪽";
+    rico:carrierExtent "6143862 bytes";
+    rico:productionTechnique "Acrobat PDF 1.5".
 ric:auth-0-ec9db4ec rico:name "이승만".
 ric:pos-0 rico:name "제헌국회 전반기 의장".
 ric:auth-1-ec8ba0ec rico:name "신익희".
@@ -5904,12 +5921,12 @@ ric:dup-jsk-hanja rico:name "정세균(丁世均)".
 ric:dup-kwk-spaced rico:name "김 원기".
 ric:dup-nanet-old rico:name "국회 도서관".
 ric:rec-gone-sample rico:title "오등록 폐기 레코드(시연용)".
-ric:inst-jsk-full rico:title "대한민국 국회를 말하다 08 정세균 (원본 PDF)".
-ric:inst-jsk-excerpt rico:title "정세균 구술총서 발췌".
 <http://archives.nanet.go.kr/id/col-정세균-구술> a rico:RecordSet;
     rico:title "정세균 구술".
 <http://archives.nanet.go.kr/id/col-국회-구술-시소러스> a rico:RecordSet;
     rico:title "국회 구술 시소러스".
+<http://archives.nanet.go.kr/id/col-미분류> a rico:RecordSet;
+    rico:title "미분류".
 ric:auth-0-ec9db4ec rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:pos-0 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:auth-1-ec8ba0ec rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
@@ -6945,3 +6962,4 @@ ric:inst-jsk-full rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-정
 ric:inst-jsk-excerpt rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:org-korea-university rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:org-theory-law-society rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
+ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
