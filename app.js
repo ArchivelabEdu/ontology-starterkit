@@ -2016,7 +2016,35 @@ function mapInsight() {
     return o && inSet.has(o) && WMAP.words.find(x => x.w === o)?.nb?.[0] === d.w;
   });
   const near = pair ? ` · 가장 붙어 다니는 짝 <b>${esc(pair.w)}–${esc(pair.nb[0])}</b>` : '';
-  return `${head}. ${most}${near}.`;
+  return `${head}. ${most}${near}.<br>${mapWhere(ws, cl, pair)}`;
+}
+/* 한 문장 풀이 — 「이 사안은 구술의 어디서 이야기되는가」.
+   군집의 말들이 실제로 나온 단락을 세어 가운데 절반이 걸치는 구간을 찾는다.
+   시간대별 흐름 화면이 그림으로 보여 주는 것을 여기서는 한 줄로 말한다 —
+   사안 이름만으로는 그 덩어리가 생애의 어느 대목인지 알 수 없기 때문이다. */
+function mapWhere(ws, cl, pair) {
+  if (!LANG.byChapter.length) return '';
+  const set = new Set(ws.map(d => d.w));
+  const hits = [];                                  // [단락 순번, 그 단락에서의 등장 횟수]
+  LANG.byChapter.forEach((ch, i) => {
+    let c = 0; for (const w of set) c += ch.freq[w] || 0;
+    if (c) hits.push([i, c]);
+  });
+  if (hits.length < 4) return '';
+  const total = hits.reduce((s, h) => s + h[1], 0);
+  const at = p => { let acc = 0; for (const [i, c] of hits) { acc += c; if (acc >= total * p) return i; } return hits[hits.length - 1][0]; };
+  const [a, b] = [at(0.25), at(0.75)];
+  const pg = i => LANG.byChapter[i]?.label?.replace(/^p\./, '') || (i + 1);
+  const pct = i => Math.round((i + 1) / LANG.byChapter.length * 100);
+  const where = pct(b) - pct(a) > 55 ? '구술 전체에 고르게 퍼져' : `구술 <b>p.${pg(a)}~${pg(b)}</b>(전체의 ${pct(a)}~${pct(b)}%)에 몰려`;
+  const name = cl ? `「${esc(cl.name)}」 사안의 말은` : '이 지도의 말들은';
+  /* 조사는 받침을 보고 고른다 — 「국회와 회의록가」처럼 어긋나면 자동 생성 티가 먼저 읽힌다.
+     한글 음절의 받침 유무는 (코드 - 0xAC00) % 28 로 판별한다. */
+  const jong = w => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return c >= 0 && c < 11172 && c % 28 > 0; };
+  const tail = pair
+    ? ` 그 한가운데에 <b>${esc(pair.w)}</b>${jong(pair.w) ? '과' : '와'} <b>${esc(pair.nb[0])}</b>${jong(pair.nb[0]) ? '이' : '가'} 붙어 있습니다.`
+    : '';
+  return `${name} ${where} 나옵니다.${tail}`;
 }
 window.mapFilterK = k => { WMAP.on = k; WMAP.pick = null; drawLang(); };
 window.mapFlip = () => { WMAP.mode3d = !WMAP.mode3d; WMAP.pick = null; drawLang(); };
