@@ -830,6 +830,27 @@ function subjectsOf(ids) {
  *  **연결된 개체 중 사진 있는 것**(연결 많은 순)을 빌려 온다 — 기록·규범은 대개 사진이 없어
  *  전부 점으로 두면 화면이 메마르고, 그렇다고 없는 사진을 지어낼 수는 없다.
  *  빌려 온 경우 from 에 그 개체 이름을 담아 title 로 출처를 밝힌다. */
+/* 사진이 없는 개체의 자리표 — 빈 틀이나 작은 점은 「못 불러왔다」로 읽힌다.
+   유형을 뜻하는 미니멀한 단색 글리프를 사이트 강조색으로 그려, 사진 자리를 그대로 채운다
+   (수원학 아카이브 검색 화면의 문법). 색은 하나뿐이고 형태로만 구분한다. */
+const GLYPH = {
+  Person: '<circle cx="12" cy="8" r="3.9"/><path d="M12 13.4c-4.2 0-7.4 2.6-7.4 5.9 0 .6.4 1 1 1h12.8c.6 0 1-.4 1-1 0-3.3-3.2-5.9-7.4-5.9Z"/>',
+  CorporateBody: '<path d="M4 20V6.5l7-2.5v3l6 2v11Zm2.4-2h2.2v-2.2H6.4Zm0-4h2.2v-2.2H6.4Zm0-4h2.2V7.8H6.4ZM12.9 18h2.2v-2.2h-2.2Zm0-4h2.2v-2.2h-2.2Z"/>',
+  Position: '<path d="M12 3.2 14.3 8l5.2.7-3.8 3.6 1 5.2-4.7-2.6-4.7 2.6 1-5.2L4.5 8.7 9.7 8Z"/><path d="M9.4 15.6 8.6 21l3.4-1.9 3.4 1.9-.8-5.4-2.6 1.4Z"/>',
+  Event: '<path d="M12 3 20.5 19H3.5Z"/>',
+  Activity: '<path d="M12 4.2a7.8 7.8 0 1 0 7.4 5.3l1.6-.6A9.5 9.5 0 1 1 12 2.5Z"/><path d="M12 6.6 18.4 3l-1.1 6.6Z"/><circle cx="12" cy="12" r="2.4"/>',
+  Place: '<path d="M12 2.8c-3.4 0-6.1 2.7-6.1 6.1 0 4.5 6.1 12.3 6.1 12.3s6.1-7.8 6.1-12.3c0-3.4-2.7-6.1-6.1-6.1Zm0 8.5a2.4 2.4 0 1 1 0-4.9 2.4 2.4 0 0 1 0 4.9Z"/>',
+  Record: '<path d="M6 2.8h7.4L18.6 8v13.2H6Zm7 1.6V8.6h4.2ZM8.4 12h7.2v1.6H8.4Zm0 3.4h7.2V17H8.4Z"/>',
+  RecordSet: '<path d="M4.2 6.2h8.2l1.6 1.8h5.8v11.6H4.2Z"/><path d="M6.6 4h6.6l1.2 1.4H6.6Z"/>',
+  Rule: '<path d="M12 2.6 4.6 5.6v6c0 4.4 3.1 8.2 7.4 9.8 4.3-1.6 7.4-5.4 7.4-9.8v-6Zm-.9 12.6-3.2-3.2 1.4-1.4 1.8 1.8 4.2-4.2 1.4 1.4Z"/>',
+  Concept: '<path d="M11.4 3.4h6.4c1.2 0 2.2 1 2.2 2.2v6.4c0 .6-.2 1.1-.6 1.6l-6.2 6.2c-.9.9-2.3.9-3.2 0l-6.4-6.4c-.9-.9-.9-2.3 0-3.2l6.2-6.2c.4-.4 1-.6 1.6-.6Zm4.8 2.6a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4Z"/>',
+  ConceptScheme: '<circle cx="12" cy="4.8" r="2.4"/><circle cx="5.6" cy="18.6" r="2.4"/><circle cx="18.4" cy="18.6" r="2.4"/><path d="M11.2 7.6h1.6v4.2h5.4v4.4h-1.6v-2.8H7.4v2.8H5.8v-4.4h5.4Z"/>',
+};
+/** 유형 자리표 — 사진과 같은 크기·같은 원형. cls 를 모르면 개념 글리프로 둔다. */
+export const clsGlyph = (cls, extra = '') =>
+  `<span class="th-ph ${extra}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">${
+    GLYPH[cls] || GLYPH.Concept}</svg></span>`;
+
 export function repImgOf(o, excludeId) {
   if (o.img) return { src: o.img, from: null };
   let best = null;
@@ -913,8 +934,7 @@ function drawSubjects() {
     const r = repImgOf(o);
     const tip = r && r.from ? `${o.label} — 대표 이미지: 연결된 개체 「${r.from}」` : o.label;
     return `<a class="th-chip" href="#/item/${encodeURIComponent(short(o.id))}" title="${esc(tip)}">
-      ${r ? `<img src="${esc(r.src)}" alt="" loading="lazy">`
-          : `<i style="background:var(${CLS[o.cls]?.v || '--muted'})"></i>`}
+      ${r ? `<img src="${esc(r.src)}" alt="" loading="lazy">` : clsGlyph(o.cls)}
       <span>${esc(o.label)}</span></a>`;
   };
 
@@ -1243,8 +1263,7 @@ function paintSubjectPane() {
       <div class="slist">${items.map(i => { const r = repImgOf(i);
         return `<a class="sitem" href="#/item/${encodeURIComponent(short(i.id))}"
           title="${esc(r && r.from ? `${i.label} — 대표 이미지: 연결된 개체 「${r.from}」` : i.label)}">
-        ${r ? `<img class="sthumb" src="${esc(r.src)}" alt="" loading="lazy">`
-            : `<span class="dot" style="background:var(${CLS[i.cls]?.v || '--muted'})"></span>`}
+        ${r ? `<img class="sthumb" src="${esc(r.src)}" alt="" loading="lazy">` : clsGlyph(i.cls, 'sthumb')}
         <b>${esc(i.label)}</b><em>${esc(CLS[i.cls]?.ko || i.cls)}</em></a>`; }).join('')
       || '<p class="note">달린 자료가 없습니다.</p>'}</div>
       ${SUBJ_STORY[short(SUBJ_PICK)] ? `<p class="note" style="margin-top:.9rem">이 주제로 엮은 전시가 있습니다 —
