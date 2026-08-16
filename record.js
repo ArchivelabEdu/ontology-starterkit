@@ -345,7 +345,15 @@ function personHighlight(n, out, inn) {
         <div class="p-kw">${top.map(x => {
           /* 단락 지문 — 이 말이 구술 몇 단락에 몰려 있는지를 단락 수만큼의 칸으로 눕힌다.
              칸의 진하기는 그 단락에서의 빈도. 크기(칩)만 있던 정보에 「어디의 말인가」가 붙는다. */
-          const cells = LANG.byChapter.map(c => c.freq[x.w] || 0);
+          /* 단락이 223개면 칸도 223개가 되어 띠가 1,100px 을 넘고 카드 밖으로 밀려났다(실측).
+             칸 수를 60 으로 묶어 나눈다 — 한 칸이 여러 단락을 대표하되, 그 안에서 가장 많이
+             나온 값을 쓰므로 「어디에 몰려 있는가」라는 뜻은 그대로다. */
+          const MAXC = 60;
+          const raw = LANG.byChapter.map(c => c.freq[x.w] || 0);
+          const step = Math.ceil(raw.length / MAXC) || 1;
+          const cells = raw.length <= MAXC ? raw
+            : Array.from({ length: Math.ceil(raw.length / step) },
+                (_, i) => Math.max(...raw.slice(i * step, (i + 1) * step)));
           const mx = Math.max(...cells, 1);
           const strip = cells.map(v =>
             `<i style="opacity:${v ? (0.25 + 0.75 * v / mx).toFixed(2) : 0}"></i>`).join('');

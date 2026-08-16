@@ -446,10 +446,10 @@ main>section{display:none}
 /* 크기는 개체명 단(.82rem)에 맞춰 고정 — tf-idf 신호는 굵기와 띠가 진다. */
 .p-kwc b{font-family:var(--serif);letter-spacing:-.01em;
   font-size:.82rem;font-weight:calc(500 + var(--k,.3) * 300)}
-.kw-strip{display:flex;gap:2px;height:11px}
+.kw-strip{display:flex;gap:2px;height:11px;min-width:0;overflow:hidden}
 /* 띠는 평소 먹 계열로 눕고, 그 행을 만질 때만 자주가 켜진다 — 96칸이 전부 자주면
    페이지의 색 총량이 어록·카운트의 자주를 삼킨다(양화진 규율: 색은 동선에만). */
-.kw-strip i{flex:1;max-width:13px;min-width:3px;background:var(--muted);border-radius:2px;
+.kw-strip i{flex:1;max-width:13px;min-width:0;background:var(--muted);border-radius:2px;
   transition:background .15s}
 .p-kwc:hover .kw-strip i,.p-kwc.on .kw-strip i{background:var(--accent)}
 .p-kwc em{font-style:normal;font-family:var(--mono);font-size:.6rem;color:var(--muted);white-space:nowrap}

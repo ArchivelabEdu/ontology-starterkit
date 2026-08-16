@@ -546,7 +546,7 @@ ric:org-dangmu-wiwonhoe a rico:CorporateBody.
 ric:org-deobureo-minjudang a rico:CorporateBody.
 ric:org-dong-a-ilbo a rico:CorporateBody.
 ric:org-dongbuga-uiwon-oegyodan a rico:CorporateBody.
-ric:org-donggyodong-gye a rico:CorporateBody.
+ric:org-donggyodong-gye a rico:CorporateBody, rico:Group.
 ric:org-education-committee a rico:CorporateBody.
 ric:org-education-culture-sports-tourism-committee a rico:CorporateBody.
 ric:org-environment-labor-committee a rico:CorporateBody.
@@ -1033,6 +1033,8 @@ ric:dup-jsk-hanja a rico:Person.
 ric:dup-kwk-spaced a rico:Person.
 ric:dup-nanet-old a rico:CorporateBody.
 ric:rec-gone-sample a rico:Record.
+ric:inst-jsk-full a rico:Instantiation.
+ric:inst-jsk-excerpt a rico:Instantiation.
 ric:org-korea-university a rico:CorporateBody.
 ric:org-theory-law-society a rico:CorporateBody.
 ric:auth-0-ec9db4ec rico:occupiesOrOccupied ric:pos-0.

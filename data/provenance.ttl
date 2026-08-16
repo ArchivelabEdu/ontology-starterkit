@@ -4287,12 +4287,3 @@ ric:stmt-5c619222ed90 a rdf:Statement;
     rdf:predicate nara:activeInTerm;
     rdf:object ric:org-national-assembly-20;
     prov:wasGeneratedBy ric:activity-b11a8a44435a.
-ric:publication-0ee2d3ac6971 a prov:Entity;
-    rdfs:label "정세균 구술";
-    prov:wasGeneratedBy ric:activity-publish-0ee2d3ac6971;
-    prov:wasAttributedTo ric:agent-user-admin.
-ric:activity-publish-0ee2d3ac6971 a prov:Activity;
-    prov:generatedAtTime "2026-08-16T10:22:27.244Z"^^xsd:dateTime;
-    prov:wasAssociatedWith ric:agent-user-admin.
-ric:agent-user-admin a prov:Agent;
-    rdfs:label "슈퍼 관리자".

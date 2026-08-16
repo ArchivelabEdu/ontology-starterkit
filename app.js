@@ -44,6 +44,10 @@ export const CLS = {
   Place:         { v: '--place',    shape: 'pin',      ko: '장소',   key: 'place' },
   Record:        { v: '--record',   shape: 'doc',      ko: '기록',   key: 'record' },
   RecordSet:     { v: '--record',   shape: 'doc',      ko: '기록집합', key: 'record' },
+  /* 구현체는 기록이 실제로 담긴 판본이다(원본 PDF·발췌본). 색·모양을 기록과 같게 둔다 —
+     기록과 겨루는 다른 것이 아니라 그 기록의 다른 얼굴이라, 한 덩어리로 읽히는 편이 맞다.
+     이 줄이 없던 동안에는 노드가 걸러졌고, 노드가 없으니 구현체로 가는 간선도 함께 사라졌다. */
+  Instantiation: { v: '--record',   shape: 'doc',      ko: '구현체',  key: 'record' },
   Rule:          { v: '--rule',     shape: 'hex',      ko: '규칙',   key: 'rule' },
   /* 개념은 실재하지 않는다 — 그래서 테두리를 점선으로 둔다. 다른 여덟은 전부 실선이다.
      색을 하나 더 쓰지만 이건 장식이 아니라 「이건 관념이다」라는 정보다. */
