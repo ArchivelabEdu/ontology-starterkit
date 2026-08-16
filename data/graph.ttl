@@ -1,5 +1,6 @@
 @prefix rico: <https://www.ica.org/standards/RiC/ontology#>.
 @prefix ric: <http://archives.nanet.go.kr/id/>.
+@prefix nara: <http://archives.nanet.go.kr/voca#>.
 
 ric:auth-0-ec9db4ec a rico:Person.
 ric:pos-0 a rico:Position.
@@ -609,7 +610,7 @@ ric:org-munche-bu a rico:CorporateBody.
 ric:org-national-assembly a rico:CorporateBody.
 ric:org-national-assembly-15 a rico:CorporateBody.
 ric:org-national-assembly-16 a rico:CorporateBody.
-ric:org-national-assembly-20 a rico:CorporateBody.
+ric:org-national-assembly-20 a rico:CorporateBody, nara:AssemblyTerm.
 ric:org-national-assembly-archives a rico:CorporateBody.
 ric:org-national-assembly-budget-office a rico:CorporateBody.
 ric:org-national-assembly-research-service a rico:CorporateBody.
@@ -798,7 +799,7 @@ ric:place-japan a rico:Place.
 ric:place-jeju-do a rico:Place.
 ric:place-jeollabuk-do a rico:Place.
 ric:place-jeongyeongnyeon-building a rico:Place.
-ric:place-jongno a rico:Place.
+ric:place-jongno a rico:Place, nara:Constituency.
 ric:place-jung-gu a rico:Place.
 ric:place-kaesong-industrial-complex a rico:Place.
 ric:place-korean-peninsula a rico:Place.
@@ -5654,12 +5655,12 @@ ric:place-assembly <https://schema.org/containedInPlace> ric:place-yeouido.
 ric:place-yeouido <https://schema.org/containedInPlace> ric:place-seoul.
 ric:org-korea-university rico:isAssociatedWithPlace ric:place-korea-univ.
 ric:org-chinnohmuhyun-pa rico:isAssociatedWithPlace ric:place-yeouido-hotel.
-ric:org-national-assembly-20 <http://archives.nanet.go.kr/voca#speaker> ric:agent-jsk;
-    <http://archives.nanet.go.kr/voca#constitutedBy> ric:event-20th-general-election.
-ric:pos-speaker-20-1 <http://archives.nanet.go.kr/voca#ofTerm> ric:org-national-assembly-20;
-    <http://archives.nanet.go.kr/voca#termHalf> "전반기".
-ric:agent-jsk <http://archives.nanet.go.kr/voca#representsConstituency> ric:place-jongno.
-ric:place-jongno <http://archives.nanet.go.kr/voca#activeInTerm> ric:org-national-assembly-20.
+ric:org-national-assembly-20 nara:speaker ric:agent-jsk;
+    nara:constitutedBy ric:event-20th-general-election.
+ric:pos-speaker-20-1 nara:ofTerm ric:org-national-assembly-20;
+    nara:termHalf "전반기".
+ric:agent-jsk nara:representsConstituency ric:place-jongno.
+ric:place-jongno nara:activeInTerm ric:org-national-assembly-20.
 ric:event-20th-general-election rico:beginningDate "2016-04-13".
 ric:auth-0-ec9db4ec rico:name "이승만".
 ric:pos-0 rico:name "제헌국회 전반기 의장".

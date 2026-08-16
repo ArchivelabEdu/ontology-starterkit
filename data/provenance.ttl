@@ -14,7 +14,7 @@
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix oa: <http://www.w3.org/ns/oa#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix nak: <http://archives.nanet.go.kr/voca#>.
+@prefix nara: <http://archives.nanet.go.kr/voca#>.
 
 ric:activity-3f208ffd1c1f a prov:Activity;
     prov:wasAssociatedWith ric:agent-nak-seed.
@@ -4225,9 +4225,9 @@ ric:selector-quote-4cf09b02c808 a oa:TextQuoteSelector;
     oa:exact "이제 제20대 국회가 개원하면서 6선의원으로서 국회의장이 되셨습니다.".
 ric:activity-beeb92cc2a99 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
     prov:generatedAtTime "2026-08-15T15:14:18.123Z"^^xsd:dateTime.
-ric:stmt-006793919e5d a rdf:Statement;
+ric:stmt-b67d76ba7168 a rdf:Statement;
     rdf:subject ric:org-national-assembly-20;
-    rdf:predicate nak:speaker;
+    rdf:predicate nara:speaker;
     rdf:object ric:agent-jsk;
     prov:wasGeneratedBy ric:activity-beeb92cc2a99.
 ric:activity-17d5e4796c35 a prov:Activity;
@@ -4236,9 +4236,9 @@ ric:selector-quote-b472aa3295e2 a oa:TextQuoteSelector;
     oa:exact "그래서 제20대 총선에서 새누리당이 크게 승리할 것이라고 당사자들도, 언론에서도 그렇게 생각했어요.".
 ric:activity-17d5e4796c35 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
     prov:generatedAtTime "2026-08-15T15:14:18.123Z"^^xsd:dateTime.
-ric:stmt-2d8cdaae4203 a rdf:Statement;
+ric:stmt-7d3413ebe6be a rdf:Statement;
     rdf:subject ric:org-national-assembly-20;
-    rdf:predicate nak:constitutedBy;
+    rdf:predicate nara:constitutedBy;
     rdf:object ric:event-20th-general-election;
     prov:wasGeneratedBy ric:activity-17d5e4796c35.
 ric:activity-991c030f4cbb a prov:Activity;
@@ -4247,9 +4247,9 @@ ric:selector-quote-1537c60dc545 a oa:TextQuoteSelector;
     oa:exact "2. 제20대 전반기 국회의장 취임".
 ric:activity-991c030f4cbb prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
     prov:generatedAtTime "2026-08-15T15:14:18.123Z"^^xsd:dateTime.
-ric:stmt-dce7c295f88d a rdf:Statement;
+ric:stmt-cec21f82ab90 a rdf:Statement;
     rdf:subject ric:pos-speaker-20-1;
-    rdf:predicate nak:ofTerm;
+    rdf:predicate nara:ofTerm;
     rdf:object ric:org-national-assembly-20;
     prov:wasGeneratedBy ric:activity-991c030f4cbb.
 ric:activity-5678cee38601 a prov:Activity;
@@ -4262,9 +4262,9 @@ ric:selector-quote-076c3d83538a a oa:TextQuoteSelector;
     oa:exact "2018년 5월에 제20대 전반기 국회의장 임기를 마치셨는데".
 ric:activity-5678cee38601 prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
     prov:generatedAtTime "2026-08-15T15:14:18.123Z"^^xsd:dateTime.
-ric:stmt-3384da94afe1 a rdf:Statement;
+ric:stmt-465069f81740 a rdf:Statement;
     rdf:subject ric:pos-speaker-20-1;
-    rdf:predicate nak:termHalf;
+    rdf:predicate nara:termHalf;
     rdf:object "전반기";
     prov:wasGeneratedBy ric:activity-5678cee38601.
 ric:activity-b11a8a44435a a prov:Activity;
@@ -4277,13 +4277,22 @@ ric:selector-quote-1554e87e9b8c a oa:TextQuoteSelector;
     oa:exact "2016 제20대국회의원(더불어민주당,서울종로구)".
 ric:activity-b11a8a44435a prov:wasAssociatedWith ric:agent-claude-code__claude-fable-5_;
     prov:generatedAtTime "2026-08-15T15:14:18.123Z"^^xsd:dateTime.
-ric:stmt-ac5b5820f76b a rdf:Statement;
+ric:stmt-6afba61eae8d a rdf:Statement;
     rdf:subject ric:agent-jsk;
-    rdf:predicate nak:representsConstituency;
+    rdf:predicate nara:representsConstituency;
     rdf:object ric:place-jongno;
     prov:wasGeneratedBy ric:activity-b11a8a44435a.
-ric:stmt-c2c3b62e48cc a rdf:Statement;
+ric:stmt-5c619222ed90 a rdf:Statement;
     rdf:subject ric:place-jongno;
-    rdf:predicate nak:activeInTerm;
+    rdf:predicate nara:activeInTerm;
     rdf:object ric:org-national-assembly-20;
     prov:wasGeneratedBy ric:activity-b11a8a44435a.
+ric:publication-0ee2d3ac6971 a prov:Entity;
+    rdfs:label "정세균 구술";
+    prov:wasGeneratedBy ric:activity-publish-0ee2d3ac6971;
+    prov:wasAttributedTo ric:agent-user-admin.
+ric:activity-publish-0ee2d3ac6971 a prov:Activity;
+    prov:generatedAtTime "2026-08-16T10:22:27.244Z"^^xsd:dateTime;
+    prov:wasAssociatedWith ric:agent-user-admin.
+ric:agent-user-admin a prov:Agent;
+    rdfs:label "슈퍼 관리자".

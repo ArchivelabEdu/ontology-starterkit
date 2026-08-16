@@ -65,6 +65,11 @@ export const REL_KO = {
   knows: '친분', isAgentAssociatedWithAgent: '관계 행위자',
   containedInPlace: '상위 장소', containsPlace: '하위 장소',
   birthPlace: '출생지', alumniOf: '출신 학교',
+  /* 국회기록원 커스텀 어휘(nara:) — 대수·선거구·선거 관계. 지역명이 표준(rico) 지역명과 안 겹치는 것을
+     확인하고 넣었다(겹치면 이 평면 맵에서 서로 덮는다 — 커스텀 클래스·속성 작명 규칙과 같은 이유). */
+  speaker: '국회의장', constitutedBy: '선출 총선', majorityParty: '제1당', rulingParty: '여당',
+  ofTerm: '해당 대수', activeInTerm: '해당 대수', representsConstituency: '대표 선거구', representedBy: '당선 의원',
+  electedIn: '당선 선거', ranIn: '출마 선거', coversArea: '관할 행정구역', redefinedIn: '획정·개편',
 };
 export const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
 export const clsColor = c => css((CLS[c] || { v: '--muted' }).v);
@@ -612,10 +617,13 @@ function buildModel() {
     same: same.get(r.s) || [], uuid: uu.get(r.s) || '',
   }));
   G.byId = new Map(G.nodes.map(n => [n.id, n]));
-  /* AP v2: foaf(친분)·schema(장소 계층·이력)도 관계다. prov·oa·rdf 는 생성이력층 — 관계망에 올리지 않는다. */
+  /* AP v2: foaf(친분)·schema(장소 계층·이력)도 관계다. prov·oa·rdf 는 생성이력층 — 관계망에 올리지 않는다.
+     voca#는 국회기록원 커스텀 어휘(nara: 국회의장·선출 총선·대표 선거구 등) — 발행이 이중 타입과 함께
+     내는 간선이라, 여기 없으면 관리시스템이 발행한 커스텀 관계가 화면에서 통째로 사라진다. */
   const er = rows(`SELECT ?s ?p ?o WHERE {
     ?s ?p ?o . FILTER(isIRI(?o) && (STRSTARTS(STR(?p), "${RICO}") || STRSTARTS(STR(?p), "${SKOS}")
-      || STRSTARTS(STR(?p), "http://xmlns.com/foaf/0.1/") || STRSTARTS(STR(?p), "https://schema.org/"))) }`);
+      || STRSTARTS(STR(?p), "http://xmlns.com/foaf/0.1/") || STRSTARTS(STR(?p), "https://schema.org/")
+      || STRSTARTS(STR(?p), "http://archives.nanet.go.kr/voca#"))) }`);
   G.edges = er.filter(e => G.byId.has(e.s) && G.byId.has(e.o))
     .map(e => ({ s: e.s, o: e.o, p: e.p.split('#')[1] || e.p.split('/').pop() }));
   buildCollections();
