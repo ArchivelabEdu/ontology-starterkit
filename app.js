@@ -1981,6 +1981,34 @@ function langMap(stage) {
   stage.appendChild(host);
   cancelAnimationFrame(WMAP.raf);
   (WMAP.mode3d ? mapDraw3d : mapDraw2d)(host);
+  const tip = document.createElement('p');
+  tip.className = 'note';
+  tip.style.cssText = 'margin:.5rem .2rem 0';
+  tip.innerHTML = mapInsight();
+  stage.appendChild(tip);
+}
+/* 사안 한 줄 풀이 — 전부 지금 지도에서 센 값이다(이름도 데이터가 지었다).
+   「무엇이 몇 번 나왔고, 어느 두 말이 서로 가장 가까운가」 — 지도를 눈으로만 보면
+   군집이 무엇을 뜻하는지 알 수 없어, 실습에서 늘 같은 질문이 나왔다. */
+function mapInsight() {
+  const cl = WMAP.on == null ? null : WMAP.cl.find(c => c.k === WMAP.on);
+  const ws = WMAP.on == null ? WMAP.words : WMAP.words.filter(d => d.k === WMAP.on);
+  if (!ws.length) return '';
+  const num = v => v.toLocaleString('ko-KR');
+  const sum = ws.reduce((a, b) => a + b.n, 0);
+  const top = [...ws].sort((a, b) => b.n - a.n).slice(0, 3);
+  const head = cl
+    ? `<b>${esc(cl.name)}</b> — 낱말 ${num(ws.length)}개 · 원문에 ${num(sum)}번`
+    : `<b>전체</b> — 낱말 ${num(ws.length)}개 · 원문에 ${num(sum)}번 · 사안 ${WMAP.cl.length}덩어리`;
+  const most = `가장 잦은 말 ${top.map(d => `${esc(d.w)} ${num(d.n)}`).join(' · ')}`;
+  /* 서로를 첫 이웃으로 꼽은 짝 — 이 덩어리에서 가장 붙어 다니는 두 말이다. */
+  const inSet = new Set(ws.map(d => d.w));
+  const pair = ws.find(d => {
+    const o = d.nb?.[0];
+    return o && inSet.has(o) && WMAP.words.find(x => x.w === o)?.nb?.[0] === d.w;
+  });
+  const near = pair ? ` · 가장 붙어 다니는 짝 <b>${esc(pair.w)}–${esc(pair.nb[0])}</b>` : '';
+  return `${head}. ${most}${near}.`;
 }
 window.mapFilterK = k => { WMAP.on = k; WMAP.pick = null; drawLang(); };
 window.mapFlip = () => { WMAP.mode3d = !WMAP.mode3d; WMAP.pick = null; drawLang(); };
