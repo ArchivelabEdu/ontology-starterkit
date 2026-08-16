@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- 사이트 로고 마크 그대로 — 두 개체를 잇는 관계 하나. 지식그래프의 최소 단위다.
+       탭에서는 22×10 원본이 너무 납작해 대각선으로 세워 정사각 안을 채운다. -->
+  <rect width="32" height="32" rx="7" fill="#7c2b4f"/>
+  <line x1="10.5" y1="21.5" x2="21.5" y2="10.5" stroke="#ffffff" stroke-width="2" opacity=".55"/>
+  <circle cx="9.5" cy="22.5" r="4.4" fill="#ffffff"/>
+  <circle cx="22.5" cy="9.5" r="4.4" fill="#ffffff"/>
+</svg>
