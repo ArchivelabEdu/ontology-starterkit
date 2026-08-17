@@ -342,7 +342,11 @@ function pickerHtml(inPage) {
         <i>개체 ${c.n}</i>${state(c)}</button>`).join('')}
     </div>
     <div class="pick-bar">
-      <button class="btn primary" onclick="goPicked()" ${same ? 'disabled' : ''}>${(PICK.size || CUR.cols.length) && same ? '적재됨' : '적재'}</button>
+      <!-- 고른 것이 지금 적재된 것과 같으면 누를 일이 없다. 예전에는 라벨이 「적재됨」이라
+           바뀌기만 해 「왜 안 눌리지」로 읽혔다(실측 지적) — 무엇이 이미 실려 있는지 말한다. -->
+      <button class="btn primary" onclick="goPicked()" ${same ? 'disabled' : ''}
+        title="${same ? '고른 조합이 이미 적재돼 있습니다 — 카드를 켜고 끄면 다시 눌립니다' : '고른 컬렉션을 적재합니다'}">${
+        (PICK.size || CUR.cols.length) && same ? '이미 적재됨' : '적재'}</button>
       <button class="btn sm" onclick="pickAll()">모두 고르기</button>
       <!-- 지금 뭐라도 켜져 있으면(체크됐거나 이미 적재됐거나) 내릴 게 있다.
            체크만 0이고 CUR.cols 는 아직 안 지워졌을 수 있다 — 카드를 손으로 눌러 마지막
@@ -474,6 +478,9 @@ function animateLoadedBanner() {
    두고 부팅 때 발행본 위에 다시 얹는다. 발행본 자체는 건드리지 않으므로, 다른 사람이 같은
    주소를 열면 발행본만 보인다. 실습에서 「내가 만든 그래프를 이 사이트로 읽는다」까지 가는 길이다. */
 const UP_KEY = 'kit.ttl.uploads';
+/* 올린 사람이 컬렉션 이름을 직접 적었을 때, 파일 안에 들어 있던 컬렉션 개체는 목록에서 뺀다 —
+   두 이름이 나란히 뜨면 어느 것이 내 것인지 알 수 없다. */
+const HIDDEN_COLS = new Set();
 let UP_MSG = null;                       // 마지막 올리기 결과 — 화면을 다시 그려도 남아 있어야 읽힌다
 const upList = () => { try { return JSON.parse(localStorage.getItem(UP_KEY) || '[]'); } catch { return []; } };
 const upSave = list => { try { localStorage.setItem(UP_KEY, JSON.stringify(list)); return true; } catch { return false; } };
@@ -494,8 +501,16 @@ async function apTerms() {
   return AP_TERMS;
 }
 
-/** TTL 한 장을 그래프에 얹는다. 반환: 사람이 읽을 결과 문장(HTML). */
-async function addTtl(text, fileName) {
+/** 이미 있는 컬렉션과 겹치지 않는 지역명 — 여러 팀이 같은 파일 이름·같은 컬렉션 이름을 올린다.
+    겹치면 -2, -3 … 을 붙인다. 남의 컬렉션에 내 개체가 섞이는 것이 가장 나쁜 결과다. */
+function freeColId(base) {
+  const taken = new Set(COLS.map(c => short(c.id)));
+  if (!taken.has(base)) return base;
+  for (let i = 2; ; i++) if (!taken.has(`${base}-${i}`)) return `${base}-${i}`;
+}
+/** TTL 한 장을 그래프에 얹는다. wantName 을 주면 그 이름으로 컬렉션을 만든다.
+    반환: 사람이 읽을 결과 문장(HTML). */
+async function addTtl(text, fileName, wantName = '') {
   const base = 'http://archives.nanet.go.kr/id/';
   let probe;
   try {                                   // 먼저 따로 파싱해 본다 — 깨진 파일이 본 그래프를 더럽히지 않도록
@@ -510,19 +525,28 @@ async function addTtl(text, fileName) {
   /* 컬렉션 개체가 들어 있으면 그대로 쓰고, 없으면 파일 이름으로 하나 만들어 이 파일의 주어들을
      그 컬렉션에 잇는다. 이름표를 붙이는 일이지 데이터를 지어내는 일이 아니다 —
      그래도 화면에 그 사실을 밝힌다. */
-  const cols = probe.query(`PREFIX rico: <${RICO}> SELECT ?s WHERE { ?s a rico:RecordSet }`)
+  const inFile = probe.query(`PREFIX rico: <${RICO}> SELECT ?s WHERE { ?s a rico:RecordSet }`)
     .map(b => b.get('s').value);
-  let made = '';
-  if (!cols.length) {
-    const name = fileName.replace(/\.ttl$/i, '').trim() || '올린 그래프';
-    const id = colLocalId(name);
+  let cols = inFile, made = '', hide = [], note = '';
+  /* 컬렉션을 우리가 만드는 경우는 둘이다 — 올린 사람이 이름을 적었을 때, 그리고 파일에
+     컬렉션 개체가 아예 없을 때. 이름을 적었으면 파일 안의 컬렉션 개체는 목록에서 숨기고
+     그 이름 하나로 모은다. 여러 팀이 같은 이름을 올려도 지역명은 겹치지 않게 번호를 붙인다. */
+  if (wantName || !inFile.length) {
+    const name = wantName || fileName.replace(/\.ttl$/i, '').trim() || '올린 그래프';
+    const id = freeColId(colLocalId(name));
     const subs = probe.query('SELECT DISTINCT ?s WHERE { ?s a ?c }').map(b => b.get('s').value)
-      .filter(u => u.startsWith(base));
+      .filter(u => u.startsWith(base) && !inFile.includes(u));
     const recs = new Set(probe.query(`PREFIX rico: <${RICO}> SELECT ?s WHERE { ?s a rico:Record }`)
       .map(b => b.get('s').value));
     made = `@prefix rico: <${RICO}> .\n<${base}${id}> a rico:RecordSet ; rico:name ${JSON.stringify(name)} .\n`
       + subs.map(u => `<${u}> rico:${recs.has(u) ? 'isOrWasIncludedIn' : 'isOrWasSubjectOf'} <${base}${id}> .`).join('\n');
-    cols.push(base + id);
+    cols = [base + id];
+    hide = inFile;                                   // 파일 안의 컬렉션 개체는 목록에서 뺀다
+    note = wantName
+      ? (inFile.length ? `파일에 적힌 컬렉션 대신 <b>적어 주신 이름</b>으로 모았습니다.` : '')
+        + (id !== colLocalId(name) ? ` 같은 이름이 이미 있어 <code>${esc(id)}</code> 로 넣었습니다.` : '')
+      : '파일에 컬렉션 개체가 없어 <b>파일 이름으로 컬렉션을 만들어</b> 개체들을 이었습니다.'
+        + (id !== colLocalId(name) ? ` 같은 이름이 이미 있어 <code>${esc(id)}</code> 로 넣었습니다.` : '');
   }
 
   // AP 대조 — 등재되지 않은 술어가 있으면 이름을 대고 알린다(적재는 막지 않는다)
@@ -532,6 +556,7 @@ async function addTtl(text, fileName) {
 
   fullStore.load(text, { format: 'text/turtle', base_iri: base });
   if (made) fullStore.load(made, { format: 'text/turtle', base_iri: base });
+  hide.forEach(u => HIDDEN_COLS.add(u));
   /* 모델은 **전체 스토어**에서 다시 짓는다. 적재가 걸려 있으면 store 는 그 범위로 좁혀진
      사본이라(rescope), 그대로 두고 buildModel 을 부르면 새 컬렉션의 RecordSet 개체가 보이지 않아
      COLS 가 통째로 비었다(실측: 올린 뒤 컬렉션 목록이 사라지고 단일 발행본 화면이 떴다). */
@@ -540,11 +565,11 @@ async function addTtl(text, fileName) {
   buildModel();                                   // COLS·G 를 다시 짓는다(끝에서 applyCollection 이 돈다)
 
   const titles = cols.map(u => COLS.find(c => c.id === u)?.title || short(u)).join(' · ');
-  const kept = upSave([...upList(), { name: fileName, ttl: text, made }]);
+  const kept = upSave([...upList(), { name: fileName, ttl: text, made, hide }]);
   return {
     ok: true, cols,
     html: `<b>컬렉션 ${cols.length}건 추가</b> — ${esc(titles)} · 트리플 ${(+nT).toLocaleString('ko-KR')}개`
-      + (made ? '<br>파일에 컬렉션 개체가 없어 <b>파일 이름으로 컬렉션을 만들어</b> 개체들을 이었습니다.' : '')
+      + (note ? `<br>${note}` : '')
       + (off.length ? `<br>AP에 등재되지 않은 술어 ${off.length}종이 있습니다 — <code>${off.slice(0, 3).map(esc).join('</code> <code>')}</code>${off.length > 3 ? ' 외' : ''}. 화면에는 실리지만 프로파일 밖입니다.` : '')
       + (kept ? '<br>이 브라우저에 저장했습니다 — 새로고침해도 남아 있습니다.'
         : '<br>브라우저 저장 공간을 넘겨 <b>이번 세션에만</b> 남습니다.'),
@@ -554,7 +579,7 @@ window.ttlPick = async input => {
   const f = input.files?.[0]; if (!f) return;
   const box = $('#ttlMsg');
   box.className = 'okbox'; box.innerHTML = `${esc(f.name)} 읽는 중…`;
-  const r = await addTtl(await f.text(), f.name);
+  const r = await addTtl(await f.text(), f.name, ($('#ttlName')?.value || '').trim());
   UP_MSG = r;
   box.className = r.ok ? 'okbox' : 'warnbox';
   box.innerHTML = r.html;
@@ -579,6 +604,9 @@ function uploadHtml() {
     <b>TTL 올려 컬렉션 더하기</b>
     <p class="note">관리 시스템·온톨로지 그라운더·LLM이 만든 <b>AP 그라운딩 TTL</b>을 올리면 컬렉션이 늘어납니다.
       파일은 <b>이 브라우저에만</b> 머물고 발행본은 그대로입니다 — 다른 사람이 같은 주소를 열면 발행본만 봅니다.</p>
+    <label class="up-name">컬렉션 이름
+      <input type="text" id="ttlName" placeholder="비우면 파일에 적힌 이름 · 없으면 파일 이름" maxlength="40">
+    </label>
     <input type="file" id="ttlFile" accept=".ttl,text/turtle" onchange="ttlPick(this)">
     <div id="ttlMsg"${UP_MSG ? ` class="${UP_MSG.ok ? 'okbox' : 'warnbox'}"` : ''}>${UP_MSG ? UP_MSG.html : ''}</div>
     ${ups.length ? `<p class="note" style="margin-top:.5rem">이 브라우저에 얹은 파일 —
@@ -664,6 +692,7 @@ async function boot() {
     /* 이 브라우저에 얹어 둔 TTL 을 발행본 위에 다시 올린다 — 새로고침해도 내 컬렉션이 남는다.
        깨진 것이 섞여 있어도 그 한 장만 건너뛰고 나머지는 뜬다. */
     for (const u of upList()) {
+      (u.hide || []).forEach(x => HIDDEN_COLS.add(x));
       try {
         store.load(u.ttl, { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
         if (u.made) store.load(u.made, { format: 'text/turtle', base_iri: 'http://archives.nanet.go.kr/id/' });
@@ -790,7 +819,7 @@ function recount() {
 function buildCollections() {
   COLS.length = 0;
   const isCol = new Map();           // 컬렉션 id → 제목
-  G.nodes.forEach(n => { if (n.cls === 'RecordSet' && short(n.id).startsWith('col-')) isCol.set(n.id, n.label); });
+  G.nodes.forEach(n => { if (n.cls === 'RecordSet' && short(n.id).startsWith('col-') && !HIDDEN_COLS.has(n.id)) isCol.set(n.id, n.label); });
   if (isCol.size) {
     for (const [id, title] of isCol) COLS.push({ id, title, members: new Set([id]) });
     const by = new Map(COLS.map(c => [c.id, c]));
