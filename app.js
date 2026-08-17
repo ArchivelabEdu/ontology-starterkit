@@ -601,7 +601,7 @@ window.ttlDrop = async i => {
 function uploadHtml() {
   const ups = upList();
   return `<div class="up-card">
-    <b>TTL 올려 컬렉션 더하기</b>
+    <b>RDF(.ttl) 올려 컬렉션 더하기</b>
     <p class="note">관리 시스템·온톨로지 그라운더·LLM이 만든 <b>AP 그라운딩 TTL</b>을 올리면 컬렉션이 늘어납니다.
       파일은 <b>이 브라우저에만</b> 머물고 발행본은 그대로입니다 — 다른 사람이 같은 주소를 열면 발행본만 봅니다.</p>
     <label class="up-name">컬렉션 이름

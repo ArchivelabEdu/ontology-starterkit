@@ -17,7 +17,7 @@
 
 | | 무엇 | 필요한 것 | 시간 |
 |---|---|---|---|
-| **A** | 내 `.ttl` 을 올려 탐색 | 브라우저만 | 5분 |
+| **A** | 내 RDF(`.ttl`)를 올려 탐색 | 브라우저만 | 5분 |
 | **B** | 클론해 **우리 기관 아카이브**로 개조 | GitHub 계정 · Claude Code | 20분~ |
 | **C** | `.ttl` 만 주고 **완전히 새 화면**을 만들기 | Claude Code | 20분~ |
 
@@ -25,10 +25,10 @@ A 로 확인하고, 시간이 남으면 B 나 C 로 갑니다. 발표는 자기 
 
 ---
 
-## A. 내 TTL 올려 탐색하기 (클론 없음)
+## A. 내 RDF(.ttl) 올려 탐색하기 (클론 없음)
 
 1. 그라운더(또는 구술기록관리시스템)에서 **`.ttl` 내려받기**
-2. https://archivelabedu.github.io/ontology-starterkit/#collection 열기
+2. https://archivelabedu.github.io/ontology-starterkit/#collection 열기 — 「RDF(.ttl) 올려 컬렉션 더하기」
 3. **컬렉션 이름**을 적고(예: `3팀 박희태 구술`) 파일 고르기 → 곧바로 적재됩니다
 4. 검색·지도·연표·관계망·주제·질의 메뉴로 **내 그래프**를 돌아봅니다
 
@@ -41,7 +41,7 @@ A 로 확인하고, 시간이 남으면 B 나 C 로 갑니다. 발표는 자기 
 - 정세균 구술과 **함께 골라 적재**하면 두 구술을 나란히 볼 수 있습니다.
 - 형식 본보기: `examples/sample-upload.ttl` (컬렉션 개체 · 소속 술어 · 출처를 갖춘 최소 형태)
 
-TTL 이 갖춰야 할 것은 셋뿐입니다.
+RDF(.ttl) 가 갖춰야 할 것은 셋뿐입니다.
 
 ```turtle
 ric:col-3team a rico:RecordSet ; rico:name "3팀 박희태 구술" .        # ① 컬렉션
@@ -84,7 +84,7 @@ git add -A && git commit -m "우리 팀 구술로 데이터 교체" && git push
 **B-1. 데이터 갈아끼우기**
 
 ```text
-data/graph.ttl 을 내가 넣은 우리 팀 TTL 로 교체했습니다.
+data/graph.ttl 을 내가 넣은 우리 팀 RDF(.ttl) 로 교체했습니다.
 1) 화면 여덟 개(기록·지도·연표·관계망·주제·질의·언어·컬렉션)가 새 데이터로 제대로 그려지는지 확인하고,
    비어 보이는 화면이 있으면 원인이 데이터 부족인지 코드 가정인지 알려 주세요.
 2) data/places.csv · data/events.csv 를 새 그래프에서 다시 만들어 주세요
