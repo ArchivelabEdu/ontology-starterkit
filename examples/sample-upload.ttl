@@ -1,0 +1,42 @@
+# 업로드 기능을 시험해 보기 위한 **예시 파일**입니다.
+# 실제 구술기록이 아니며, 발행본(data/graph.ttl)과 섞이지 않습니다.
+# 컬렉션 화면의 「TTL 올려 컬렉션 더하기」에 이 파일을 올려 보세요.
+#
+# 지켜야 할 것 세 가지가 이 파일에 다 들어 있습니다.
+#   ① 컬렉션 개체(rico:RecordSet)와 이름
+#   ② 소속 — 기록은 isOrWasIncludedIn, 그 밖(인물·사건·장소)은 isOrWasSubjectOf
+#   ③ 출처 — 모든 개체에 dcterms:source 로 근거를 답니다
+@prefix ric:     <http://archives.nanet.go.kr/id/> .
+@prefix rico:    <https://www.ica.org/standards/RiC/ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+ric:col-sample-oral a rico:RecordSet ;
+    rico:name "예시 구술" .
+
+ric:rec-sample-1 a rico:Record ;
+    rico:title "예시 구술 1차" ;
+    rico:beginningDate "2024-03-11" ;
+    rico:scopeAndContent "업로드 시험용 예시 기록입니다." ;
+    dcterms:source "예시 파일 — 실제 기록 아님" ;
+    rico:isOrWasIncludedIn ric:col-sample-oral .
+
+ric:agent-sample a rico:Person ;
+    rico:name "예시 구술자" ;
+    rico:generalDescription "업로드 시험용 예시 인물입니다." ;
+    dcterms:source "예시 파일 — 실제 인물 아님" ;
+    rico:isOrWasSubjectOf ric:col-sample-oral .
+
+ric:event-sample a rico:Event ;
+    rico:name "예시 사건" ;
+    rico:beginningDate "2024-05-20" ;
+    dcterms:source "예시 파일 — 실제 사건 아님" ;
+    rico:isOrWasSubjectOf ric:col-sample-oral .
+
+ric:place-sample a rico:Place ;
+    rico:name "예시 장소" ;
+    dcterms:source "예시 파일 — 실제 장소 아님" ;
+    rico:isOrWasSubjectOf ric:col-sample-oral .
+
+ric:rec-sample-1 rico:hasCreator ric:agent-sample .
+ric:agent-sample rico:isOrWasParticipantIn ric:event-sample .
+ric:event-sample rico:isAssociatedWithPlace ric:place-sample .

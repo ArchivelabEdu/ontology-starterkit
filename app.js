@@ -1878,7 +1878,12 @@ export async function loadCorpus() {
   const noText = CUR.cols.filter(c => !withText.has(short(c)))
     .map(c => COLS.find(x => x.id === c)?.title || short(c).replace(/^col-/, ''));
   const sc = $('#langScope');
-  if (sc) sc.textContent = paras.length ? '적재된 원문' : '원문 없음 —';
+  if (sc) sc.textContent = '적재된 원문';
+  /* 원문이 하나도 없으면 리드 문장을 통째로 감춘다 — 「원문 없음 —에서 뽑은 어휘를 …」이 되어
+     문장이 스스로 무너졌다(올린 컬렉션에 원문이 없을 때 늘 이 상태가 된다).
+     그 자리는 아래 #langNone 안내가 대신한다. */
+  const lead = $('#langLead');
+  if (lead) lead.hidden = !paras.length;
   /* 쪽 수는 리드 문장에 넣지 않는다 — 문장은 어느 구술을 적재하든 그대로 성립해야 한다.
      분량은 아래 안내 줄에서, 컬렉션 이름과 함께 말한다. */
   const pt = $('#langPartial');
