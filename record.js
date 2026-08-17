@@ -533,6 +533,19 @@ function item(sid) {
     <h3 class="zsec">서지</h3>
     <dl class="facts-dl">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
 
+    ${(n.file || n.fileThumb) ? `
+    <h3 class="zsec">파일</h3>
+    <div class="att">
+      ${n.file && /pdf/i.test(n.fileMime || n.file) ? `
+      <iframe class="att-pdf" src="data/${esc(n.file)}" title="${esc(n.label)} — PDF 뷰어"></iframe>` : ''}
+      <div class="att-bar">
+        ${!n.file && n.fileThumb ? `<img class="att-thumb" src="data/${esc(n.fileThumb)}" alt="">` : ''}
+        ${n.file ? `<a class="btn sm" href="data/${esc(n.file)}" download>파일 내려받기${n.fileMime ? ` · ${esc(n.fileMime)}` : ''}</a>
+          <a class="btn sm" href="data/${esc(n.file)}" target="_blank" rel="noopener">새 탭에서 열기 ↗</a>` :
+          `<span class="status">원본 파일은 이 발행본에 실리지 않았습니다 — 썸네일만 제공됩니다.</span>`}
+      </div>
+    </div>` : ''}
+
     <h3 class="zsec">연결된 개체 <span>${total}</span></h3>
     ${total ? rows.map(r => `
       <div class="link-row">

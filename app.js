@@ -744,14 +744,16 @@ async function boot() {
 
 /* 그래프를 화면용 모델로 */
 function buildModel() {
-  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img ?imgsrc WHERE {
+  const nr = rows(`SELECT ?s ?c ?n ?d ?g ?lat ?lon ?k ?img ?imgsrc ?file ?fthumb ?fmime WHERE {
     ?s a ?c . OPTIONAL{?s rico:name ?n} OPTIONAL{?s rico:title ?n} OPTIONAL{?s skos:prefLabel ?n}
     OPTIONAL{?s rico:beginningDate ?d}
     OPTIONAL{?s rico:generalDescription ?g} OPTIONAL{?s rico:history ?g}
     OPTIONAL{?s rico:scopeAndContent ?g}
     OPTIONAL{?s geo:lat ?lat} OPTIONAL{?s geo:long ?lon}
     OPTIONAL{?s rdfs:comment ?k} OPTIONAL{?s skos:scopeNote ?k}
-    OPTIONAL{?s foaf:depiction ?img} OPTIONAL{?s rdfs:label ?imgsrc} }`);
+    OPTIONAL{?s foaf:depiction ?img} OPTIONAL{?s rdfs:label ?imgsrc}
+    OPTIONAL{?s schema:contentUrl ?file} OPTIONAL{?s schema:thumbnailUrl ?fthumb}
+    OPTIONAL{?s schema:encodingFormat ?fmime} }`);
   // owl:sameAs 와 UUID 는 한 개체에 여럿 붙으므로 따로 모은다
   const same = new Map(), uu = new Map();
   rows(`SELECT ?s ?u WHERE { ?s owl:sameAs ?u }`).forEach(r => {
@@ -766,7 +768,7 @@ function buildModel() {
     if (!CLS[cls]) return;
     const cur = seen.get(r.s);
     if (cur) {                       // 여러 OPTIONAL 로 중복 행이 나오므로 병합
-      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k', 'img', 'imgsrc']) if (!cur[f] && r[f]) cur[f] = r[f];
+      for (const f of ['n', 'd', 'g', 'lat', 'lon', 'k', 'img', 'imgsrc', 'file', 'fthumb', 'fmime']) if (!cur[f] && r[f]) cur[f] = r[f];
       return;
     }
     seen.set(r.s, { ...r, cls });
@@ -775,6 +777,9 @@ function buildModel() {
     id: r.s, cls: r.cls, label: r.n || r.s.split('/').pop(),
     date: r.d || '', desc: r.g || '', kind: r.k || '', img: r.img || '', imgSrc: r.imgsrc || '',
     lat: r.lat ? +r.lat : null, lon: r.lon ? +r.lon : null,
+    /* 파일 사본(schema:contentUrl 등) — 발행본(data/) 기준 상대경로다. 구현체 페이지가
+       내려받기·PDF 뷰어를 그리는 근거. 없는 개체는 빈 문자열(지어내지 않는다). */
+    file: r.file || '', fileThumb: r.fthumb || '', fileMime: r.fmime || '',
     same: same.get(r.s) || [], uuid: uu.get(r.s) || '',
   }));
   G.byId = new Map(G.nodes.map(n => [n.id, n]));

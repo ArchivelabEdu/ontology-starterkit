@@ -1037,7 +1037,81 @@ ric:inst-jsk-full a rico:Instantiation.
 ric:inst-jsk-excerpt a rico:Instantiation.
 ric:org-korea-university a rico:CorporateBody.
 ric:org-theory-law-society a rico:CorporateBody.
+ric:rec-oral-2018-021 a rico:Record.
+ric:local-8eb14776 a rico:Place.
+ric:rec-oral-2018-061 a rico:Record.
+ric:rec-oral-2018-121 a rico:Record.
+ric:rec-oral-2018-163 a rico:Record.
+ric:rec-oral-2019-001 a rico:Record.
+ric:rec-oral-2019-002 a rico:Record.
+ric:rec-oral-2019-031 a rico:Record.
+ric:local-ebb339d5 a rico:Person.
+ric:rec-oral-2019-032 a rico:Record.
+ric:rec-oral-2020-011 a rico:Record.
+ric:local-5cb6d908 a rico:Place.
+ric:rec-oral-2020-012 a rico:Record.
+ric:rec-min-1948-0001 a rico:Record.
+ric:local-6cbc9032 a rico:Record.
+ric:rec-min-1948-0002 a rico:Record.
+ric:rec-min-1948-0017 a rico:Record.
+ric:rec-min-1948-0028 a rico:Record.
+ric:rec-min-1950-0104 a rico:Record.
+ric:local-f85df3f6 a rico:Record.
+ric:rec-14530382 a rico:Record.
+ric:rec-8cb4ad2c a rico:Record.
+ric:rec-c6592c23 a rico:Record.
+ric:rec-8163fc50 a rico:Record.
+ric:rec-8a57feeb a rico:Record.
+ric:rec-deec794b a rico:Record.
+ric:rec-e07b93ae a rico:Record.
+ric:rec-ffa127ba a rico:Record.
+ric:rec-9470e727 a rico:Record.
+ric:rec-0455bd64 a rico:Record.
 ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 a rico:Instantiation.
+ric:6fc97b57-5bfb-4482-9f98-8f1c7533f992 a rico:CorporateBody.
+ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf a rico:Place.
+ric:a9ed7a1e-64c9-4bd3-8c46-a00c4e9ff1c1 a rico:Place.
+ric:0fc5c03f-fd67-4f82-b1ad-82ac721b647b a rico:CorporateBody.
+ric:aeecc970-7b26-4c47-9827-d8d39789a467 a rico:Event.
+ric:9e23d725-8463-4c8f-bc9c-b81fc7a454bb a rico:Place.
+ric:baa28287-fad9-477a-ad76-cb7c85904a70 a rico:Place.
+ric:791d6ad8-ac95-49bb-b13f-26d8b3017fa5 a rico:CorporateBody.
+ric:700ab025-2fe3-4796-9482-7d4f2ac4ffcd a rico:Event.
+ric:cb834d2b-aa4c-48eb-a2c0-a27e356d2435 a rico:Event.
+ric:15651d9e-9e08-41ca-b5c7-131deed455e1 a rico:Concept.
+ric:63ccfd7a-b2fb-419b-9e43-ba61ea98efe5 a rico:Concept.
+ric:f3adf0b7-bed3-4225-a5a6-530f58696115 a rico:Concept.
+ric:ad7796f3-51bd-4fe6-9282-bb6c9cf28240 a <http://www.w3.org/2004/02/skos/core#ConceptScheme>.
+ric:37c3b502-4876-4fd7-bd58-abcbdebaf980 a rico:Thing.
+ric:1be64a13-055a-4608-8333-6e782c09ca34 a rico:CorporateBody.
+ric:21e89b51-5754-43e2-b739-f489af8af990 a rico:CorporateBody.
+ric:6c130b8c-317a-47f5-a5c1-d4577ba2af5c a rico:Place.
+ric:551a2c30-c8da-4a02-96b8-fb926e448c3e a rico:Event.
+ric:d3013e8b-5e36-40f9-b609-35d677929e55 a rico:Thing.
+ric:94ff6451-b103-4bd2-aba9-9598e083515c a rico:Thing.
+ric:574f5391-0330-4ed8-b4c1-27190b7f56c2 a rico:Thing.
+ric:3ca8f18e-5abc-4a68-86e2-677a3cf9f48b a rico:CorporateBody.
+ric:49c87740-4275-4b5f-88f8-b4f7bf69b881 a rico:Event.
+ric:4f453e6a-6004-40b6-9d89-ff9230eec21d a rico:Event.
+ric:2623204d-448b-4c78-b276-7775d8d20cb7 a rico:Concept.
+ric:ddd8b8e3-bf4d-4f73-80ad-6841acacd072 a rico:Place.
+ric:9a29d8a4-85f5-4f57-a0f5-a04d7df6c775 a rico:Place.
+ric:9dca88f2-a9ed-4318-92af-02a8c64a83eb a rico:Place.
+ric:5e6bc93c-5781-44a5-94b3-9cdbb3baf7a9 a rico:CorporateBody.
+ric:43ad0736-71d0-48ca-9b61-5ae7a70320a9 a rico:CorporateBody.
+ric:df06109d-bcac-47ba-9f77-8b73a294a75f a rico:Event.
+ric:0f7919a2-20e2-468b-93ed-97bd262f3f78 a rico:Concept.
+ric:99402738-a48e-4690-b760-61c09c6ccd7e a rico:Place.
+ric:6dbf0b5b-e497-4866-a6e7-e7bc20904081 a rico:CorporateBody.
+ric:1f869d2f-ceaa-4775-b2b3-c26a3abccf8c a rico:Event.
+ric:77f3e243-adbf-4e5e-bce0-923c2e31237a a rico:CorporateBody.
+ric:dcfb3699-4532-422c-85c3-452ba7beb939 a rico:Event.
+ric:ae437f39-f993-420c-97cc-94a1b7cfb22b a rico:Place.
+ric:4a6cef3b-4552-45c3-95de-6d182ccd9d71 a rico:CorporateBody.
+ric:8c65b0e3-df2d-43e5-a202-6740b4ba8f08 a rico:Position.
+ric:f3a14aa3-44f4-4ce9-a467-97474a033c56 a rico:Rule.
+ric:0162b929-933d-419e-a372-ff48a4c76207 a rico:Concept.
+ric:f9d09c69-397c-4921-9eba-e60aae8e4916 a rico:Rule.
 ric:auth-0-ec9db4ec rico:occupiesOrOccupied ric:pos-0.
 ric:pos-0 rico:beginningDate "1948-05-31";
     rico:endDate "1948-07-24".
@@ -5664,6 +5738,126 @@ ric:pos-speaker-20-1 nara:ofTerm ric:org-national-assembly-20;
     nara:termHalf "전반기".
 ric:agent-jsk nara:representsConstituency ric:place-jongno.
 ric:place-jongno nara:activeInTerm ric:org-national-assembly-20.
+ric:rec-oral-2018-021 rico:identifier "ORAL-2018-021";
+    rico:beginningDate "2018-08-24";
+    rico:hasCreator ric:auth-86-eca095ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "정세균 1차 구술 — 성장 과정과 사회 진출".
+ric:rec-oral-2018-061 rico:identifier "ORAL-2018-061";
+    rico:beginningDate "2018-09-14";
+    rico:hasCreator ric:auth-86-eca095ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "정세균 2차 구술 — 제15·16대 국회 활동".
+ric:rec-oral-2018-121 rico:identifier "ORAL-2018-121";
+    rico:beginningDate "2018-10-12";
+    rico:hasCreator ric:auth-86-eca095ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "정세균 3차 구술 — 제17~19대 국회 활동".
+ric:rec-oral-2018-163 rico:identifier "ORAL-2018-163";
+    rico:beginningDate "2018-11-09";
+    rico:hasCreator ric:auth-86-eca095ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "정세균 4차 구술 — 제20대 국회와 국회의장직".
+ric:rec-oral-2019-001 rico:identifier "ORAL-2019-001";
+    rico:beginningDate "2019-03-08";
+    rico:hasCreator ric:auth-70-eab980ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "김원기 1차 구술 — 유신 전후의 정치 입문".
+ric:rec-oral-2019-002 rico:identifier "ORAL-2019-002";
+    rico:beginningDate "2019-04-05";
+    rico:hasCreator ric:auth-70-eab980ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:agent-sdy;
+    rico:title "김원기 2차 구술 — 국회의장 재임기".
+ric:rec-oral-2019-031 rico:identifier "ORAL-2019-031";
+    rico:beginningDate "2019-06-21";
+    rico:hasCreator ric:auth-73-ec9e84ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:local-ebb339d5;
+    rico:title "임채정 1차 구술 — 언론인에서 정치인으로".
+ric:rec-oral-2019-032 rico:identifier "ORAL-2019-032";
+    rico:beginningDate "2019-07-19";
+    rico:hasCreator ric:auth-73-ec9e84ec;
+    rico:isAssociatedWithPlace ric:local-8eb14776;
+    rico:hasAuthor ric:local-ebb339d5;
+    rico:title "임채정 2차 구술 — 개헌 논의와 의장직".
+ric:rec-oral-2020-011 rico:identifier "ORAL-2020-011";
+    rico:beginningDate "2020-05-15";
+    rico:hasCreator ric:auth-79-eca095ec;
+    rico:isAssociatedWithPlace ric:local-5cb6d908;
+    rico:hasAuthor ric:local-ebb339d5;
+    rico:title "정의화 1차 구술 — 의료인에서 국회로".
+ric:rec-oral-2020-012 rico:identifier "ORAL-2020-012";
+    rico:beginningDate "2020-06-12";
+    rico:hasCreator ric:auth-79-eca095ec;
+    rico:isAssociatedWithPlace ric:local-5cb6d908;
+    rico:hasAuthor ric:local-ebb339d5;
+    rico:title "정의화 2차 구술 — 국회선진화법 이후의 의장".
+ric:rec-min-1948-0001 rico:isOrWasIncludedIn ric:local-6cbc9032;
+    rico:hasOrHadSubject ric:auth-0-ec9db4ec;
+    rico:scopeAndContent "국회 개원 및 의장단 선거";
+    rico:identifier "MIN-1948-0001";
+    rico:title "제헌국회 제1회 제1차 본회의";
+    rico:beginningDate "1948-05-31".
+ric:rec-min-1948-0002 rico:isOrWasIncludedIn ric:local-6cbc9032;
+    rico:hasOrHadSubject ric:auth-1-ec8ba0ec;
+    rico:scopeAndContent "국회법 기초위원 선정";
+    rico:identifier "MIN-1948-0002";
+    rico:title "제헌국회 제1회 제2차 본회의";
+    rico:beginningDate "1948-06-01".
+ric:rec-min-1948-0017 rico:isOrWasIncludedIn ric:local-6cbc9032;
+    rico:hasOrHadSubject ric:auth-3-eab980ec;
+    rico:scopeAndContent "헌법안 제1독회";
+    rico:identifier "MIN-1948-0017";
+    rico:title "제헌국회 제1회 제17차 본회의";
+    rico:beginningDate "1948-06-23".
+ric:rec-min-1948-0028 rico:isOrWasIncludedIn ric:local-6cbc9032;
+    rico:hasOrHadSubject ric:auth-6-eca1b0eb;
+    rico:scopeAndContent "헌법안 제3독회";
+    rico:identifier "MIN-1948-0028";
+    rico:title "제헌국회 제1회 제28차 본회의";
+    rico:beginningDate "1948-07-12".
+ric:rec-min-1950-0104 rico:isOrWasIncludedIn ric:local-f85df3f6;
+    rico:hasOrHadSubject ric:auth-5-ec9ea5ed;
+    rico:scopeAndContent "예산안 심의";
+    rico:identifier "MIN-1950-0104";
+    rico:title "제2대국회 제8회 제104차 본회의";
+    rico:beginningDate "1950-11-20".
+ric:rec-14530382 rico:title "1996년 대정부 질문";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-daejeongbu-jilmun-1996";
+    rico:name "1996년 대정부 질문".
+ric:rec-8cb4ad2c rico:title "4대 개혁 입법";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-four-reform-bills";
+    rico:name "4대 개혁 입법".
+ric:rec-c6592c23 rico:title "가정교사(입주 가정교사)";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-live-in-tutor";
+    rico:name "가정교사(입주 가정교사)".
+ric:rec-8163fc50 rico:title "경제개발 5개년 계획";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-five-year-economic-development-plan";
+    rico:name "경제개발 5개년 계획".
+ric:rec-8a57feeb rico:title "국회의원 특권 내려놓기 추진";
+    rico:identifier "http://archives.nanet.go.kr/id/act-privilege-reform";
+    rico:name "국회의원 특권 내려놓기 추진".
+ric:rec-deec794b rico:title "국회의장단 구술기록 아카이브 구축 사업";
+    rico:identifier "http://archives.nanet.go.kr/id/act-oral-project";
+    rico:name "국회의장단 구술기록 아카이브 구축 사업".
+ric:rec-e07b93ae rico:title "노동 고용의 질 개선 활동";
+    rico:identifier "http://archives.nanet.go.kr/id/act-labor-reform";
+    rico:name "노동 고용의 질 개선 활동".
+ric:rec-ffa127ba rico:title "불체포 특권 개선";
+    rico:identifier "http://archives.nanet.go.kr/id/act-bulchepo-teukgwon-gaeseon";
+    rico:name "불체포 특권 개선".
+ric:rec-9470e727 rico:title "약종상(약방 운영)";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-yakjongsang";
+    rico:name "약종상(약방 운영)".
+ric:rec-0455bd64 rico:title "에너지 복지 제도 도입";
+    rico:identifier "http://archives.nanet.go.kr/id/activity-energy-welfare";
+    rico:name "에너지 복지 제도 도입".
 ric:event-20th-general-election rico:beginningDate "2016-04-13".
 ric:recset-jsk rico:hasOrHadInstantiation ric:65e0d20e-2254-4dbb-9599-fc7466e52b32.
 ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 rico:isOrWasInstantiationOf ric:recset-jsk;
@@ -5681,6 +5875,28 @@ ric:inst-jsk-excerpt rico:name "정세균 구술총서 발췌";
     rico:instantiationExtent "1 파일 · 10쪽";
     rico:carrierExtent "6143862 bytes";
     rico:productionTechnique "Acrobat PDF 1.5".
+ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf <https://schema.org/containedInPlace> ric:a9ed7a1e-64c9-4bd3-8c46-a00c4e9ff1c1.
+ric:6fc97b57-5bfb-4482-9f98-8f1c7533f992 rico:isAssociatedWithPlace ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf.
+ric:0fc5c03f-fd67-4f82-b1ad-82ac721b647b rico:isRelatedTo ric:6fc97b57-5bfb-4482-9f98-8f1c7533f992.
+ric:aeecc970-7b26-4c47-9827-d8d39789a467 rico:isAssociatedWithPlace ric:a9ed7a1e-64c9-4bd3-8c46-a00c4e9ff1c1;
+    rico:resultsOrResultedIn ric:f3adf0b7-bed3-4225-a5a6-530f58696115.
+ric:9e23d725-8463-4c8f-bc9c-b81fc7a454bb rico:isRelatedTo ric:aeecc970-7b26-4c47-9827-d8d39789a467, ric:63ccfd7a-b2fb-419b-9e43-ba61ea98efe5, ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf.
+ric:baa28287-fad9-477a-ad76-cb7c85904a70 rico:isRelatedTo ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf.
+ric:ad7796f3-51bd-4fe6-9282-bb6c9cf28240 <http://www.w3.org/2004/02/skos/core#prefLabel> "3조 주제 시소러스".
+ric:1be64a13-055a-4608-8333-6e782c09ca34 rico:isAssociatedWithPlace ric:6c130b8c-317a-47f5-a5c1-d4577ba2af5c.
+ric:21e89b51-5754-43e2-b739-f489af8af990 rico:isAgentAssociatedWithAgent ric:1be64a13-055a-4608-8333-6e782c09ca34.
+ric:551a2c30-c8da-4a02-96b8-fb926e448c3e rico:isAssociatedWithPlace ric:6c130b8c-317a-47f5-a5c1-d4577ba2af5c;
+    rico:resultsOrResultedIn ric:d3013e8b-5e36-40f9-b609-35d677929e55.
+ric:94ff6451-b103-4bd2-aba9-9598e083515c rico:isRelatedTo ric:551a2c30-c8da-4a02-96b8-fb926e448c3e.
+ric:37c3b502-4876-4fd7-bd58-abcbdebaf980 rico:isRelatedTo ric:94ff6451-b103-4bd2-aba9-9598e083515c.
+ric:574f5391-0330-4ed8-b4c1-27190b7f56c2 rico:isRelatedTo ric:37c3b502-4876-4fd7-bd58-abcbdebaf980.
+ric:37c3b502-4876-4fd7-bd58-abcbdebaf980 rico:isRelatedTo ric:2623204d-448b-4c78-b276-7775d8d20cb7.
+ric:5e6bc93c-5781-44a5-94b3-9cdbb3baf7a9 rico:isAssociatedWithPlace ric:ddd8b8e3-bf4d-4f73-80ad-6841acacd072;
+    rico:hasOrHadPosition ric:8c65b0e3-df2d-43e5-a202-6740b4ba8f08.
+ric:43ad0736-71d0-48ca-9b61-5ae7a70320a9 rico:isAssociatedWithPlace ric:9a29d8a4-85f5-4f57-a0f5-a04d7df6c775.
+ric:5e6bc93c-5781-44a5-94b3-9cdbb3baf7a9 rico:isRelatedTo ric:0f7919a2-20e2-468b-93ed-97bd262f3f78.
+ric:4a6cef3b-4552-45c3-95de-6d182ccd9d71 rico:hasOrHadPosition ric:8c65b0e3-df2d-43e5-a202-6740b4ba8f08.
+ric:f3a14aa3-44f4-4ce9-a467-97474a033c56 rico:isRelatedTo ric:0162b929-933d-419e-a372-ff48a4c76207, ric:f9d09c69-397c-4921-9eba-e60aae8e4916.
 ric:auth-0-ec9db4ec rico:name "이승만".
 ric:pos-0 rico:name "제헌국회 전반기 의장".
 ric:auth-1-ec8ba0ec rico:name "신익희".
@@ -5921,6 +6137,64 @@ ric:dup-jsk-hanja rico:name "정세균(丁世均)".
 ric:dup-kwk-spaced rico:name "김 원기".
 ric:dup-nanet-old rico:name "국회 도서관".
 ric:rec-gone-sample rico:title "오등록 폐기 레코드(시연용)".
+ric:local-8eb14776 rico:name "국회 의원회관".
+ric:local-ebb339d5 rico:name "김선정".
+ric:local-5cb6d908 rico:name "부산 사무실".
+ric:local-6cbc9032 rico:title "제헌국회".
+ric:local-f85df3f6 rico:title "제2대".
+ric:6fc97b57-5bfb-4482-9f98-8f1c7533f992 rico:name "두레방".
+ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf rico:name "옛 성병보건소 건물".
+ric:a9ed7a1e-64c9-4bd3-8c46-a00c4e9ff1c1 rico:name "의정부시 고산동 빼뻘마을".
+ric:0fc5c03f-fd67-4f82-b1ad-82ac721b647b rico:name "의정부시".
+ric:aeecc970-7b26-4c47-9827-d8d39789a467 rico:name "새뜰마을사업".
+ric:9e23d725-8463-4c8f-bc9c-b81fc7a454bb rico:name "우토로 평화기념관".
+ric:baa28287-fad9-477a-ad76-cb7c85904a70 rico:name "원주 아카데미극장".
+ric:791d6ad8-ac95-49bb-b13f-26d8b3017fa5 rico:name "경기도".
+ric:700ab025-2fe3-4796-9482-7d4f2ac4ffcd rico:name "2024년 조례 개정".
+ric:cb834d2b-aa4c-48eb-a2c0-a27e356d2435 rico:name "2026년 6월 지방선거".
+ric:15651d9e-9e08-41ca-b5c7-131deed455e1 <http://www.w3.org/2004/02/skos/core#prefLabel> "기지촌 여성 인권".
+ric:63ccfd7a-b2fb-419b-9e43-ba61ea98efe5 <http://www.w3.org/2004/02/skos/core#prefLabel> "기억공간".
+ric:f3adf0b7-bed3-4225-a5a6-530f58696115 <http://www.w3.org/2004/02/skos/core#prefLabel> "커뮤니티센터".
+ric:ad7796f3-51bd-4fe6-9282-bb6c9cf28240 <http://www.w3.org/2004/02/skos/core#prefLabel> "3조 주제 시소러스".
+ric:37c3b502-4876-4fd7-bd58-abcbdebaf980 <http://www.w3.org/2004/02/skos/core#prefLabel> "옛 성병보건소 건물".
+ric:1be64a13-055a-4608-8333-6e782c09ca34 rico:name "두레방".
+ric:21e89b51-5754-43e2-b739-f489af8af990 rico:name "의정부시".
+ric:6c130b8c-317a-47f5-a5c1-d4577ba2af5c rico:name "고산동 빼뻘마을".
+ric:551a2c30-c8da-4a02-96b8-fb926e448c3e rico:name "새뜰마을사업".
+ric:d3013e8b-5e36-40f9-b609-35d677929e55 <http://www.w3.org/2004/02/skos/core#prefLabel> "커뮤니티센터".
+ric:94ff6451-b103-4bd2-aba9-9598e083515c <http://www.w3.org/2004/02/skos/core#prefLabel> "우토로 평화기념관".
+ric:574f5391-0330-4ed8-b4c1-27190b7f56c2 <http://www.w3.org/2004/02/skos/core#prefLabel> "원주 아카데미극장".
+ric:3ca8f18e-5abc-4a68-86e2-677a3cf9f48b rico:name "경기도".
+ric:49c87740-4275-4b5f-88f8-b4f7bf69b881 rico:name "2024년 조례 개정".
+ric:4f453e6a-6004-40b6-9d89-ff9230eec21d rico:name "2026년 6월 지방선거".
+ric:2623204d-448b-4c78-b276-7775d8d20cb7 <http://www.w3.org/2004/02/skos/core#prefLabel> "기지촌 여성 인권".
+ric:ddd8b8e3-bf4d-4f73-80ad-6841acacd072 rico:name "의정부시 고산동 빼뻘마을".
+ric:9a29d8a4-85f5-4f57-a0f5-a04d7df6c775 rico:name "옛 성병보건소 건물".
+ric:9dca88f2-a9ed-4318-92af-02a8c64a83eb rico:name "두레방 사무실".
+ric:5e6bc93c-5781-44a5-94b3-9cdbb3baf7a9 rico:name "의정부시".
+ric:43ad0736-71d0-48ca-9b61-5ae7a70320a9 rico:name "두레방".
+ric:df06109d-bcac-47ba-9f77-8b73a294a75f rico:name "2022년 선정된 새뜰마을사업".
+ric:0f7919a2-20e2-468b-93ed-97bd262f3f78 <http://www.w3.org/2004/02/skos/core#prefLabel> "새뜰마을사업".
+ric:99402738-a48e-4690-b760-61c09c6ccd7e rico:name "일본 우토로 평화기념관".
+ric:6dbf0b5b-e497-4866-a6e7-e7bc20904081 rico:name "정부".
+ric:1f869d2f-ceaa-4775-b2b3-c26a3abccf8c rico:name "2026년 6월 지방선거".
+ric:77f3e243-adbf-4e5e-bce0-923c2e31237a rico:name "경기도".
+ric:dcfb3699-4532-422c-85c3-452ba7beb939 rico:name "2024년 조례 개정".
+ric:ae437f39-f993-420c-97cc-94a1b7cfb22b rico:name "원주 아카데미극장".
+ric:4a6cef3b-4552-45c3-95de-6d182ccd9d71 rico:name "시".
+ric:8c65b0e3-df2d-43e5-a202-6740b4ba8f08 rico:name "단체장".
+ric:f3a14aa3-44f4-4ce9-a467-97474a033c56 rico:name "조례".
+ric:0162b929-933d-419e-a372-ff48a4c76207 <http://www.w3.org/2004/02/skos/core#prefLabel> "등록문화유산".
+ric:f9d09c69-397c-4921-9eba-e60aae8e4916 rico:name "공유재산관리계획".
+ric:inst-jsk-full <https://schema.org/contentUrl> "assets/objects/07193759-4564-4d57-bc18-a9675e519c6e.pdf";
+    <https://schema.org/encodingFormat> "application/pdf";
+    <https://schema.org/thumbnailUrl> "assets/objects/07193759-4564-4d57-bc18-a9675e519c6e-thumb.webp".
+ric:inst-jsk-excerpt <https://schema.org/contentUrl> "assets/objects/be2704e0-1ba8-46e4-b955-696b656e5e45.pdf";
+    <https://schema.org/encodingFormat> "application/pdf";
+    <https://schema.org/thumbnailUrl> "assets/objects/be2704e0-1ba8-46e4-b955-696b656e5e45-thumb.webp".
+ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 <https://schema.org/contentUrl> "assets/objects/9adfbd10-e713-451f-8ddd-0c9a80797c73.pdf";
+    <https://schema.org/encodingFormat> "application/pdf";
+    <https://schema.org/thumbnailUrl> "assets/objects/9adfbd10-e713-451f-8ddd-0c9a80797c73-thumb.webp".
 <http://archives.nanet.go.kr/id/col-정세균-구술> a rico:RecordSet;
     rico:title "정세균 구술".
 <http://archives.nanet.go.kr/id/col-국회-구술-시소러스> a rico:RecordSet;
@@ -6962,4 +7236,78 @@ ric:inst-jsk-full rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-정
 ric:inst-jsk-excerpt rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:org-korea-university rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
 ric:org-theory-law-society rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-정세균-구술>.
+ric:rec-oral-2018-021 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:local-8eb14776 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2018-061 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2018-121 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2018-163 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2019-001 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2019-002 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2019-031 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:local-ebb339d5 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2019-032 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2020-011 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:local-5cb6d908 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-oral-2020-012 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-min-1948-0001 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:local-6cbc9032 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-min-1948-0002 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-min-1948-0017 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-min-1948-0028 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-min-1950-0104 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:local-f85df3f6 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-14530382 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-8cb4ad2c rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-c6592c23 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-8163fc50 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-8a57feeb rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-deec794b rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-e07b93ae rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-ffa127ba rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-9470e727 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:rec-0455bd64 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
 ric:65e0d20e-2254-4dbb-9599-fc7466e52b32 rico:isOrWasIncludedIn <http://archives.nanet.go.kr/id/col-미분류>.
+ric:6fc97b57-5bfb-4482-9f98-8f1c7533f992 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:b4367faf-8155-467c-8dbf-45ed4dd8dcdf rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:a9ed7a1e-64c9-4bd3-8c46-a00c4e9ff1c1 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:0fc5c03f-fd67-4f82-b1ad-82ac721b647b rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:aeecc970-7b26-4c47-9827-d8d39789a467 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:9e23d725-8463-4c8f-bc9c-b81fc7a454bb rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:baa28287-fad9-477a-ad76-cb7c85904a70 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:791d6ad8-ac95-49bb-b13f-26d8b3017fa5 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:700ab025-2fe3-4796-9482-7d4f2ac4ffcd rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:cb834d2b-aa4c-48eb-a2c0-a27e356d2435 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:15651d9e-9e08-41ca-b5c7-131deed455e1 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:63ccfd7a-b2fb-419b-9e43-ba61ea98efe5 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:f3adf0b7-bed3-4225-a5a6-530f58696115 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:ad7796f3-51bd-4fe6-9282-bb6c9cf28240 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:37c3b502-4876-4fd7-bd58-abcbdebaf980 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:1be64a13-055a-4608-8333-6e782c09ca34 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:21e89b51-5754-43e2-b739-f489af8af990 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:6c130b8c-317a-47f5-a5c1-d4577ba2af5c rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:551a2c30-c8da-4a02-96b8-fb926e448c3e rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:d3013e8b-5e36-40f9-b609-35d677929e55 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:94ff6451-b103-4bd2-aba9-9598e083515c rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:574f5391-0330-4ed8-b4c1-27190b7f56c2 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:3ca8f18e-5abc-4a68-86e2-677a3cf9f48b rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:49c87740-4275-4b5f-88f8-b4f7bf69b881 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:4f453e6a-6004-40b6-9d89-ff9230eec21d rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:2623204d-448b-4c78-b276-7775d8d20cb7 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:ddd8b8e3-bf4d-4f73-80ad-6841acacd072 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:9a29d8a4-85f5-4f57-a0f5-a04d7df6c775 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:9dca88f2-a9ed-4318-92af-02a8c64a83eb rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:5e6bc93c-5781-44a5-94b3-9cdbb3baf7a9 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:43ad0736-71d0-48ca-9b61-5ae7a70320a9 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:df06109d-bcac-47ba-9f77-8b73a294a75f rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:0f7919a2-20e2-468b-93ed-97bd262f3f78 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:99402738-a48e-4690-b760-61c09c6ccd7e rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:6dbf0b5b-e497-4866-a6e7-e7bc20904081 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:1f869d2f-ceaa-4775-b2b3-c26a3abccf8c rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:77f3e243-adbf-4e5e-bce0-923c2e31237a rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:dcfb3699-4532-422c-85c3-452ba7beb939 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:ae437f39-f993-420c-97cc-94a1b7cfb22b rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:4a6cef3b-4552-45c3-95de-6d182ccd9d71 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:8c65b0e3-df2d-43e5-a202-6740b4ba8f08 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:f3a14aa3-44f4-4ce9-a467-97474a033c56 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:0162b929-933d-419e-a372-ff48a4c76207 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
+ric:f9d09c69-397c-4921-9eba-e60aae8e4916 rico:isOrWasSubjectOf <http://archives.nanet.go.kr/id/col-미분류>.
