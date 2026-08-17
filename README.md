@@ -1,23 +1,143 @@
-# 구술기록 지식그래프 스타터킷
+# 서비스킷 — 구술기록 지식그래프
 
-2026 국회기록원 온톨로지-지식그래프 실습교육 · 오후 세션(13:00–16:00)
+**2026 온톨로지·지식그래프 실습** (2026. 8. 19. 수 · 국회기록원 의정관 105호 · 강사 안대진)
 
-**바로 보기 → https://archivelabedu.github.io/ontology-starterkit/**
-오전 학습 사이트 → https://archivelabedu.github.io/ontology-site/
+**바로 열기 → https://archivelabedu.github.io/ontology-starterkit/**
+오전 학습킷 → https://archivelabedu.github.io/ontology-site/
 
-정세균 구술기록으로 만든 **동작하는 완성본**입니다. 팀은 이걸 자기 구술자 데이터로
-갈아끼우고 확장합니다. 바닥부터 만들지 않기 때문에 3시간 안에 들어갑니다.
+정세균 구술기록으로 만든 **동작하는 완성본**입니다. 오전에는 시연으로 보고,
+오후 **15:30–16:00 「탐색」** 시간에 여러분이 만든 `.ttl` 을 여기에 올려 지식그래프를 탐색합니다.
 
-## 5분 안에 띄우기
+---
 
-```bash
-python3 -m http.server 8000
+## 실습에서 할 일 — 세 갈래
+
+| | 무엇 | 필요한 것 | 시간 |
+|---|---|---|---|
+| **A** | 내 `.ttl` 을 올려 탐색 | 브라우저만 | 5분 |
+| **B** | 클론해 **우리 기관 아카이브**로 개조 | GitHub 계정 · Claude Code | 20분~ |
+| **C** | `.ttl` 만 주고 **완전히 새 화면**을 만들기 | Claude Code | 20분~ |
+
+A 로 확인하고, 시간이 남으면 B 나 C 로 갑니다. 발표는 자기 노트북 화면으로 합니다.
+
+---
+
+## A. 내 TTL 올려 탐색하기 (클론 없음)
+
+1. 그라운더(또는 구술기록관리시스템)에서 **`.ttl` 내려받기**
+2. https://archivelabedu.github.io/ontology-starterkit/#collection 열기
+3. **컬렉션 이름**을 적고(예: `3팀 박희태 구술`) 파일 고르기 → 곧바로 적재됩니다
+4. 검색·지도·연표·관계망·주제·질의 메뉴로 **내 그래프**를 돌아봅니다
+
+알아 둘 것
+
+- 파일은 **올린 브라우저에만** 남습니다(localStorage). 서버·GitHub 로 가지 않으므로 옆 사람 화면에는 발행본만 보입니다.
+- 문법이 깨진 파일은 얹지 않고 오류 줄을 알려 줍니다 — 본 그래프는 손상되지 않습니다.
+- 여러 팀이 **같은 이름**을 올려도 섞이지 않습니다(지역명에 `-2`, `-3`).
+- 프로파일(`data/ontology.rdf`)에 없는 술어가 있으면 **경고만** 하고 싣습니다. 발표 자료로 쓸 것이라면 그 술어를 먼저 AP 에 등재하세요.
+- 정세균 구술과 **함께 골라 적재**하면 두 구술을 나란히 볼 수 있습니다.
+- 형식 본보기: `examples/sample-upload.ttl` (컬렉션 개체 · 소속 술어 · 출처를 갖춘 최소 형태)
+
+TTL 이 갖춰야 할 것은 셋뿐입니다.
+
+```turtle
+ric:col-3team a rico:RecordSet ; rico:name "3팀 박희태 구술" .        # ① 컬렉션
+ric:rec-1 a rico:Record ; rico:title "…" ;
+    rico:isOrWasIncludedIn ric:col-3team ;                          # ② 소속(기록)
+    dcterms:source "구술총서 p.42" .                                 # ③ 출처
+ric:agent-1 a rico:Person ; rico:name "…" ;
+    rico:isOrWasSubjectOf ric:col-3team .                           # ② 소속(그 밖)
 ```
 
-브라우저에서 `http://localhost:8000` — "그래프 적재 완료"가 보이면 준비 끝입니다.
-(ES 모듈이라 `file://` 로 직접 열면 동작하지 않습니다. 반드시 웹서버로 여세요.)
+---
 
-## 구성
+## B. 클론해 나만의 서비스킷 만들기
+
+내 데이터를 **주소로 공유**하고 싶을 때. 결과는 `https://<내계정>.github.io/ontology-starterkit/` 입니다.
+
+```bash
+# 1) 내 계정으로 포크한 뒤 클론 (또는 웹에서 Fork 버튼)
+gh repo fork ArchivelabEdu/ontology-starterkit --clone
+cd ontology-starterkit
+
+# 2) 내 .ttl 을 넣고 로컬에서 확인
+cp ~/Downloads/우리팀.ttl data/graph.ttl
+python3 -m http.server 8000        # → http://localhost:8000
+
+# 3) 커밋·푸시
+git add -A && git commit -m "우리 팀 구술로 데이터 교체" && git push
+
+# 4) GitHub 저장소 → Settings → Pages → Source: main / (root) → Save
+#    1~3분 뒤 https://<내계정>.github.io/ontology-starterkit/ 가 열립니다
+```
+
+`data/graph.ttl` 만 갈아끼워도 여덟 화면이 전부 새 데이터로 그려집니다. 지도 좌표와 연표는
+`data/places.csv` · `data/events.csv` 를, 언어 화면은 `data/corpus/<컬렉션>.json` 을 함께 바꾸면 채워집니다.
+
+### 프롬프트 — Claude Code 에 그대로 붙여 넣기
+
+포크한 폴더에서 `claude` 를 실행한 뒤 씁니다. `CLAUDE.md` 가 자동으로 읽혀 규칙(어휘·출처·PN_LOCAL)이 지켜집니다.
+
+**B-1. 데이터 갈아끼우기**
+
+```text
+data/graph.ttl 을 내가 넣은 우리 팀 TTL 로 교체했습니다.
+1) 화면 여덟 개(기록·지도·연표·관계망·주제·질의·언어·컬렉션)가 새 데이터로 제대로 그려지는지 확인하고,
+   비어 보이는 화면이 있으면 원인이 데이터 부족인지 코드 가정인지 알려 주세요.
+2) data/places.csv · data/events.csv 를 새 그래프에서 다시 만들어 주세요
+   (좌표가 없는 장소는 지어내지 말고 목록으로 남겨 주세요).
+3) 사이트 제목·부제·푸터의 기관명을 "<우리 기관/구술자 이름>" 으로 바꿔 주세요.
+검증: python3 -m http.server 8000 으로 띄워 콘솔 오류 0, 각 화면의 개체 수를 보고해 주세요.
+```
+
+**B-2. 우리 기관 색으로 바꾸기**
+
+```text
+index.html 의 CSS 변수만 고쳐 우리 기관 색으로 바꿔 주세요.
+--accent 를 <#색상> 으로 하고, 그 색과 어울리는 중립 회색·선 색을 함께 정해 주세요.
+다크 모드에서도 대비가 유지되어야 하고, 색을 하드코딩한 곳이 남지 않아야 합니다.
+바꾸기 전후를 같은 화면에서 비교해 보여 주세요.
+```
+
+**B-3. 우리 기록에 맞는 화면 하나 더**
+
+```text
+우리 구술에는 <예: 회의록 발언> 이 많습니다. 이를 위한 화면을 하나 추가해 주세요.
+- 메뉴에 항목을 넣고 #<이름> 해시로 열리게 하고, route() 의 재계산 목록에도 등록할 것
+- 데이터는 graph.ttl 에서 SPARQL 로만 가져올 것(하드코딩 금지)
+- 라이브러리 추가 금지 — 캔버스/SVG 로 직접 그릴 것
+- 데이터에 없는 값은 만들지 말고 "없음" 으로 둘 것
+```
+
+---
+
+## C. `.ttl` 만 주고 새 아카이브 만들기
+
+서비스킷을 쓰지 않고 **처음부터** 만들어 보는 심화 과정입니다. 빈 폴더에서 `claude` 를 실행하고:
+
+```text
+첨부한 graph.ttl 은 RiC-O 기반 구술기록 지식그래프입니다. 이것만으로 도는 정적 웹 아카이브를 만들어 주세요.
+
+조건
+- 정적 파일만(HTML/CSS/JS). 빌드 도구·프레임워크 없이 python3 -m http.server 로 열릴 것
+- 질의는 브라우저 안에서 SPARQL 로 — Oxigraph WASM(https://cdn.jsdelivr.net/npm/oxigraph@0.4.11/web.js) 사용
+- 화면은 최소 넷: ① 개체 찾아보기(유형 필터) ② 개체 상세(어떤 관계로 이어졌는지 방향까지) ③ 관계망 ④ SPARQL 질의창
+- 모든 화면은 그래프에 **있는 것만** 그릴 것. 데이터에 없으면 "없음" 이라고 쓸 것
+- 개체마다 출처(dcterms:source)를 화면에 노출할 것
+
+먼저 graph.ttl 을 읽어 클래스·속성 목록과 개체 수를 요약해 보여 주고,
+어떤 화면을 어떤 순서로 만들지 제안한 뒤 승인받고 시작하세요.
+```
+
+---
+
+## 구성 — 안을 들여다볼 사람에게
+
+로컬에서 열 때는 웹서버가 필요합니다(ES 모듈이라 `file://` 로는 동작하지 않습니다).
+
+```bash
+python3 -m http.server 8000     # → http://localhost:8000
+```
 
 메뉴 한 항목이 **한 페이지**입니다. 해시가 페이지를 고릅니다 —
 `#place` `#event` `#graph-sec` `#query` `#lang` `#about` · 기록은 `#/records`, 개별 기록은 `#/item/<id>`.
@@ -109,28 +229,15 @@ python3 -m http.server 8000
 python3 build_sample.py
 ```
 
-## 실습 진행
+## 이 저장소의 규칙
 
-`PROMPTS.md` — 체크포인트 프롬프트 4개를 순서대로.
-`CLAUDE.md` — Claude Code가 지킬 작업 규칙 (자동 로드됨).
+`CLAUDE.md` — Claude Code 가 지킬 작업 규칙(자동 로드). 요약하면 셋입니다.
 
-### 내가 만든 TTL 을 이 사이트로 읽기
+1. **어휘는 AP(`data/ontology.rdf`)에 등재된 것만** — RiC-O 1.1 뼈대 + FOAF·Schema.org·SKOS·OWL·DCTERMS 보강층
+2. **모든 트리플에 출처** — 구술은 쪽수, 전거는 전거명. 도구가 만든 진술은 생성이력까지
+3. **Turtle 지역명에 `/` 금지** — `ric:agent-jsk`(O) `ric:agent/jsk`(X)
 
-`data/graph.ttl` 을 갈아끼우지 않고도, **컬렉션 화면에서 TTL 한 장을 올리면** 컬렉션이 늘어납니다.
-관리 시스템·온톨로지 그라운더·LLM 이 만든 AP 그라운딩 TTL 을 그대로 올려 보세요.
-
-- 파일은 **올린 브라우저에만** 남습니다(localStorage). 발행본은 그대로이므로 다른 사람은 발행본만 봅니다.
-- 문법이 깨진 파일은 얹지 않고 오류 줄을 알려 줍니다. 본 그래프는 손상되지 않습니다.
-- **컬렉션 이름을 직접 적을 수 있습니다.** 적으면 그 이름으로 모읍니다(파일 안 컬렉션 개체는 목록에서 빠집니다).
-  비우면 `rico:RecordSet` 의 이름을, 그것도 없으면 **파일 이름**을 씁니다.
-  기록은 `isOrWasIncludedIn`, 그 밖은 `isOrWasSubjectOf` 로 잇습니다.
-- 여러 팀이 **같은 이름**을 올려도 서로 섞이지 않습니다 — 지역명에 `-2`, `-3` 이 붙습니다.
-- `data/ontology.rdf` 에 등재되지 않은 술어가 있으면 **경고만** 하고 싣습니다 — 프로파일 밖이라는 사실이
-  화면에 남습니다. 발표 자료로 쓸 것이라면 그 술어를 먼저 프로파일에 등재하세요.
-- 팀 전체가 함께 보려면 관리 시스템에서 **발행**해야 합니다. 올리기는 내 화면에서 확인하는 길입니다.
-
-시험용 예시 파일이 `examples/sample-upload.ttl` 에 있습니다 — 컬렉션 개체·소속 술어·출처를
-갖춘 최소 형태라, 내 TTL 을 만들 때 형식을 맞추는 본보기로도 씁니다.
+`PROMPTS.md` — 체크포인트 프롬프트 4개(오후 실습용).
 
 ## 데이터는 어떻게 만들었나
 
