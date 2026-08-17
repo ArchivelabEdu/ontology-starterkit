@@ -5,7 +5,7 @@
 
    아이템 페이지의 핵심은 '연결된 개체'다. 무엇과 이어져 있는지가 아니라
    **어떤 관계로** 이어져 있는지를 보여야 한다. 그게 표와 그래프의 차이다. */
-import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref, colLabel, LANG, LIFE, topTfidf, sentencesWith, repImgOf, clsGlyph } from './app.js';
+import { G, CLS, REL_KO, RICO, esc, $, clsColor, parseHash, colHref, colLabel, LANG, LIFE, topTfidf, sentencesWith, repImgOf, clsGlyph, attachThumb } from './app.js';
 
 const SRC = '『대한민국 국회를 말하다 08 정세균』(국회도서관, 2021)';
 // 개념·개념체계도 개체다. 빼 두면 「전체」 수가 그래프와 어긋난다(실측 791 vs 810).
@@ -126,8 +126,9 @@ window.recMore = c => { R.more.add(c); draw(); };
 function card(n) {
   /* 사진이 없는 카드도 왼쪽 칸을 지킨다 — 유형 글리프가 그 자리를 대신하면 목록이
      들쭉날쭉하지 않고, 무엇에 관한 카드인지 이름을 읽기 전에 알 수 있다. */
+  const t = attachThumb(n);   // 사진 → 파일 썸네일 → 연결 구현체의 파일 썸네일 (없으면 글리프)
   return `<a class="rec-card has-img" href="${colHref('item/' + encodeURIComponent(short(n.id)))}">
-    ${n.img ? `<img class="thumb" src="${esc(n.img)}" alt="" loading="lazy">` : clsGlyph(n.cls, 'thumb')}
+    ${t ? `<img class="thumb" src="${esc(t)}" alt="" loading="lazy">` : clsGlyph(n.cls, 'thumb')}
     <span class="c" style="color:${clsColor(n.cls)}">${CLS[n.cls].ko}</span>
     <b>${mark(n.label)}</b>
     ${n.date ? `<time>${esc(n.date)}</time>` : ''}

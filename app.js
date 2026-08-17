@@ -1026,8 +1026,14 @@ export const clsGlyph = (cls, extra = '') =>
   `<span class="th-ph ${extra}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">${
     GLYPH[cls] || GLYPH.Concept}</svg></span>`;
 
+/** 개체의 「제 이미지」 — 사진(foaf:depiction)이 먼저, 없으면 첨부 파일의 썸네일
+ *  (schema:thumbnailUrl — 구현체에 붙은 디지털 객체의 실물 표지). 지어낸 그림이 아니라
+ *  그 개체의 파일에서 만든 이미지라, 글리프 자리를 사진처럼 채워도 거짓이 아니다.
+ *  fileThumb 는 발행본(data/) 기준 상대경로라 여기서 접두를 붙인다. */
+const ownImg = n => n.img || (n.fileThumb ? 'data/' + n.fileThumb : '');
+
 export function repImgOf(o, excludeId) {
-  if (o.img) return { src: o.img, from: null };
+  if (ownImg(o)) return { src: ownImg(o), from: null };
   let best = null;
   G.edges.forEach(e => {
     const other = e.s === o.id ? G.byId.get(e.o) : (e.o === o.id ? G.byId.get(e.s) : null);
@@ -1037,11 +1043,27 @@ export function repImgOf(o, excludeId) {
     /* 인물 초상은 남을 대신하지 못한다. 이웃 가운데 연결이 가장 많은 것을 빌려 오는데,
        구술자는 거의 모든 개체와 이어져 있어 언제나 그가 뽑힌다 — 주제 화면에서 이미지가 붙은
        칩 19개 중 16개가 정세균 얼굴이었다(실측). 「10월유신 선포」에 그의 얼굴이 붙으면
-       그 사건의 사진으로 읽히는데 사실이 아니다. 장소·단체·기록의 사진만 빌린다. */
+       그 사건의 사진으로 읽히는데 사실이 아니다. 장소·단체·기록의 사진만 빌린다.
+       구현체의 파일 썸네일도 빌림 후보다 — 기록의 대표 이미지로 제 구현체의 표지만큼
+       정직한 것이 없다(연결이 그 사실을 보증한다). */
     if (other && other.cls === 'Person') return;
-    if (other && other.img && (!best || (other.deg || 0) > (best.deg || 0))) best = other;
+    if (other && ownImg(other) && (!best || (other.deg || 0) > (best.deg || 0))) best = other;
   });
-  return best ? { src: best.img, from: best.label } : null;
+  return best ? { src: ownImg(best), from: best.label } : null;
+}
+
+/** 탐색 카드의 글리프 자리용 썸네일 — 자기 사진 → 자기 파일 썸네일 → **연결된 구현체**의 파일 썸네일.
+ *  기록의 첨부물은 제 구현체에 붙으므로, 기록 카드가 표지를 보여 주려면 한 발 건너야 한다.
+ *  repImgOf 의 일반 이웃 빌림과 달리 **첨부물에서만** 가져온다 — 탐색 카드는 지금껏 자기 것만
+ *  보여 왔고, 이웃 사진까지 빌리면 카드가 남의 얼굴을 달게 된다. */
+export function attachThumb(n) {
+  const own = ownImg(n);
+  if (own) return own;
+  for (const e of G.edges) {
+    const other = e.s === n.id ? G.byId.get(e.o) : (e.o === n.id ? G.byId.get(e.s) : null);
+    if (other && other.cls === 'Instantiation' && other.fileThumb) return 'data/' + other.fileThumb;
+  }
+  return '';
 }
 
 let SUBJ_PICK = null;
