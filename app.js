@@ -564,11 +564,11 @@ async function addTtl(text, fileName, wantName = '') {
   ALL_TRIPLES = TRIPLES = Number(fullStore.query('SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }')[0]?.get('n')?.value ?? 0);
   buildModel();                                   // COLS·G 를 다시 짓는다(끝에서 applyCollection 이 돈다)
 
-  const titles = cols.map(u => COLS.find(c => c.id === u)?.title || short(u)).join(' · ');
-  const kept = upSave([...upList(), { name: fileName, ttl: text, made, hide }]);
+  const titles = cols.map(u => COLS.find(c => c.id === u)?.title || short(u));
+  const kept = upSave([...upList(), { name: fileName, ttl: text, made, hide, cols, titles }]);
   return {
     ok: true, cols,
-    html: `<b>컬렉션 ${cols.length}건 추가</b> — ${esc(titles)} · 트리플 ${(+nT).toLocaleString('ko-KR')}개`
+    html: `<b>컬렉션 ${cols.length}건 추가</b> — ${esc(titles.join(' · '))} · 트리플 ${(+nT).toLocaleString('ko-KR')}개`
       + (note ? `<br>${note}` : '')
       + (off.length ? `<br>AP에 등재되지 않은 술어 ${off.length}종이 있습니다 — <code>${off.slice(0, 3).map(esc).join('</code> <code>')}</code>${off.length > 3 ? ' 외' : ''}. 화면에는 실리지만 프로파일 밖입니다.` : '')
       + (kept ? '<br>이 브라우저에 저장했습니다 — 새로고침해도 남아 있습니다.'
@@ -590,11 +590,21 @@ window.ttlPick = async input => {
   r.cols.forEach(id => PICK.add(short(id)));
   location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}/collection`;
 };
-window.ttlDrop = async i => {
-  const list = upList(); const gone = list.splice(i, 1)[0];
+/* 빼기 — 얹은 것을 지우고 발행본부터 다시 읽는다. 트리플스토어에서 일부만 걷어내는 것보다
+   정직하고, 잘못 올린 것이 여러 건일 때도 한 번에 깨끗해진다. */
+window.ttlDrop = i => {
+  const list = upList(); if (!list[i]) return;
+  const name = (list[i].titles || []).join(' · ') || list[i].name;
+  if (!confirm(`「${name}」을 이 브라우저에서 뺍니다. 발행본은 그대로입니다.`)) return;
+  list.splice(i, 1);
   upSave(list);
-  location.reload();                      // 얹은 것을 빼려면 발행본부터 다시 읽는 편이 정직하다
-  return gone;
+  location.reload();
+};
+window.ttlDropAll = () => {
+  const n = upList().length;
+  if (!n || !confirm(`올린 컬렉션 ${n}건을 모두 뺍니다. 발행본은 그대로입니다.`)) return;
+  try { localStorage.removeItem(UP_KEY); } catch (e) { }
+  location.reload();
 };
 
 /** 올리기 칸 — 컬렉션 고르개 아래. 지금 이 브라우저에 얹혀 있는 파일도 함께 보인다. */
@@ -609,9 +619,14 @@ function uploadHtml() {
     </label>
     <input type="file" id="ttlFile" accept=".ttl,text/turtle" onchange="ttlPick(this)">
     <div id="ttlMsg"${UP_MSG ? ` class="${UP_MSG.ok ? 'okbox' : 'warnbox'}"` : ''}>${UP_MSG ? UP_MSG.html : ''}</div>
-    ${ups.length ? `<p class="note" style="margin-top:.5rem">이 브라우저에 얹은 파일 —
-      ${ups.map((u, i) => `<code>${esc(u.name)}</code>
-        <button class="btn sm" onclick="ttlDrop(${i})">빼기</button>`).join(' · ')}</p>` : ''}
+    ${ups.length ? `<div class="up-list">
+      <p class="note">이 브라우저에 얹은 컬렉션 ${ups.length}건 — 발행본은 지워지지 않습니다.</p>
+      ${ups.map((u, i) => `<div class="up-row">
+        <b>${esc((u.titles || []).join(' · ') || u.name.replace(/\.ttl$/i, ''))}</b>
+        <code>${esc(u.name)}</code>
+        <button class="btn sm" onclick="ttlDrop(${i})">빼기</button></div>`).join('')}
+      ${ups.length > 1 ? `<button class="btn sm" onclick="ttlDropAll()">올린 것 모두 빼기</button>` : ''}
+    </div>` : ''}
   </div>`;
 }
 
