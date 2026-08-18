@@ -352,6 +352,8 @@ function pickerHtml(inPage) {
            체크만 0이고 CUR.cols 는 아직 안 지워졌을 수 있다 — 카드를 손으로 눌러 마지막
            하나를 껐을 때가 그렇다. 그 경우에도 이 버튼이 눌려야 실제로 내려간다. -->
       <button class="btn sm" onclick="pickNone()" ${(PICK.size || CUR.cols.length) ? '' : 'disabled'}>모두 내리기</button>
+      <!-- 올린 컬렉션을 지우는 자리도 적재 옆에 둔다 — 목록 안에만 있으면 눈에 띄지 않았다(실측 지적) -->
+      ${upList().length ? `<button class="btn sm" onclick="ttlDropAll()">올린 것 모두 삭제 (${upList().length})</button>` : ''}
       <span class="status">${[
         inPage && CUR.cols.length
           ? `적재됨 ${CUR.cols.map(c => esc(COLS.find(x => x.id === c)?.title ?? '')).join(', ')}`
@@ -590,19 +592,19 @@ window.ttlPick = async input => {
   r.cols.forEach(id => PICK.add(short(id)));
   location.hash = `#/c/${[...PICK].map(encodeURIComponent).join(',')}/collection`;
 };
-/* 빼기 — 얹은 것을 지우고 발행본부터 다시 읽는다. 트리플스토어에서 일부만 걷어내는 것보다
+/* 삭제 — 얹은 것을 지우고 발행본부터 다시 읽는다. 트리플스토어에서 일부만 걷어내는 것보다
    정직하고, 잘못 올린 것이 여러 건일 때도 한 번에 깨끗해진다. */
 window.ttlDrop = i => {
   const list = upList(); if (!list[i]) return;
   const name = (list[i].titles || []).join(' · ') || list[i].name;
-  if (!confirm(`「${name}」을 이 브라우저에서 뺍니다. 발행본은 그대로입니다.`)) return;
+  if (!confirm(`「${name}」을 이 브라우저에서 삭제합니다. 발행본은 그대로입니다.`)) return;
   list.splice(i, 1);
   upSave(list);
   location.reload();
 };
 window.ttlDropAll = () => {
   const n = upList().length;
-  if (!n || !confirm(`올린 컬렉션 ${n}건을 모두 뺍니다. 발행본은 그대로입니다.`)) return;
+  if (!n || !confirm(`올린 컬렉션 ${n}건을 모두 삭제합니다. 발행본은 그대로입니다.`)) return;
   try { localStorage.removeItem(UP_KEY); } catch (e) { }
   location.reload();
 };
@@ -624,8 +626,7 @@ function uploadHtml() {
       ${ups.map((u, i) => `<div class="up-row">
         <b>${esc((u.titles || []).join(' · ') || u.name.replace(/\.ttl$/i, ''))}</b>
         <code>${esc(u.name)}</code>
-        <button class="btn sm" onclick="ttlDrop(${i})">빼기</button></div>`).join('')}
-      ${ups.length > 1 ? `<button class="btn sm" onclick="ttlDropAll()">올린 것 모두 빼기</button>` : ''}
+        <button class="btn" onclick="ttlDrop(${i})">삭제</button></div>`).join('')}
     </div>` : ''}
   </div>`;
 }
