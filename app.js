@@ -331,6 +331,10 @@ function pickerHtml(inPage) {
   };
   /* 고른 것과 실린 것이 같으면 「적재」는 할 일이 없다 — 눌러도 그대로인 버튼은 죽여 둔다. */
   const same = PICK.size === CUR.cols.length && CUR.cols.every(c => PICK.has(short(c)));
+  /* 삭제는 **올려서 생긴 컬렉션**에만 쓴다. 하나라도 발행본이 섞이면 잠근다 —
+     발행본은 이 브라우저에 있는 것이 아니라 지울 대상이 없다. */
+  const upIds = uploadedIds();
+  const canDrop = PICK.size > 0 && [...PICK].every(id => upIds.has(id));
   return `
     <div class="picker" data-inpage="${inPage ? 1 : 0}">
     <div class="col-grid">
@@ -352,8 +356,12 @@ function pickerHtml(inPage) {
            체크만 0이고 CUR.cols 는 아직 안 지워졌을 수 있다 — 카드를 손으로 눌러 마지막
            하나를 껐을 때가 그렇다. 그 경우에도 이 버튼이 눌려야 실제로 내려간다. -->
       <button class="btn sm" onclick="pickNone()" ${(PICK.size || CUR.cols.length) ? '' : 'disabled'}>모두 내리기</button>
-      <!-- 올린 컬렉션을 지우는 자리도 적재 옆에 둔다 — 목록 안에만 있으면 눈에 띄지 않았다(실측 지적) -->
-      ${upList().length ? `<button class="btn sm" onclick="ttlDropAll()">올린 것 모두 삭제 (${upList().length})</button>` : ''}
+      <!-- 올린 컬렉션을 지우는 자리도 적재 옆에 둔다 — 목록 안에만 있으면 눈에 띄지 않았다(실측 지적).
+           발행본은 이 브라우저에 있는 것이 아니라 지울 수 없다 — 하나라도 섞이면 잠근다. -->
+      ${upList().length ? `<button class="btn sm" onclick="ttlDropPicked()" ${canDrop ? '' : 'disabled'}
+        title="${canDrop ? '고른 컬렉션을 이 브라우저에서 삭제합니다'
+          : PICK.size ? '발행본은 삭제할 수 없습니다 — 올린 컬렉션만 고르세요' : '삭제할 컬렉션을 고르세요'}">삭제</button>
+        <button class="btn sm" onclick="ttlDropAll()">올린 것 모두 삭제</button>` : ''}
       <span class="status">${[
         inPage && CUR.cols.length
           ? `적재됨 ${CUR.cols.map(c => esc(COLS.find(x => x.id === c)?.title ?? '')).join(', ')}`
@@ -483,6 +491,8 @@ const UP_KEY = 'kit.ttl.uploads';
 /* 올린 사람이 컬렉션 이름을 직접 적었을 때, 파일 안에 들어 있던 컬렉션 개체는 목록에서 뺀다 —
    두 이름이 나란히 뜨면 어느 것이 내 것인지 알 수 없다. */
 const HIDDEN_COLS = new Set();
+/** 올려서 생긴 컬렉션의 지역명 — 발행본과 구분해야 「삭제해도 되는 것」을 가릴 수 있다. */
+const uploadedIds = () => new Set(upList().flatMap(u => (u.cols || []).map(short)));
 let UP_MSG = null;                       // 마지막 올리기 결과 — 화면을 다시 그려도 남아 있어야 읽힌다
 const upList = () => { try { return JSON.parse(localStorage.getItem(UP_KEY) || '[]'); } catch { return []; } };
 const upSave = list => { try { localStorage.setItem(UP_KEY, JSON.stringify(list)); return true; } catch { return false; } };
@@ -600,6 +610,21 @@ window.ttlDrop = i => {
   if (!confirm(`「${name}」을 이 브라우저에서 삭제합니다. 발행본은 그대로입니다.`)) return;
   list.splice(i, 1);
   upSave(list);
+  location.reload();
+};
+window.ttlDropPicked = () => {
+  const ids = new Set(PICK);
+  const list = upList();
+  const gone = list.filter(u => (u.cols || []).some(c => ids.has(short(c))));
+  if (!gone.length) return;
+  const names = gone.flatMap(u => u.titles || [u.name]).join(' · ');
+  if (!confirm(`「${names}」을 이 브라우저에서 삭제합니다. 발행본은 그대로입니다.`)) return;
+  upSave(list.filter(u => !gone.includes(u)));
+  /* 지운 것만 주소에서 빼고 나머지 적재는 지킨다 — 통째로 비우면 지우려던 것 하나 때문에
+     보고 있던 발행본까지 내려가 「다 사라졌다」로 읽힌다(실측). */
+  const dropped = new Set(gone.flatMap(u => (u.cols || []).map(short)));
+  const keep = CUR.cols.map(short).filter(id => !dropped.has(id));
+  location.hash = keep.length ? `#/c/${keep.map(encodeURIComponent).join(',')}/collection` : '#/collection';
   location.reload();
 };
 window.ttlDropAll = () => {
