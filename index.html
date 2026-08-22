@@ -1199,9 +1199,12 @@ footer .fw a:hover{color:var(--accent);border-bottom-color:var(--accent)}
       <button class="fs-btn" onclick="fullscreen('place')">⤢ 전체화면</button>
       <div class="kicker">Archive Map</div>
       <h2>구술이 지나간 자리</h2>
-      <p>구술에 등장하는 장소 <b id="nPlace">–</b>곳을 지도에 펼쳤습니다.
+      <p id="placeLead">구술에 등장하는 장소 <b id="nPlace">–</b>곳을 지도에 펼쳤습니다.
          유형으로 걸러 보고, ‘생애 따라가기’로 진안에서 여의도까지 여섯 장면을 따라가 보세요.
          워싱턴·로스앤젤레스 같은 해외 장소는 <b>세계 전체</b>로 넓혀 보세요.</p>
+      <!-- 좌표가 하나도 없을 때 — 「0곳을 펼쳤습니다」는 말이 안 된다. 무엇을 채우면 되는지 말한다. -->
+      <p class="note" id="placeNone" hidden>이 컬렉션에는 <b>좌표가 붙은 장소가 없습니다</b> —
+         그래프의 장소 개체에 <code>geo:lat</code>·<code>geo:long</code> 을 넣으면 여기에 찍힙니다.</p>
     </div>
     <div class="chips" id="mapChips"></div>
     <div class="chips" style="margin-top:-.4rem">
@@ -1221,9 +1224,11 @@ footer .fw a:hover{color:var(--accent);border-bottom-color:var(--accent)}
       <button class="fs-btn" onclick="fullscreen('event')">⤢ 전체화면</button>
       <div class="kicker">Timeline</div>
       <h2>사건이 놓인 자리</h2>
-      <p>구술과 부록 연표에서 뽑은 사건 <b id="nEvent">–</b>건을 시간 위에 놓았습니다.
+      <p id="eventLead">구술과 부록 연표에서 뽑은 사건 <b id="nEvent">–</b>건을 시간 위에 놓았습니다.
          같은 해에 몰린 것은 순서를 지키며 옆으로 밀어 두었으니, 가로로 밀어 보세요.
          유형 칩으로 걸러 보고 항목을 누르면 상세가 열립니다.</p>
+      <p class="note" id="eventNone" hidden>이 컬렉션에는 <b>날짜가 붙은 사건이 없습니다</b> —
+         사건 개체에 <code>rico:beginningDate</code> 를 넣으면 여기에 놓입니다.</p>
     </div>
     <div class="chips" id="tlChips"></div>
     <div class="panel"><div class="tl-wrap">

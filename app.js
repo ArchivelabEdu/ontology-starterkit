@@ -1554,6 +1554,11 @@ function placeNodes() {
 function drawMap() {
   const ps = placeNodes();
   $('#nPlace').textContent = ps.length;
+  /* 좌표가 없으면 리드 문장을 감추고 「무엇을 채우면 되는지」를 대신 말한다 —
+     올린 컬렉션에는 좌표가 없는 것이 보통이라 이 상태가 자주 온다. */
+  const pl = $('#placeLead'), pn = $('#placeNone');
+  if (pl) pl.hidden = !ps.length;
+  if (pn) pn.hidden = !!ps.length;
   const kinds = [...new Set(ps.map(p => p.kind).filter(Boolean))];
   MAP.filter = new Set(kinds);
   $('#mapChips').innerHTML =
@@ -1815,6 +1820,9 @@ function eventNodes() {
 function drawTimeline() {
   const evs = eventNodes();
   $('#nEvent').textContent = evs.length;
+  const el2 = $('#eventLead'), en = $('#eventNone');
+  if (el2) el2.hidden = !evs.length;
+  if (en) en.hidden = !!evs.length;
   const kinds = [...new Set(evs.map(e => e.kind).filter(Boolean))];
   TL.filter = new Set(kinds);
   $('#tlChips').innerHTML =
